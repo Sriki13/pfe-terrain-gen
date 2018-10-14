@@ -13,7 +13,7 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         App app = new App();
-        File file = new File("target");
+        File file = new File("target/lib");
         System.out.println(file.getCanonicalPath());
         app.createJar(Collections.singletonList("GridPoints"));
     }
@@ -42,7 +42,7 @@ public class App {
             }
         }
         for (String jar : jars) {
-            Files.copy(Paths.get("target/dependency/" + jar), Paths.get("../gen/lib/" + jar));
+            Files.copy(Paths.get("target/lib/" + jar), Paths.get("../gen/lib/" + jar));
         }
     }
 
