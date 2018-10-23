@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.gridcreator.MeshGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -20,11 +21,9 @@ public class MeshBuilder implements MeshGenerator
 
         List<Polygon> polygons = genPolygons(map);
 
-        List<Coordinate> vertices = genVertex(polygons);
-
-        List<Edge> edges = genEdges(polygons);
-
-        List<Face> faces = genFaces(polygons);
+        map.setVertices(new HashSet<Coordinate>(genVertex(polygons)));
+        map.setEdges(new HashSet<Edge>(genEdges(polygons)));
+        map.setFaces(new HashSet<Face>(genFaces(polygons)));
     }
 
     private List<Polygon> genPolygons(IslandMap map){
