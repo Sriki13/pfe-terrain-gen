@@ -126,7 +126,7 @@ public class MeshBuilder implements MeshGenerator
             }
 
             for(Face face : faces){
-                face.setNeighbors(faces);
+                face.addNeighbor(faces);
             }
         }
 
