@@ -1,16 +1,14 @@
 package pfe.terrain.gen;
 
 import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.gridcreator.MeshGenerator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 public class MeshBuilder implements MeshGenerator
@@ -24,6 +22,8 @@ public class MeshBuilder implements MeshGenerator
         map.setVertices(new HashSet<Coordinate>(genVertex(polygons)));
         map.setEdges(new HashSet<Edge>(genEdges(polygons)));
         map.setFaces(new HashSet<Face>(genFaces(polygons)));
+
+        genNeighbor(map);
     }
 
     private List<Polygon> genPolygons(IslandMap map){
@@ -107,6 +107,29 @@ public class MeshBuilder implements MeshGenerator
             }
         }
         return edges;
+    }
+
+    private void genNeighbor(IslandMap map){
+        Set<Coordinate> centers = map.getFacesCenters();
+
+        DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
+        builder.setSites(centers);
+
+        Geometry geo = builder.getTriangles(new GeometryFactory());
+
+        List<Polygon> polygons = genPolygons(geo);
+
+        for(Polygon polygon : polygons){
+            Set<Face> faces = new HashSet<>();
+            for(Coordinate coordinate : polygon.getCoordinates()){
+                faces.add(map.getFaceFromCenter(coordinate));
+            }
+
+            for(Face face : faces){
+                face.setNeighbors(faces);
+            }
+        }
+
     }
 
 

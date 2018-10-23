@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class IslandMap {
@@ -66,5 +67,15 @@ public class IslandMap {
         }
         return null;
 
+    }
+
+    public Set<Coordinate> getFacesCenters(){
+        Set<Coordinate> coords = new HashSet<>();
+
+        for(Face face : faces){
+            coords.add(face.getCenter());
+        }
+
+        return coords;
     }
 }
