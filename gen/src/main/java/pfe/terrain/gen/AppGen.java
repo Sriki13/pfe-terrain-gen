@@ -4,7 +4,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.gridcreator.PointsGenerator;
+import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class AppGen {
         IslandMap islandMap = new IslandMap();
         islandMap.setSize(8);
         //PointsGenerator generator = new GridPoints();
-        Reflections reflections = new Reflections("pfe.terrain.gen",new SubTypesScanner(false));
+        Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
         System.out.println(reflections.getAllTypes());
         Set<Class<? extends PointsGenerator>> subTypes = reflections.getSubTypesOf(PointsGenerator.class);
         if (subTypes.isEmpty()) {
@@ -36,7 +37,7 @@ public class AppGen {
         }
         try {
             g.generatePoint(islandMap, 4);
-            System.out.println(islandMap.getPoints());
+            System.out.println(islandMap.getProperty(Property.POINTS, Set.class));
         } catch (InvalidAlgorithmParameters invalidAlgorithmParameters) {
             invalidAlgorithmParameters.printStackTrace();
         }

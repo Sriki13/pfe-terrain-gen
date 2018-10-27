@@ -2,6 +2,8 @@ package pfe.terrain.gen.algo.gridcreator;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -15,6 +17,6 @@ public class RandomPoints implements PointsGenerator {
         for (int i = 0; i < numberOfPoints; i++) {
             points.add(new Coordinate(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }
-        islandMap.setPoints(points);
+        islandMap.putProperty(Property.POINTS, points, Set.class);
     }
 }

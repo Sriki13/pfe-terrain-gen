@@ -7,6 +7,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -40,7 +42,7 @@ public class RelaxedPoints implements PointsGenerator {
                     .map(c -> new Coordinate(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
                     .collect(Collectors.toSet());
         }
-        islandMap.setPoints(points);
+        islandMap.putProperty(Property.POINTS, points, Set.class);
     }
 
     private double insideValue(double val, int maxSize) {

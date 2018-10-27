@@ -15,7 +15,7 @@ public class App {
         App app = new App();
         File file = new File("target/lib");
         System.out.println(file.getCanonicalPath());
-        app.createJar(Collections.singletonList("GridPoints"));
+        app.createJar(Collections.singletonList("RandomPoints"));
     }
 
     private HashMap<String, String> nameToJar = new HashMap<>();

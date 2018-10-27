@@ -3,6 +3,8 @@ package pfe.terrain.gen.algo.gridcreator;
 import com.vividsolutions.jts.geom.Coordinate;
 import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +26,6 @@ public class GridPoints implements PointsGenerator {
                 points.add(new Coordinate(x * squareSide + halfSide, y * squareSide + halfSide));
             }
         }
-        islandMap.setPoints(points);
+        islandMap.putProperty(Property.POINTS, points, Set.class);
     }
 }
