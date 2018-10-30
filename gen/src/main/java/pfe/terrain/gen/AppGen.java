@@ -2,10 +2,9 @@ package pfe.terrain.gen;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
-import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.Set;
 
@@ -37,8 +36,8 @@ public class AppGen {
         }
         try {
             g.generatePoint(islandMap, 4);
-            System.out.println(islandMap.getProperty(Property.POINTS, Set.class));
-        } catch (InvalidAlgorithmParameters invalidAlgorithmParameters) {
+            System.out.println(islandMap.getProperty(new Key<>("POINTS", CoordSet.class)));
+        } catch (InvalidAlgorithmParameters | KeyTypeMismatch | NoSuchKeyException | DuplicateKeyException invalidAlgorithmParameters) {
             invalidAlgorithmParameters.printStackTrace();
         }
     }

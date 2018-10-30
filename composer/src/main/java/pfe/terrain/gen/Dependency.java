@@ -1,6 +1,5 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Property;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 
@@ -10,16 +9,16 @@ import java.util.Set;
 public class Dependency {
 
     private final Contract contract;
-    private final Set<Property> created;
+    private final Set<String> created;
 
-    private Set<Property> required;
+    private Set<String> required;
 
     public Dependency(Contract contract) throws InvalidContractException {
         this.contract = contract;
         this.required = new HashSet<>();
         Constraints constraints = contract.getContract();
         this.created = constraints.getCreated();
-        for (Property prop : constraints.getCreated()) {
+        for (String prop : constraints.getCreated()) {
             if (constraints.getRequired().contains(prop)) {
                 throw new InvalidContractException(contract);
             }
@@ -32,7 +31,7 @@ public class Dependency {
     }
 
     public boolean partiallySolves(Dependency dependency) {
-        for (Property property : dependency.getRequired()) {
+        for (String property : dependency.getRequired()) {
             if (created.contains(property)) {
                 return true;
             }
@@ -48,11 +47,11 @@ public class Dependency {
         return contract;
     }
 
-    public Set<Property> getRequired() {
+    public Set<String> getRequired() {
         return required;
     }
 
-    public Set<Property> getCreated() {
+    public Set<String> getCreated() {
         return created;
     }
 

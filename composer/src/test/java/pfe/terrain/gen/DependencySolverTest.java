@@ -1,7 +1,6 @@
 package pfe.terrain.gen;
 
 import org.junit.Test;
-import pfe.terrain.gen.algo.Property;
 import pfe.terrain.gen.algo.constraints.Contract;
 
 import java.util.ArrayList;
@@ -19,12 +18,12 @@ public class DependencySolverTest {
     // EP -> B -> A
     @Test
     public void simpleLineTree() throws Exception {
-        Contract A = new TestContract("A", Collections.singletonList(Property.POINTS),
+        Contract A = new TestContract("A", Collections.singletonList("POINTS"),
                 new ArrayList<>());
-        Contract B = new TestContract("B", Collections.singletonList(Property.EDGES),
-                Collections.singletonList(Property.POINTS));
+        Contract B = new TestContract("B", Collections.singletonList("EDGES"),
+                Collections.singletonList("POINTS"));
         Contract EP = new TestContract("C", new ArrayList<>(),
-                Collections.singletonList(Property.EDGES));
+                Collections.singletonList("EDGES"));
         dependencySolver = new DependencySolver(Arrays.asList(A, B), new ArrayList<>(), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(2, got.size());
@@ -36,14 +35,14 @@ public class DependencySolverTest {
     //    -> B -> A
     @Test
     public void simpleTree() throws Exception {
-        Contract A = new TestContract("A", Collections.singletonList(Property.POINTS),
+        Contract A = new TestContract("A", Collections.singletonList("POINTS"),
                 new ArrayList<>());
-        Contract B = new TestContract("B", Collections.singletonList(Property.EDGES),
-                Collections.singletonList(Property.POINTS));
-        Contract C = new TestContract("C", Collections.singletonList(Property.FACES),
+        Contract B = new TestContract("B", Collections.singletonList("EDGES"),
+                Collections.singletonList("POINTS"));
+        Contract C = new TestContract("C", Collections.singletonList("FACES"),
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
-                Arrays.asList(Property.EDGES, Property.FACES));
+                Arrays.asList("EDGES", "FACES"));
         dependencySolver = new DependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
@@ -60,18 +59,18 @@ public class DependencySolverTest {
     // + available E (like A) but we want A specifically
     @Test
     public void simplePriority() throws Exception {
-        Contract A = new TestContract("A", Collections.singletonList(Property.POINTS),
+        Contract A = new TestContract("A", Collections.singletonList("POINTS"),
                 new ArrayList<>());
-        Contract B = new TestContract("B", Collections.singletonList(Property.EDGES),
-                Collections.singletonList(Property.POINTS));
-        Contract C = new TestContract("C", Collections.singletonList(Property.FACES),
+        Contract B = new TestContract("B", Collections.singletonList("EDGES"),
+                Collections.singletonList("POINTS"));
+        Contract C = new TestContract("C", Collections.singletonList("FACES"),
                 new ArrayList<>());
-        Contract D = new TestContract("D", Collections.singletonList(Property.EDGES),
-                Collections.singletonList(Property.POINTS));
-        Contract E = new TestContract("A", Collections.singletonList(Property.POINTS),
+        Contract D = new TestContract("D", Collections.singletonList("EDGES"),
+                Collections.singletonList("POINTS"));
+        Contract E = new TestContract("A", Collections.singletonList("POINTS"),
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
-                Arrays.asList(Property.EDGES, Property.FACES));
+                Arrays.asList("EDGES", "FACES"));
         dependencySolver = new DependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());

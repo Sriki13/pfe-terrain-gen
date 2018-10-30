@@ -3,11 +3,10 @@ package pfe.terrain.gen.algo;
 import com.vividsolutions.jts.geom.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashSet;
-import java.util.Set;
+import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class IslandMapTest {
@@ -20,12 +19,18 @@ public class IslandMapTest {
     }
 
     @Test
-    @SuppressWarnings("Incompatible types.")
-    public void testo() {
-        map.putProperty(Property.POINTS, new HashSet<Coordinate>(), Set.class);
-        Set<Coordinate> coordinates = map.getProperty(Property.POINTS, Set.class);
+    public void test1() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        map.putProperty(new Key<>("POINTS", CoordSet.class), new CoordSet());
+        CoordSet coordinates = map.getProperty(new Key<>("POINTS", CoordSet.class));
         coordinates.add(new Coordinate());
-        map.putProperty(Property.POINTS, coordinates, Set.class);
-        assertThat(map.getProperty(Property.POINTS, Set.class).size(), equalTo(1));
+        map.putProperty(new Key<>("POINTS", CoordSet.class), coordinates);
+        assertThat(map.getProperty(new Key<>("POINTS", CoordSet.class)).size(), equalTo(1));
+    }
+
+    @Test(expected = KeyTypeMismatch.class)
+    public void test2() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        map.putProperty(new Key<>("POINTS", CoordSet.class), new CoordSet());
+        String coordinates = map.getProperty(new Key<>("POINTS", String.class));
+        assertThat(coordinates, equalTo(null));
     }
 }

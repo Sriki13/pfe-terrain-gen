@@ -5,10 +5,12 @@ import com.vividsolutions.jts.geom.CoordinateFilter;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
+import pfe.terrain.gen.algo.DuplicateKeyException;
 import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -18,8 +20,8 @@ import java.util.stream.Collectors;
 public class RelaxedPoints implements PointsGenerator {
 
     @Override
-    public void generatePoint(IslandMap islandMap, int numberOfPoints) throws InvalidAlgorithmParameters {
-        Set<Coordinate> points = new HashSet<>();
+    public void generatePoint(IslandMap islandMap, int numberOfPoints) throws InvalidAlgorithmParameters, DuplicateKeyException {
+        CoordSet points = new CoordSet();
         Random random = new Random();
         for (int i = 0; i < numberOfPoints; i++) {
             points.add(new Coordinate(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
@@ -38,11 +40,11 @@ public class RelaxedPoints implements PointsGenerator {
             for (int j = 0; j < voronoiDiagram.getNumGeometries(); j++) {
                 centroids.add(voronoiDiagram.getGeometryN(j).getCentroid().getCoordinate());
             }
-            points = centroids.stream()
+            points = (CoordSet) centroids.stream()
                     .map(c -> new Coordinate(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
                     .collect(Collectors.toSet());
         }
-        islandMap.putProperty(Property.POINTS, points, Set.class);
+        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
 
     private double insideValue(double val, int maxSize) {

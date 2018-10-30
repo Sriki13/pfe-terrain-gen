@@ -1,6 +1,5 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Property;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 
@@ -12,7 +11,7 @@ public class TestContract implements Contract {
     private String name;
     private Constraints constraints;
 
-    public TestContract(String name, List<Property> created, List<Property> required) {
+    public TestContract(String name, List<String> created, List<String> required) {
         this.name = name;
         this.constraints = new Constraints(
                 new HashSet<>(required), new HashSet<>(created)

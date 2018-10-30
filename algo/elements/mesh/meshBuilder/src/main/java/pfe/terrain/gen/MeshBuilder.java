@@ -3,35 +3,34 @@ package pfe.terrain.gen;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Property;
+import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.algorithms.MeshGenerator;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.geometry.*;
 
 import java.util.*;
 
 
 public class MeshBuilder implements MeshGenerator {
     @Override
-    public void generateMesh(IslandMap map) {
+    public void generateMesh(IslandMap map) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
 
 
         List<Polygon> polygons = genPolygons(map);
 
-        map.putProperty(Property.VERTICES, new HashSet<Coordinate>(genVertex(polygons)), Set.class);
-        map.putProperty(Property.EDGES, new HashSet<Edge>(genEdges(polygons)), Set.class);
-        map.putProperty(Property.FACES, new HashSet<Face>(genFaces(polygons)), Set.class);
+        map.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(genVertex(polygons)));
+        map.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(genEdges(polygons)));
+        map.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(genFaces(polygons)));
+
 
         genNeighbor(map);
     }
 
-    private List<Polygon> genPolygons(IslandMap map) {
+    private List<Polygon> genPolygons(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> res = new ArrayList<>();
 
         VoronoiDiagramBuilder builder = new VoronoiDiagramBuilder();
 
-        builder.setSites(map.getProperty(Property.POINTS, Set.class));
+        builder.setSites(map.getProperty(new Key<>("POINTS", CoordSet.class)));
 
         Coordinate[] boundaries = {new Coordinate(0, 0),
                 new Coordinate(0, map.getSize()),
@@ -108,8 +107,9 @@ public class MeshBuilder implements MeshGenerator {
         return edges;
     }
 
-    private void genNeighbor(IslandMap map) {
-        Set<Coordinate> centers = getFacesCenters(map.getProperty(Property.FACES, Set.class));
+    private void genNeighbor(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
+        Key<FaceSet> key = new Key<>("FACES", FaceSet.class);
+        Set<Coordinate> centers = getFacesCenters(map.getProperty(key));
 
         DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
         builder.setSites(centers);
@@ -121,7 +121,7 @@ public class MeshBuilder implements MeshGenerator {
         for (Polygon polygon : polygons) {
             Set<Face> faces = new HashSet<>();
             for (Coordinate coordinate : polygon.getCoordinates()) {
-                faces.add(getFaceFromCenter(map.getProperty(Property.FACES, Set.class), coordinate));
+                faces.add(getFaceFromCenter(map.getProperty(key), coordinate));
             }
 
             for (Face face : faces) {
