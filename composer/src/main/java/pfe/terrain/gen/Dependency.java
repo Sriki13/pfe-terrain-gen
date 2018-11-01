@@ -2,6 +2,7 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.exception.InvalidContractException;
 
 import java.util.HashSet;
 import java.util.Set;

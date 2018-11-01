@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo;
+package pfe.terrain.gen.algo.exception;
 
 public class DuplicateKeyException extends Exception {
     public DuplicateKeyException(String s) {

@@ -1,6 +1,8 @@
 package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.exception.InvalidContractException;
+import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.util.ArrayList;
 import java.util.List;

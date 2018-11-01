@@ -1,4 +1,4 @@
-package pfe.terrain.gen;
+package pfe.terrain.gen.exception;
 
 import pfe.terrain.gen.algo.constraints.Contract;
 

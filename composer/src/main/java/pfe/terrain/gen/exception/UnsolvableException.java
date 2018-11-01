@@ -1,4 +1,4 @@
-package pfe.terrain.gen;
+package pfe.terrain.gen.exception;
 
 public class UnsolvableException extends Exception {
 

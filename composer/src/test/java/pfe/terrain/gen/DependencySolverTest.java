@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class DependencySolverTest {
 
-    private DependencySolver dependencySolver;
+    private ChocoDependencySolver dependencySolver;
 
     // EP -> B -> A
     @Test
@@ -24,7 +24,7 @@ public class DependencySolverTest {
                 Collections.singletonList("POINTS"));
         Contract EP = new TestContract("C", new ArrayList<>(),
                 Collections.singletonList("EDGES"));
-        dependencySolver = new DependencySolver(Arrays.asList(A, B), new ArrayList<>(), EP);
+        dependencySolver = new ChocoDependencySolver(Arrays.asList(A, B), new ArrayList<>(), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(2, got.size());
         assertEquals(A, got.get(0));
@@ -43,7 +43,7 @@ public class DependencySolverTest {
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 Arrays.asList("EDGES", "FACES"));
-        dependencySolver = new DependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
+        dependencySolver = new ChocoDependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
         assertEquals(A, got.get(0));
@@ -71,7 +71,7 @@ public class DependencySolverTest {
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 Arrays.asList("EDGES", "FACES"));
-        dependencySolver = new DependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
+        dependencySolver = new ChocoDependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
         assertEquals(A, got.get(0));

@@ -1,7 +1,7 @@
 package pfe.terrain.gen.algo.algorithms;
 
-import pfe.terrain.gen.algo.DuplicateKeyException;
-import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
+import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;

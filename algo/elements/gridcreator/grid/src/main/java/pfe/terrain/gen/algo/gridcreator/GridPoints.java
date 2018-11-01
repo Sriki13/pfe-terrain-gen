@@ -1,15 +1,12 @@
 package pfe.terrain.gen.algo.gridcreator;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import pfe.terrain.gen.algo.DuplicateKeyException;
-import pfe.terrain.gen.algo.InvalidAlgorithmParameters;
+import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 import pfe.terrain.gen.algo.geometry.CoordSet;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class GridPoints implements PointsGenerator {
 

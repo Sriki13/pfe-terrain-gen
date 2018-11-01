@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo;
+package pfe.terrain.gen.algo.exception;
 
 public class NoSuchKeyException extends Exception {
     public NoSuchKeyException(String s) {

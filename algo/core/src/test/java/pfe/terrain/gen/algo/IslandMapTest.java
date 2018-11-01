@@ -3,6 +3,9 @@ package pfe.terrain.gen.algo;
 import com.vividsolutions.jts.geom.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;

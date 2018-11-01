@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo;
+package pfe.terrain.gen.algo.exception;
 
 public class InvalidAlgorithmParameters extends Exception {
     public InvalidAlgorithmParameters(String message) {

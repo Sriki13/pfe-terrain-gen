@@ -1,9 +1,9 @@
 package pfe.terrain.gen.algo.algorithms;
 
-import pfe.terrain.gen.algo.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.KeyTypeMismatch;
-import pfe.terrain.gen.algo.NoSuchKeyException;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 

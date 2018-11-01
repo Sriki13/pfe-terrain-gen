@@ -4,6 +4,10 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.Set;

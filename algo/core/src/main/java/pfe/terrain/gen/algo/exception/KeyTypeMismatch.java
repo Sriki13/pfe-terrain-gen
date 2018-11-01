@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo;
+package pfe.terrain.gen.algo.exception;
 
 public class KeyTypeMismatch extends Exception {
     public KeyTypeMismatch(String got, String expected) {
