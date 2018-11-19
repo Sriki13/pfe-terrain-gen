@@ -3,6 +3,7 @@ package pfe.terrain.gen;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.variables.IntVar;
+import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.exception.InvalidContractException;
@@ -37,11 +38,11 @@ public class ChocoDependencySolver {
      */
     public List<Contract> orderContracts() throws UnsolvableException,MissingRequiredException {
 
-        Set<String> elementsToAdd = finalMap.getContract().getRequired();
+        Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element
         elementsToAdd.removeAll(toUse.getAllCreated());
 
-        for(String resource : elementsToAdd){
+        for(Key resource : elementsToAdd){
             toUse.add(available.getContractCreating(resource));
         }
 
@@ -49,7 +50,7 @@ public class ChocoDependencySolver {
         // same process as before to be sure all need are satisfied for each algorithm
         elementsToAdd.removeAll(toUse.getAllCreated());
 
-        for(String resource : elementsToAdd){
+        for(Key resource : elementsToAdd){
             toUse.add(available.getContractCreating(resource));
         }
 
@@ -84,13 +85,13 @@ public class ChocoDependencySolver {
                 Constraints b = contracts.get(j).getContract();
                 model.arithm(vars[i], "!=",vars[j]).post(); // must be different
 
-                for(String required : a.getRequired()){
+                for(Key required : a.getRequired()){
                     if(b.getCreated().contains(required)){
                         model.arithm(vars[i], ">",vars[j]).post();
                     }
                 }
 
-                for(String create : a.getCreated()){
+                for(Key create : a.getCreated()){
                     if(b.getRequired().contains(create)){
                         model.arithm(vars[j], ">",vars[i]).post();
                     }

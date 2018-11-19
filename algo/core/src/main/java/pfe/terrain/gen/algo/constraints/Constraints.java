@@ -1,23 +1,25 @@
 package pfe.terrain.gen.algo.constraints;
 
+import pfe.terrain.gen.algo.Key;
+
 import java.util.Set;
 
 public class Constraints {
 
-    private Set<String> required;
+    private Set<Key> required;
 
-    private Set<String> created;
+    private Set<Key> created;
 
-    public Constraints(Set<String> required, Set<String> created) {
+    public Constraints(Set<Key> required, Set<Key> created) {
         this.required = required;
         this.created = created;
     }
 
-    public Set<String> getRequired() {
+    public Set<Key> getRequired() {
         return required;
     }
 
-    public Set<String> getCreated() {
+    public Set<Key> getCreated() {
         return created;
     }
 }
