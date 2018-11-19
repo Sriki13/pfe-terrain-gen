@@ -8,6 +8,7 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 public class GridPoints implements PointsGenerator {
@@ -25,7 +26,7 @@ public class GridPoints implements PointsGenerator {
 
         for (int x = 0; x < pointsByLineDouble; x++) {
             for (int y = 0; y < pointsByLineDouble; y++) {
-                points.add(new Coordinate(x * squareSide + halfSide, y * squareSide + halfSide));
+                points.add(new Coord(x * squareSide + halfSide, y * squareSide + halfSide));
             }
         }
         islandMap.putProperty(new Key<>("POINTS",CoordSet.class), points);

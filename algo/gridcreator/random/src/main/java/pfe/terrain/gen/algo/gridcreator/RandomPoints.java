@@ -8,6 +8,7 @@ import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.Random;
@@ -21,7 +22,7 @@ public class RandomPoints implements PointsGenerator {
         CoordSet points = new CoordSet();
         Random random = new Random();
         for (int i = 0; i < numberOfPoints; i++) {
-            points.add(new Coordinate(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
+            points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }
         islandMap.putProperty(new Key<>("POINTS",CoordSet.class),points);
     }

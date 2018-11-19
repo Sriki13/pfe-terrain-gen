@@ -4,9 +4,6 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +22,10 @@ public class DependencySolverTest {
     public void simpleLineTree() throws Exception {
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
                 new ArrayList<>());
-        Contract B = new TestContract("B", Collections.singletonList(new Key<>("EDGES", EdgeSet.class)),
+        Contract B = new TestContract("B", Collections.singletonList(new Key<>("EDGES", Void.class)),
                 Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
         Contract EP = new TestContract("C", new ArrayList<>(),
-                Collections.singletonList(new Key<>("EDGES", EdgeSet.class)));
+                Collections.singletonList(new Key<>("EDGES", Void.class)));
         dependencySolver = new ChocoDependencySolver(Arrays.asList(A, B), new ArrayList<>(), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(2, got.size());
@@ -42,12 +39,12 @@ public class DependencySolverTest {
     public void simpleTree() throws Exception {
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
                 new ArrayList<>());
-        Contract B = new TestContract("B", Collections.singletonList(new Key<>("EDGES", EdgeSet.class)),
+        Contract B = new TestContract("B", Collections.singletonList(new Key<>("EDGES", Void.class)),
                 Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
-        Contract C = new TestContract("C", Collections.singletonList(new Key<>("FACES", FaceSet.class)),
+        Contract C = new TestContract("C", Collections.singletonList(new Key<>("FACES", Void.class)),
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
-                Arrays.asList(new Key<>("EDGES", EdgeSet.class), new Key<>("FACES", FaceSet.class)));
+                Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
         dependencySolver = new ChocoDependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
@@ -66,16 +63,16 @@ public class DependencySolverTest {
     public void simplePriority() throws Exception {
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
                 new ArrayList<>());
-        Contract B = new TestContract("B", Collections.singletonList(new Key<>("EDGES", EdgeSet.class)),
+        Contract B = new TestContract("B", Collections.singletonList(new Key<>("EDGES", Void.class)),
                 Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
-        Contract C = new TestContract("C", Collections.singletonList(new Key<>("FACES", FaceSet.class)),
+        Contract C = new TestContract("C", Collections.singletonList(new Key<>("FACES", Void.class)),
                 new ArrayList<>());
-        Contract D = new TestContract("D", Collections.singletonList(new Key<>("EDGES", EdgeSet.class)),
+        Contract D = new TestContract("D", Collections.singletonList(new Key<>("EDGES", Void.class)),
                 Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
         Contract E = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
-                Arrays.asList(new Key<>("EDGES", EdgeSet.class), new Key<>("FACES", FaceSet.class)));
+                Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
         dependencySolver = new ChocoDependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());

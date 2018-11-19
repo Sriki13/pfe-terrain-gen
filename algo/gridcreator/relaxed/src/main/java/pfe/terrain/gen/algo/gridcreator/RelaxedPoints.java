@@ -12,6 +12,7 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class RelaxedPoints implements PointsGenerator {
         CoordSet points = new CoordSet();
         Random random = new Random();
         for (int i = 0; i < numberOfPoints; i++) {
-            points.add(new Coordinate(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
+            points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }
         int relaxationIterations = 3;
         for (int i = 0; i < relaxationIterations; i++) {
@@ -44,7 +45,7 @@ public class RelaxedPoints implements PointsGenerator {
                 centroids.add(voronoiDiagram.getGeometryN(j).getCentroid().getCoordinate());
             }
             points = (CoordSet) centroids.stream()
-                    .map(c -> new Coordinate(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
+                    .map(c -> new Coord(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
                     .collect(Collectors.toSet());
         }
         islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);

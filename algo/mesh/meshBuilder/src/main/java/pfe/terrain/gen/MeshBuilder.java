@@ -25,7 +25,6 @@ public class MeshBuilder implements MeshGenerator {
         map.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(genEdges(polygons)));
         map.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(genFaces(polygons)));
 
-
         genNeighbor(map);
     }
 
@@ -47,8 +46,8 @@ public class MeshBuilder implements MeshGenerator {
 
         List<Polygon> polygons = genPolygons(geo);
 
-        for (int i = 0; i < polygons.size(); i++) {
-            res.add((Polygon) polygons.get(i).intersection(rect));
+        for (Polygon polygon : polygons) {
+            res.add((Polygon) polygon.intersection(rect));
         }
 
         return res;
@@ -64,15 +63,17 @@ public class MeshBuilder implements MeshGenerator {
         return res;
     }
 
-    private List<Coordinate> genVertex(List<Polygon> polygons) {
-        List<Coordinate> coordinates = new ArrayList<>();
+    private List<Coord> genVertex(List<Polygon> polygons) {
+        List<Coord> coordinates = new ArrayList<>();
 
-        for (int i = 0; i < polygons.size(); i++) {
-            coordinates.addAll(Arrays.asList(polygons.get(i).getCoordinates()));
-            Point centroid = polygons.get(i).getCentroid();
-            coordinates.add(new Coordinate(centroid.getX(), centroid.getY()));
+        for (Polygon polygon : polygons) {
+            Coordinate[] vertices = polygon.getCoordinates();
+            for (Coordinate vertex : vertices) {
+                coordinates.add(new Coord(vertex));
+            }
+            Point centroid = polygon.getCentroid();
+            coordinates.add(new Coord(centroid.getX(), centroid.getY()));
         }
-
         return coordinates;
     }
 
@@ -103,9 +104,9 @@ public class MeshBuilder implements MeshGenerator {
         Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             if (i == coordinates.length - 1) {
-                edges.add(new Edge(coordinates[i], coordinates[0]));
+                edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[0])));
             } else {
-                edges.add(new Edge(coordinates[i], coordinates[i + 1]));
+                edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[i + 1])));
             }
         }
         return edges;

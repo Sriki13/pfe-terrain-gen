@@ -6,6 +6,7 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,7 +26,7 @@ public class IslandMapTest {
     public void test1() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         map.putProperty(new Key<>("POINTS", CoordSet.class), new CoordSet());
         CoordSet coordinates = map.getProperty(new Key<>("POINTS", CoordSet.class));
-        coordinates.add(new Coordinate());
+        coordinates.add(new Coord(0,0));
         map.putProperty(new Key<>("POINTS", CoordSet.class), coordinates);
         assertThat(map.getProperty(new Key<>("POINTS", CoordSet.class)).size(), equalTo(1));
     }

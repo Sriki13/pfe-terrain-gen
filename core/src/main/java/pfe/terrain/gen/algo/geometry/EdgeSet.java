@@ -7,7 +7,7 @@ public class EdgeSet extends HashSet<Edge> {
     public EdgeSet() {
     }
 
-    public EdgeSet(Collection<? extends Edge> c) {
+    public EdgeSet(Collection<Edge> c) {
         super(c);
     }
 }
