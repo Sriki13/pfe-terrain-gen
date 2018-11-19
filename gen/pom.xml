@@ -81,6 +81,7 @@
                 <version>1.0.5</version>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
                             <goal>add-jars</goal>
                         </goals>
@@ -109,6 +110,28 @@
                     <executable>java</executable>
                     <mainClass>pfe.terrain.gen.AppGen</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>pfe.terrain.gen.AppGen</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

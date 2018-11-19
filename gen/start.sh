@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-mvn clean install exec:java
+mvn clean package
+./merge.sh
+
+java -cp generator.jar pfe.terrain.gen.AppGen
+
