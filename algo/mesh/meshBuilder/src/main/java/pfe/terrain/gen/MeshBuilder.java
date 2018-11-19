@@ -6,6 +6,7 @@ import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.algorithms.MeshGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
@@ -15,7 +16,7 @@ import java.util.*;
 
 public class MeshBuilder implements MeshGenerator {
     @Override
-    public void generateMesh(IslandMap map) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
 
 
         List<Polygon> polygons = genPolygons(map);
@@ -153,5 +154,8 @@ public class MeshBuilder implements MeshGenerator {
         return coords;
     }
 
-
+    @Override
+    public String getName() {
+        return "MeshBuilder";
+    }
 }

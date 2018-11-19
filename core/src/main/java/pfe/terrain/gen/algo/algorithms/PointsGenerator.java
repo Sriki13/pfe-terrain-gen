@@ -13,7 +13,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface PointsGenerator extends Contract {
-    void generatePoint(IslandMap islandMap, int numberOfPoints) throws InvalidAlgorithmParameters, DuplicateKeyException;
+
+    default int getDefaultNbPoint() {
+        return 800;
+    }
 
     @Override
     default Constraints getContract() {

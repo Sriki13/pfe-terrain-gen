@@ -8,25 +8,26 @@ import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.CoordSet;
+import pfe.terrain.gen.algo.geometry.EdgeSet;
+import pfe.terrain.gen.algo.geometry.FaceSet;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class TestContract implements Contract {
-
-    private String name;
-    private Constraints constraints;
-
-    public TestContract(String name, List<Key> created, List<Key> required) {
-        this.name = name;
-        this.constraints = new Constraints(
-                new HashSet<>(required), new HashSet<>(created)
-        );
-    }
+public class FinalContract implements Contract {
 
     @Override
     public Constraints getContract() {
-        return constraints;
+        Set<Key> required = Stream.of(
+                new Key<>("VERTICES", CoordSet.class),
+                new Key<>("EDGES", EdgeSet.class),
+                new Key<>("FACES", FaceSet.class)).collect(Collectors.toSet());
+
+        return new Constraints(required,new HashSet<>());
+
     }
 
     @Override
@@ -36,11 +37,8 @@ public class TestContract implements Contract {
 
     @Override
     public String getName() {
-        return "TEST";
+        return "Final";
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
+
 }

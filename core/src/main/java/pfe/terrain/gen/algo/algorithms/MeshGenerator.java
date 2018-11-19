@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 public interface MeshGenerator extends Contract {
 
-    void generateMesh(IslandMap map) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch;
 
     @Override
     default Constraints getContract() {

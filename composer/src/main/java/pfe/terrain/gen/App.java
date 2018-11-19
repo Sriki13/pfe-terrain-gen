@@ -1,36 +1,70 @@
 package pfe.terrain.gen;
 
+import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.gridcreator.GridPoints;
+import pfe.terrain.gen.algo.gridcreator.RandomPoints;
+import pfe.terrain.gen.algo.gridcreator.RelaxedPoints;
+import pfe.terrain.gen.exception.InvalidContractException;
+import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.UnsolvableException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class App {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InvalidContractException {
         App app = new App();
         File file = new File("target/lib");
         System.out.println(file.getCanonicalPath());
-        app.createJar(Collections.singletonList("RandomPoints"));
+        app.setupGenerator();
+
+
     }
 
-    private HashMap<String, String> nameToJar = new HashMap<>();
+    private HashMap<Contract, String> nameToJar = new HashMap<>();
 
-    private String addSuffix(String str) {
-        return str + "-1.0-SNAPSHOT.jar";
+    private String addSuffixPrefix(String str) {
+        return "algo." + str + "-1.0-SNAPSHOT.jar";
     }
+
+    private List<Contract> available;
+    private List<Contract> priority;
 
     public App() {
-        nameToJar.put("GridPoints", addSuffix("gridcreator.grid"));
-        nameToJar.put("RandomPoints", addSuffix("gridcreator.random"));
-        nameToJar.put("RelaxedPoints", addSuffix("gridcreator.relaxed"));
+        Contract gridPoints = new GridPoints();
+        Contract relaxedPoints = new RelaxedPoints();
+        Contract randomPoints = new RandomPoints();
+        Contract meshBuilder = new MeshBuilder();
+
+        available = new ArrayList<>();
+        available.add(gridPoints);
+        available.add(relaxedPoints);
+        available.add(randomPoints);
+        available.add(meshBuilder);
+
+        priority = new ArrayList<>();
+        priority.add(gridPoints);
+        priority.add(meshBuilder);
+
+        nameToJar.put(gridPoints, addSuffixPrefix("gridcreator.grid"));
+        nameToJar.put(randomPoints, addSuffixPrefix("gridcreator.random"));
+        nameToJar.put(relaxedPoints, addSuffixPrefix("gridcreator.relaxed"));
+        nameToJar.put(meshBuilder, addSuffixPrefix("mesh.builder"));
     }
 
-    public void createJar(List<String> include) throws IOException {
+    public List<Contract> getOrderedContract() throws InvalidContractException, UnsolvableException, MissingRequiredException {
+        ChocoDependencySolver solver = new ChocoDependencySolver(this.available,this.priority,new FinalContract());
+        return solver.orderContracts();
+    }
+
+    public void createJar(List<Contract> include) throws IOException {
         List<String> jars = include.stream()
                 .map(item -> nameToJar.get(item))
                 .collect(Collectors.toList());
@@ -46,5 +80,14 @@ public class App {
         }
     }
 
+    public void setupGenerator(){
+        try{
+            List<Contract> contracts = getOrderedContract();
+            this.createJar(contracts);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+    }
 }
 
