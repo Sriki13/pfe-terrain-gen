@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Face {
+
     private Coordinate center;
 
     private List<Edge> edges;
@@ -38,4 +39,13 @@ public class Face {
     public Coordinate getCenter() {
         return center;
     }
+
+    public Set<Coordinate> getVertices() {
+        Set<Coordinate> result = new HashSet<>();
+        for (Edge edge : edges) {
+            result.add(edge.getStart());
+        }
+        return result;
+    }
+
 }
