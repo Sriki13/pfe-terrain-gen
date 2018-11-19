@@ -6,12 +6,15 @@ import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 public class GridPoints implements PointsGenerator {
 
     @Override
-    public void generatePoint(IslandMap islandMap, int numberOfPoints) throws InvalidAlgorithmParameters, DuplicateKeyException {
+    public void execute(IslandMap islandMap) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        int numberOfPoints = this.getDefaultNbPoint();
         double pointsByLineDouble = Math.sqrt(numberOfPoints);
         if (!(pointsByLineDouble - Math.floor(pointsByLineDouble) == 0)) {
             throw new InvalidAlgorithmParameters("numberOfPoints must be a square root");
@@ -26,5 +29,10 @@ public class GridPoints implements PointsGenerator {
             }
         }
         islandMap.putProperty(new Key<>("POINTS",CoordSet.class), points);
+    }
+
+    @Override
+    public String getName() {
+        return "GridPoints";
     }
 }

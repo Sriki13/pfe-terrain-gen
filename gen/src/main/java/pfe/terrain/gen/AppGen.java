@@ -39,7 +39,7 @@ public class AppGen {
             break;
         }
         try {
-            g.generatePoint(islandMap, 4);
+            g.execute(islandMap);
             System.out.println(islandMap.getProperty(new Key<>("POINTS", CoordSet.class)));
         } catch (InvalidAlgorithmParameters | KeyTypeMismatch | NoSuchKeyException | DuplicateKeyException invalidAlgorithmParameters) {
             invalidAlgorithmParameters.printStackTrace();

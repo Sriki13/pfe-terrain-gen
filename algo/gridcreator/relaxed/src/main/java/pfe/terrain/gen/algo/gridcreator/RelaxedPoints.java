@@ -10,6 +10,8 @@ import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.HashSet;
@@ -20,7 +22,8 @@ import java.util.stream.Collectors;
 public class RelaxedPoints implements PointsGenerator {
 
     @Override
-    public void generatePoint(IslandMap islandMap, int numberOfPoints) throws InvalidAlgorithmParameters, DuplicateKeyException {
+    public void execute(IslandMap islandMap) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        int numberOfPoints = this.getDefaultNbPoint();
         CoordSet points = new CoordSet();
         Random random = new Random();
         for (int i = 0; i < numberOfPoints; i++) {
@@ -45,6 +48,11 @@ public class RelaxedPoints implements PointsGenerator {
                     .collect(Collectors.toSet());
         }
         islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
+    }
+
+    @Override
+    public String getName() {
+        return "RelaxedPoints";
     }
 
     private double insideValue(double val, int maxSize) {
