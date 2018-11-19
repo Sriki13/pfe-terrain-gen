@@ -32,8 +32,8 @@ public class Key<T> {
     @Override
     public String toString() {
         return "Key{" +
-                "identifier='" + identifier + '\'' +
-                ", type=" + type.getName() +
+                "identifier :" + identifier +
+                ", type : " + type.getName() +
                 '}';
     }
 
