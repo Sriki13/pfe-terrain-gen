@@ -72,7 +72,7 @@ public class BasicBordersTest {
 
     @Test
     public void generateBordersTest() throws Exception {
-        basicBorders.generateBorders(islandMap);
+        basicBorders.execute(islandMap);
         BordersSet borders = islandMap.getProperty(new Key<>("BORDERS", BordersSet.class));
         Set<Coordinate> borderVertices = borders.getBorderVertices();
         validCoords.forEach(coord -> assertFalse(borderVertices.contains(coord)));

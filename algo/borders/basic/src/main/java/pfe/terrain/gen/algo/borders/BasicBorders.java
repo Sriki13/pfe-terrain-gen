@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 public class BasicBorders implements BordersGenerator {
 
     @Override
-    public void generateBorders(IslandMap islandMap)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+    public void execute(IslandMap islandMap)
+            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         CoordSet coords = islandMap.getProperty(new Key<>("VERTICES", CoordSet.class));
         Set<Coordinate> borderVertices = coords.stream()
                 .filter(c -> isBorder(c, islandMap.getSize()))
@@ -29,6 +29,11 @@ public class BasicBorders implements BordersGenerator {
                 .filter(f -> isBorder(f, islandMap.getSize()))
                 .collect(Collectors.toSet());
         islandMap.putProperty(new Key<>("BORDERS", BordersSet.class), new BordersSet(borderVertices, borderFaces));
+    }
+
+    @Override
+    public String getName() {
+        return "Basic Borders";
     }
 
     private boolean isBorder(Coordinate coord, int islandSize) {
