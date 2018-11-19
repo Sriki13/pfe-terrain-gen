@@ -1,6 +1,6 @@
 package pfe.terrain.gen.algo.biome;
 
-public class Biome {
+public abstract class Biome {
 
     private String name;
 
