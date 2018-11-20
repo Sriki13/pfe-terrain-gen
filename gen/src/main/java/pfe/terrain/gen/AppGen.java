@@ -19,7 +19,7 @@ public class AppGen {
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException {
         IslandMap islandMap = new IslandMap();
-        islandMap.setSize(8);
+        //islandMap.setSize(8);
         //PointsGenerator generator = new GridPoints();
         Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
         System.out.println(reflections.getAllTypes());
@@ -39,7 +39,7 @@ public class AppGen {
             break;
         }
         try {
-            g.execute(islandMap, );
+            g.execute(islandMap, new Context());
             System.out.println(islandMap.getProperty(new Key<>("POINTS", CoordSet.class)));
         } catch (InvalidAlgorithmParameters | KeyTypeMismatch | NoSuchKeyException | DuplicateKeyException invalidAlgorithmParameters) {
             invalidAlgorithmParameters.printStackTrace();

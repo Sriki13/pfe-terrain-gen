@@ -56,7 +56,7 @@ public class BasicBordersTest {
     public void setUp() throws DuplicateKeyException {
         basicBorders = new BasicBorders();
         islandMap = new IslandMap();
-        islandMap.setSize(100);
+        islandMap.putProperty(new Key<Integer>("SIZE",Integer.class),100);
         List<Coord> allCoords = new ArrayList<>();
         allCoords.addAll(validCoords);
         allCoords.addAll(invalidCoords);

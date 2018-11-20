@@ -38,6 +38,7 @@ public class App {
     private List<Contract> priority;
 
     public App() {
+        Contract initializator = new BasicInitializer();
         Contract gridPoints = new GridPoints();
         Contract relaxedPoints = new RelaxedPoints();
         Contract randomPoints = new RandomPoints();
@@ -48,12 +49,15 @@ public class App {
         available.add(relaxedPoints);
         available.add(randomPoints);
         available.add(meshBuilder);
+        available.add(initializator);
 
         priority = new ArrayList<>();
         priority.add(gridPoints);
         priority.add(meshBuilder);
+        priority.add(initializator);
 
         nameToJar.put(gridPoints, addSuffixPrefix("gridcreator.grid"));
+        nameToJar.put(initializator, addSuffixPrefix("initializer.basic"));
         nameToJar.put(randomPoints, addSuffixPrefix("gridcreator.random"));
         nameToJar.put(relaxedPoints, addSuffixPrefix("gridcreator.relaxed"));
         nameToJar.put(meshBuilder, addSuffixPrefix("mesh.builder"));
