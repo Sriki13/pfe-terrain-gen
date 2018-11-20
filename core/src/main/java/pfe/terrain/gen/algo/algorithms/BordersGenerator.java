@@ -19,5 +19,4 @@ public abstract class BordersGenerator extends Contract {
                 Stream.of(verticeBorderKey, faceBorderKey).collect(Collectors.toSet())
         );
     }
-
 }

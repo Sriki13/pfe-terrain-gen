@@ -20,6 +20,8 @@ public abstract class Contract implements Parameters {
     protected static final Key<CoordSet> vertices = new Key<>("VERTICES", CoordSet.class);
     protected static final Key<EdgeSet> edges = new Key<>("EDGES", EdgeSet.class);
     protected static final Key<FaceSet> faces = new Key<>("FACES", FaceSet.class);
+    protected static final Key<Integer> size = new Key<>("SIZE", Integer.class);
+    protected static final Key<Integer> seed = new Key<>("SEED", Integer.class);
 
     public abstract Constraints getContract();
 
