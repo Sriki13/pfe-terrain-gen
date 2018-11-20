@@ -71,7 +71,7 @@ public class BasicBordersTest {
         basicBorders.execute(islandMap);
         Set<Coord> borderVertices = new HashSet<>();
         for (Coord vertice : islandMap.getVertices()) {
-            if (vertice.getProperty(basicBorders.verticeBorderKey)) {
+            if (vertice.getProperty(basicBorders.verticeBorderKey).value) {
                 borderVertices.add(vertice);
             }
         }
@@ -79,7 +79,7 @@ public class BasicBordersTest {
         invalidCoords.forEach(coord -> assertTrue(borderVertices.contains(coord)));
         Set<Face> borderFaces = new HashSet<>();
         for (Face face : islandMap.getFaces()) {
-            if (face.getProperty(basicBorders.faceBorderKey)) {
+            if (face.getProperty(basicBorders.faceBorderKey).value) {
                 borderFaces.add(face);
             }
         }

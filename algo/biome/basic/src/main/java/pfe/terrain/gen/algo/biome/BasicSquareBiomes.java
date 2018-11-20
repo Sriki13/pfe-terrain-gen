@@ -1,5 +1,6 @@
 package pfe.terrain.gen.algo.biome;
 
+import pfe.terrain.gen.algo.Biome;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.algorithms.BasicBiomeGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -17,15 +18,15 @@ public class BasicSquareBiomes extends BasicBiomeGenerator {
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         Set<Face> borderFaces = new HashSet<>();
         for (Face face : map.getFaces()) {
-            if (face.getProperty(faceBorderKey)) {
+            if (face.getProperty(faceBorderKey).value) {
                 borderFaces.add(face);
             }
         }
         for (Face face : map.getFaces()) {
             if (borderFaces.contains(face)) {
-                face.putProperty(faceBiomeKey, new Ocean());
+                face.putProperty(faceBiomeKey, Biome.OCEAN);
             } else {
-                face.putProperty(faceBiomeKey, new Desert());
+                face.putProperty(faceBiomeKey, Biome.SUB_TROPICAL_DESERT);
             }
         }
     }
