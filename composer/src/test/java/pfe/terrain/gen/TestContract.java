@@ -12,7 +12,7 @@ import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import java.util.HashSet;
 import java.util.List;
 
-public class TestContract implements Contract {
+public class TestContract extends Contract {
 
     private String name;
     private Constraints constraints;
