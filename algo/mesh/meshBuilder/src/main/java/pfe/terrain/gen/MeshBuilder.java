@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MeshBuilder implements MeshGenerator {
+public class MeshBuilder extends MeshGenerator {
 
     @Override
     public void execute(IslandMap map) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {

@@ -9,7 +9,7 @@ import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.Random;
 
-public class RandomPoints implements PointsGenerator {
+public class RandomPoints extends PointsGenerator {
 
 
     @Override
