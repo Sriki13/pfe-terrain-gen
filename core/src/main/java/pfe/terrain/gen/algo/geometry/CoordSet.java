@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class CoordSet extends HashSet<Coord> {
+
     public CoordSet() {
     }
 

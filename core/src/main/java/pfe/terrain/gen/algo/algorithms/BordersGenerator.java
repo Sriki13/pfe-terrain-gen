@@ -1,16 +1,20 @@
 package pfe.terrain.gen.algo.algorithms;
 
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.SerializableKey;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class BordersGenerator extends Contract {
 
-    public final Key<Boolean> verticeBorderKey = new Key<>(verticesPrefix + "IS_BORDER", Boolean.class);
-    public final Key<Boolean> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", Boolean.class);
+    public final Key<BooleanType> verticeBorderKey =
+            new SerializableKey<>(verticesPrefix + "IS_BORDER", "is_border", BooleanType.class);
+    public final Key<BooleanType> faceBorderKey =
+            new SerializableKey<>(facesPrefix + "IS_BORDER", "is_border", BooleanType.class);
 
     @Override
     public Constraints getContract() {
@@ -19,4 +23,5 @@ public abstract class BordersGenerator extends Contract {
                 Stream.of(verticeBorderKey, faceBorderKey).collect(Collectors.toSet())
         );
     }
+
 }

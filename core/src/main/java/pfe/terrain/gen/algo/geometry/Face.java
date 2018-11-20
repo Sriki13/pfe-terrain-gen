@@ -49,4 +49,12 @@ public class Face extends Mappable {
         return result;
     }
 
+    public Set<Face> getNeighbors() {
+        return neighbors;
+    }
+
+    public List<Edge> getEdges() {
+        return edges;
+    }
+
 }

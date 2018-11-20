@@ -20,6 +20,14 @@ public class Key<T> {
         return type;
     }
 
+    public boolean isSerialized() {
+        return false;
+    }
+
+    public String getSerializedName() {
+        throw new UnsupportedOperationException("The key " + identifier + " is not serializable!");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
