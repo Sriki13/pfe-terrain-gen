@@ -50,6 +50,18 @@ public class IslandMap extends Mappable {
         return super.getProperty(key);
     }
 
+    public CoordSet getVertices() {
+        return vertices;
+    }
+
+    public EdgeSet getEdges() {
+        return edges;
+    }
+
+    public FaceSet getFaces() {
+        return faces;
+    }
+
     public int getSize() {
         return size;
     }

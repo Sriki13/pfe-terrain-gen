@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import pfe.terrain.gen.algo.Mappable;
 
 public class Coord extends Mappable {
+
     public double x;
     public double y;
 

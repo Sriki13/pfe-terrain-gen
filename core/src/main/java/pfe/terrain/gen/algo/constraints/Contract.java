@@ -12,5 +12,8 @@ public interface Contract {
 
     void execute(IslandMap map) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch;
 
-    String getName();
+    default String getName() {
+        return getClass().getName();
+    }
+
 }
