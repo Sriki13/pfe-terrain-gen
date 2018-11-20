@@ -26,7 +26,7 @@ public class GridPoints extends PointsGenerator {
                 points.add(new Coord(x * squareSide + halfSide, y * squareSide + halfSide));
             }
         }
-        islandMap.putProperty(new Key<>("POINTS",CoordSet.class), points);
+        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
 
 }

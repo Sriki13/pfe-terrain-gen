@@ -10,6 +10,7 @@ import pfe.terrain.gen.algo.geometry.FaceSet;
 public class IslandMap extends Mappable {
 
     private int size;
+    private int seed;
     private CoordSet vertices;
     private EdgeSet edges;
     private FaceSet faces;
@@ -24,6 +25,7 @@ public class IslandMap extends Mappable {
         this.vertices = null;
         this.edges = null;
         this.faces = null;
+        this.seed = 0;
     }
 
     @Override
@@ -62,6 +64,10 @@ public class IslandMap extends Mappable {
         return faces;
     }
 
+    public int getSeed() {
+        return seed;
+    }
+
     public int getSize() {
         return size;
     }
@@ -70,4 +76,7 @@ public class IslandMap extends Mappable {
         this.size = size;
     }
 
+    public void setSeed(int seed) {
+        this.seed = seed;
+    }
 }
