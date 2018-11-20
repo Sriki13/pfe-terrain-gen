@@ -25,7 +25,7 @@ import java.util.*;
 public class AppGen implements Generator {
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-        AppGen gen = new AppGen();
+        Generator gen = new AppGen();
 
         System.out.println(gen.generate());
 
@@ -34,22 +34,30 @@ public class AppGen implements Generator {
     private List<OrderedContract> orderedContracts;
     private List<Contract> contracts;
     private IslandMap islandMap;
+    private int id;
 
     public AppGen(){
         this.islandMap = new IslandMap();
         islandMap.setSize(9);
         this.contracts = new ArrayList<>();
+        this.getContractOrder();
+        this.instantiateContracts();
+
     }
 
     public String generate(){
-        this.getContractOrder();
-        this.instantiateContracts();
+
         this.execute();
         try{
             return islandMap.getProperty(new Key<>("POINTS", CoordSet.class)).toString();
         } catch (Exception e){
             return e.getMessage();
         }
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     public void getContractOrder(){
@@ -70,6 +78,8 @@ public class AppGen implements Generator {
             OrderParser parser = new OrderParser();
 
             this.orderedContracts = parser.getList(result.toString());
+
+            this.id = result.toString().hashCode();
 
             this.orderedContracts.sort(new Comparator<OrderedContract>() {
                 @Override

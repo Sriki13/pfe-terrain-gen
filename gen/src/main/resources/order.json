@@ -1,1 +1,1 @@
-[{"name":"GridPoints","order":0},{"name":"MeshBuilder","order":1}]
+[{"name":"pfe.terrain.gen.algo.gridcreator.GridPoints","order":0},{"name":"pfe.terrain.gen.MeshBuilder","order":1}]
