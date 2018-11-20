@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public interface PointsGenerator extends Contract {
 
     default int getDefaultNbPoint() {
-        return 800;
+        return 200*200;
     }
 
     @Override

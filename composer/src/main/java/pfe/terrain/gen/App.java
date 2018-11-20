@@ -4,11 +4,13 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.gridcreator.GridPoints;
 import pfe.terrain.gen.algo.gridcreator.RandomPoints;
 import pfe.terrain.gen.algo.gridcreator.RelaxedPoints;
+import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -80,10 +82,24 @@ public class App {
         }
     }
 
+    private void createOrderTextFile(List<Contract> contracts) throws IOException{
+        OrderParser parser = new OrderParser();
+        String json = parser.writeList(contracts);
+
+        File file = new File("../gen/src/main/resources/order.json");
+
+        file.createNewFile();
+
+        FileWriter writer = new FileWriter(file);
+        writer.write(json);
+        writer.close();
+    }
+
     public void setupGenerator(){
         try{
             List<Contract> contracts = getOrderedContract();
             this.createJar(contracts);
+            this.createOrderTextFile(contracts);
         }catch (Exception e){
             e.printStackTrace();
             System.out.println(e.getMessage());
