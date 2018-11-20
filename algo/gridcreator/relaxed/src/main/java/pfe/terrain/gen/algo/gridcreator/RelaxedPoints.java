@@ -17,7 +17,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RelaxedPoints implements PointsGenerator {
+public class RelaxedPoints extends PointsGenerator {
 
     @Override
     public void execute(IslandMap islandMap) throws DuplicateKeyException {

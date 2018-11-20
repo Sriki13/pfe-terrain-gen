@@ -4,21 +4,16 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface MeshGenerator extends Contract {
+public abstract class MeshGenerator extends Contract {
 
     @Override
-    default Constraints getContract() {
+    public Constraints getContract() {
         return new Constraints(Stream.of(new Key<>("POINTS", CoordSet.class)).collect(Collectors.toSet()),
-                Stream.of(
-                        new Key<>("VERTICES", CoordSet.class),
-                        new Key<>("EDGES", EdgeSet.class),
-                        new Key<>("FACES", FaceSet.class)).collect(Collectors.toSet()));
+                Stream.of(vertices, edges, faces).collect(Collectors.toSet()));
     }
 
 }
