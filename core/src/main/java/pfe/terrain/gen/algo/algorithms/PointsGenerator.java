@@ -9,14 +9,14 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface PointsGenerator extends Contract {
+public abstract class PointsGenerator extends Contract {
 
-    default int getDefaultNbPoint() {
+    protected int getDefaultNbPoint() {
         return 1024;
     }
 
     @Override
-    default Constraints getContract() {
+    public Constraints getContract() {
         return new Constraints(new HashSet<>(), Stream.of(new Key<>("POINTS", CoordSet.class)).collect(Collectors.toSet()));
     }
 }
