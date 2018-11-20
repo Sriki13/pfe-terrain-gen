@@ -3,6 +3,7 @@ package pfe.terrain.gen;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.MeshGenerator;
@@ -19,7 +20,7 @@ import java.util.Set;
 public class MeshBuilder extends MeshGenerator {
 
     @Override
-    public void execute(IslandMap map) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> polygons = genPolygons(map);
         map.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(genVertex(polygons)));
         map.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(genEdges(polygons)));

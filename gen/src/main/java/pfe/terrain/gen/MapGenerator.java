@@ -2,6 +2,7 @@ package pfe.terrain.gen;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -19,10 +20,14 @@ public class MapGenerator implements Generator {
     private List<Contract> contracts;
     private IslandMap islandMap;
     private int id;
+    private Context context;
 
     public MapGenerator(){
         this.islandMap = new IslandMap();
         islandMap.setSize(9);
+
+        this.context = new Context();
+
         this.contracts = new ArrayList<>();
         this.getContractOrder();
         this.instantiateContracts();
@@ -103,7 +108,7 @@ public class MapGenerator implements Generator {
     private void executeByName(String name) throws Exception{
         for(Contract contract : contracts){
             if(contract.getName().equals(name)){
-                contract.execute(islandMap);
+                contract.execute(islandMap,this.context);
             }
         }
     }

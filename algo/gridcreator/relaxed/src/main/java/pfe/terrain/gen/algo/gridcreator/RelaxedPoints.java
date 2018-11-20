@@ -5,10 +5,12 @@ import com.vividsolutions.jts.geom.CoordinateFilter;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.PointsGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
@@ -19,15 +21,25 @@ import java.util.stream.Collectors;
 
 public class RelaxedPoints extends PointsGenerator {
 
+    private Key<Integer> nbIter = new Key<>("nbIterations", Integer.class);
+
     @Override
-    public void execute(IslandMap islandMap) throws DuplicateKeyException {
-        int numberOfPoints = this.getDefaultNbPoint();
+    public Set<Key> getRequestedParameters() {
+        Set<Key> keys = super.getRequestedParameters();
+        keys.add(nbIter);
+        return keys;
+    }
+
+
+    @Override
+    public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+        int numberOfPoints = context.getPropertyOrDefault(nbPoints, getDefaultNbPoint());
+        int relaxationIterations = context.getPropertyOrDefault(nbIter, 3);
         CoordSet points = new CoordSet();
         Random random = new Random(islandMap.getSeed());
         for (int i = 0; i < numberOfPoints; i++) {
             points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }
-        int relaxationIterations = 3;
         for (int i = 0; i < relaxationIterations; i++) {
             VoronoiDiagramBuilder voronoiBuilder = new VoronoiDiagramBuilder();
             voronoiBuilder.setSites(points);
@@ -47,6 +59,7 @@ public class RelaxedPoints extends PointsGenerator {
         }
         islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
+
 
     private double insideValue(double val, int maxSize) {
         if (val < 0) {

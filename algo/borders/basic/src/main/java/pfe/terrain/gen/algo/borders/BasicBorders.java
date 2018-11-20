@@ -1,5 +1,6 @@
 package pfe.terrain.gen.algo.borders;
 
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.algorithms.BordersGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 public class BasicBorders extends BordersGenerator {
 
     @Override
-    public void execute(IslandMap islandMap) throws DuplicateKeyException {
+    public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException {
         Set<Coord> borderVertices = islandMap.getVertices().stream()
                 .filter(c -> isBorder(c, islandMap.getSize()))
                 .collect(Collectors.toSet());
