@@ -2,6 +2,7 @@ package pfe.terrain.gen.algo.borders;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -68,7 +69,7 @@ public class BasicBordersTest {
 
     @Test
     public void generateBordersTest() throws Exception {
-        basicBorders.execute(islandMap);
+        basicBorders.execute(islandMap, new Context());
         Set<Coord> borderVertices = new HashSet<>();
         for (Coord vertice : islandMap.getVertices()) {
             if (vertice.getProperty(basicBorders.verticeBorderKey)) {

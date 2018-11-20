@@ -6,6 +6,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,6 +14,13 @@ public abstract class PointsGenerator extends Contract {
 
     protected int getDefaultNbPoint() {
         return 1024;
+    }
+
+    protected Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);
+
+    @Override
+    public Set<Key> getRequestedParameters() {
+        return Stream.of(nbPoints).collect(Collectors.toSet());
     }
 
     @Override

@@ -2,6 +2,7 @@ package pfe.terrain.gen.algo.biome;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.geometry.Coord;
@@ -41,7 +42,7 @@ public class BasicSquareBiomesTest {
 
     @Test
     public void dumbSquareBiomesTest() throws Exception {
-        biomeMapper.execute(islandMap);
+        biomeMapper.execute(islandMap, new Context());
         assertThat(land.getProperty(biomeMapper.faceBiomeKey), instanceOf(Desert.class));
         assertThat(ocean.getProperty(biomeMapper.faceBiomeKey), instanceOf(Ocean.class));
     }

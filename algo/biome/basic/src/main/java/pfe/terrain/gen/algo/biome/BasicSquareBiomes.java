@@ -1,5 +1,6 @@
 package pfe.terrain.gen.algo.biome;
 
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.algorithms.BasicBiomeGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class BasicSquareBiomes extends BasicBiomeGenerator {
 
     @Override
-    public void execute(IslandMap map)
+    public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         Set<Face> borderFaces = new HashSet<>();
         for (Face face : map.getFaces()) {

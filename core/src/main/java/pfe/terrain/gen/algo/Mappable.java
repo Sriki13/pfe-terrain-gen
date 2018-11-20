@@ -9,7 +9,7 @@ import java.util.Map;
 
 public abstract class Mappable {
 
-    private Map<Key<?>, Object> properties;
+    protected Map<Key<?>, Object> properties;
 
     protected Mappable() {
         this.properties = new HashMap<>();
