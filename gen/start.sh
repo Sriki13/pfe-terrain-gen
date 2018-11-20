@@ -2,4 +2,4 @@
 
 ./merge.sh
 
-java -jar generator.jar
+java -jar generator.jar $*
