@@ -30,5 +30,4 @@ public class GridPoints extends PointsGenerator {
         }
         islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
-
 }
