@@ -1,20 +1,22 @@
 package pfe.terrain.gen.algo.geometry;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import pfe.terrain.gen.algo.Mappable;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Face {
-    private Coordinate center;
+public class Face extends Mappable {
+
+    private Coord center;
 
     private List<Edge> edges;
 
     private Set<Face> neighbors;
 
-    public Face(Coordinate center, List<Edge> edges) {
+    public Face(Coord center, List<Edge> edges) {
+        super();
         this.center = center;
         this.edges = edges;
         this.neighbors = new HashSet<>();
@@ -35,7 +37,16 @@ public class Face {
         this.neighbors.remove(this);
     }
 
-    public Coordinate getCenter() {
+    public Coord getCenter() {
         return center;
     }
+
+    public Set<Coord> getVertices() {
+        Set<Coord> result = new HashSet<>();
+        for (Edge edge : edges) {
+            result.add(edge.getStart());
+        }
+        return result;
+    }
+
 }

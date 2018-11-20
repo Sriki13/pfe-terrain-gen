@@ -1,8 +1,5 @@
 package pfe.terrain.gen.algo.algorithms;
 
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -15,7 +12,7 @@ import java.util.stream.Stream;
 public interface PointsGenerator extends Contract {
 
     default int getDefaultNbPoint() {
-        return 200*200;
+        return 1024;
     }
 
     @Override

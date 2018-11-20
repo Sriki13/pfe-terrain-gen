@@ -1,13 +1,23 @@
 package pfe.terrain.gen.algo.geometry;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import pfe.terrain.gen.algo.Mappable;
 
-public class Edge {
-    private Coordinate a;
-    private Coordinate b;
+public class Edge extends Mappable {
 
-    public Edge(Coordinate a, Coordinate b) {
-        this.a = a;
-        this.b = b;
+    private Coord start;
+    private Coord end;
+
+    public Edge(Coord start, Coord end) {
+        super();
+        this.start = start;
+        this.end = end;
+    }
+
+    public Coord getStart() {
+        return start;
+    }
+
+    public Coord getEnd() {
+        return end;
     }
 }

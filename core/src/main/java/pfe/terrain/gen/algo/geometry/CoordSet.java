@@ -1,15 +1,13 @@
 package pfe.terrain.gen.algo.geometry;
 
-import com.vividsolutions.jts.geom.Coordinate;
-
 import java.util.Collection;
 import java.util.HashSet;
 
-public class CoordSet extends HashSet<Coordinate> {
+public class CoordSet extends HashSet<Coord> {
     public CoordSet() {
     }
 
-    public CoordSet(Collection<? extends Coordinate> c) {
+    public CoordSet(Collection<Coord> c) {
         super(c);
     }
 }

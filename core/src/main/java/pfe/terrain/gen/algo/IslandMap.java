@@ -3,39 +3,63 @@ package pfe.terrain.gen.algo;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.CoordSet;
+import pfe.terrain.gen.algo.geometry.EdgeSet;
+import pfe.terrain.gen.algo.geometry.FaceSet;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class IslandMap {
+public class IslandMap extends Mappable {
 
     private int size;
+    private CoordSet vertices;
+    private EdgeSet edges;
+    private FaceSet faces;
 
-    private Map<Key<?>, Object> properties;
+    private Key<CoordSet> verticesKey = new Key<>("VERTICES", CoordSet.class);
+    private Key<EdgeSet> edgesKey = new Key<>("EDGES", EdgeSet.class);
+    private Key<FaceSet> facesKey = new Key<>("FACES", FaceSet.class);
 
     public IslandMap() {
-        properties = new HashMap<>();
+        super();
+        this.size = 0;
+        this.vertices = null;
+        this.edges = null;
+        this.faces = null;
     }
 
+    @Override
     public <T> void putProperty(Key<T> key, T value) throws DuplicateKeyException {
-        for (Key k : properties.keySet()) {
-            if (k.getId().equals(key.getId()) && !(k.getType().equals(key.getType()))) {
-                throw new DuplicateKeyException(key.getId());
-            }
+        if (key.equals(verticesKey)) {
+            this.vertices = verticesKey.getType().cast(value);
+        } else if (key.equals(edgesKey)) {
+            this.edges = edgesKey.getType().cast(value);
+        } else if (key.equals(facesKey)) {
+            this.faces = facesKey.getType().cast(value);
         }
-        properties.put(key, value);
+        super.putProperty(key, value);
     }
 
+    @Override
     public <T> T getProperty(Key<T> key) throws NoSuchKeyException, KeyTypeMismatch {
-        if (properties.keySet().stream().noneMatch(cKey -> cKey.getId().equals(key.getId()))) {
-            throw new NoSuchKeyException(key.getId());
+        if (key.equals(verticesKey)) {
+            return key.getType().cast(vertices);
+        } else if (key.equals(edgesKey)) {
+            return key.getType().cast(edges);
+        } else if (key.equals(facesKey)) {
+            return key.getType().cast(faces);
         }
-        T value = key.getType().cast(properties.get(key));
-        if (value == null) {
-            Class<?> c = properties.keySet().stream().filter(cKey -> cKey.getId().equals(key.getId())).findFirst().get().getType();
-            throw new KeyTypeMismatch(key.getType().toString(), c.toString());
-        }
-        return value;
+        return super.getProperty(key);
+    }
+
+    public CoordSet getVertices() {
+        return vertices;
+    }
+
+    public EdgeSet getEdges() {
+        return edges;
+    }
+
+    public FaceSet getFaces() {
+        return faces;
     }
 
     public int getSize() {
@@ -45,5 +69,5 @@ public class IslandMap {
     public void setSize(int size) {
         this.size = size;
     }
-//
+
 }
