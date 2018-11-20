@@ -3,29 +3,27 @@ package pfe.terrain.gen;
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
-import pfe.terrain.gen.algo.*;
+import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.MeshGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MeshBuilder implements MeshGenerator {
+
     @Override
-    public void execute(IslandMap map) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-
-
+    public void execute(IslandMap map) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> polygons = genPolygons(map);
-
         map.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(genVertex(polygons)));
         map.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(genEdges(polygons)));
         map.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(genFaces(polygons)));
-
-
         genNeighbor(map);
     }
 
@@ -47,8 +45,8 @@ public class MeshBuilder implements MeshGenerator {
 
         List<Polygon> polygons = genPolygons(geo);
 
-        for (int i = 0; i < polygons.size(); i++) {
-            res.add((Polygon) polygons.get(i).intersection(rect));
+        for (Polygon polygon : polygons) {
+            res.add((Polygon) polygon.intersection(rect));
         }
 
         return res;
@@ -64,15 +62,17 @@ public class MeshBuilder implements MeshGenerator {
         return res;
     }
 
-    private List<Coordinate> genVertex(List<Polygon> polygons) {
-        List<Coordinate> coordinates = new ArrayList<>();
+    private List<Coord> genVertex(List<Polygon> polygons) {
+        List<Coord> coordinates = new ArrayList<>();
 
-        for (int i = 0; i < polygons.size(); i++) {
-            coordinates.addAll(Arrays.asList(polygons.get(i).getCoordinates()));
-            Point centroid = polygons.get(i).getCentroid();
-            coordinates.add(new Coordinate(centroid.getX(), centroid.getY()));
+        for (Polygon polygon : polygons) {
+            Coordinate[] vertices = polygon.getCoordinates();
+            for (Coordinate vertex : vertices) {
+                coordinates.add(new Coord(vertex));
+            }
+            Point centroid = polygon.getCentroid();
+            coordinates.add(new Coord(centroid.getX(), centroid.getY()));
         }
-
         return coordinates;
     }
 
@@ -90,8 +90,7 @@ public class MeshBuilder implements MeshGenerator {
 
         for (Polygon polygon : polygons) {
             List<Edge> edges = extractEdges(polygon);
-            faces.add(new Face(polygon.getCentroid().getCoordinate(),
-                    edges));
+            faces.add(new Face(new Coord(polygon.getCentroid().getCoordinate()), edges));
         }
 
         return faces;
@@ -103,9 +102,9 @@ public class MeshBuilder implements MeshGenerator {
         Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             if (i == coordinates.length - 1) {
-                edges.add(new Edge(coordinates[i], coordinates[0]));
+                edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[0])));
             } else {
-                edges.add(new Edge(coordinates[i], coordinates[i + 1]));
+                edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[i + 1])));
             }
         }
         return edges;
@@ -113,7 +112,7 @@ public class MeshBuilder implements MeshGenerator {
 
     private void genNeighbor(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
         Key<FaceSet> key = new Key<>("FACES", FaceSet.class);
-        Set<Coordinate> centers = getFacesCenters(map.getProperty(key));
+        Set<Coord> centers = getFacesCenters(map.getProperty(key));
 
         DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
         builder.setSites(centers);
@@ -125,7 +124,7 @@ public class MeshBuilder implements MeshGenerator {
         for (Polygon polygon : polygons) {
             Set<Face> faces = new HashSet<>();
             for (Coordinate coordinate : polygon.getCoordinates()) {
-                faces.add(getFaceFromCenter(map.getProperty(key), coordinate));
+                faces.add(getFaceFromCenter(map.getProperty(key), new Coord(coordinate)));
             }
 
             for (Face face : faces) {
@@ -134,7 +133,7 @@ public class MeshBuilder implements MeshGenerator {
         }
     }
 
-    private Face getFaceFromCenter(Set<Face> faces, Coordinate center) {
+    private Face getFaceFromCenter(Set<Face> faces, Coord center) {
         for (Face face : faces) {
             if (face.getCenter().equals(center)) {
                 return face;
@@ -144,8 +143,8 @@ public class MeshBuilder implements MeshGenerator {
 
     }
 
-    private Set<Coordinate> getFacesCenters(Set<Face> faces) {
-        Set<Coordinate> coords = new HashSet<>();
+    private Set<Coord> getFacesCenters(Set<Face> faces) {
+        Set<Coord> coords = new HashSet<>();
 
         for (Face face : faces) {
             coords.add(face.getCenter());
@@ -154,8 +153,4 @@ public class MeshBuilder implements MeshGenerator {
         return coords;
     }
 
-    @Override
-    public String getName() {
-        return "MeshBuilder";
-    }
 }

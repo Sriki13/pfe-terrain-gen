@@ -1,6 +1,5 @@
 package pfe.terrain.gen.algo.borders;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.IslandMap;
@@ -8,49 +7,46 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class BasicBordersTest {
 
     private IslandMap islandMap;
     private BasicBorders basicBorders;
 
-    private List<Coordinate> validCoords = Arrays.asList(
-            new Coordinate(20, 50), new Coordinate(10, 86)
+    private List<Coord> validCoords = Arrays.asList(
+            new Coord(20, 50), new Coord(10, 86)
     );
 
-    private List<Coordinate> invalidCoords = Arrays.asList(
-            new Coordinate(0, 10), new Coordinate(9, 100),
-            new Coordinate(95, 101)
+    private List<Coord> invalidCoords = Arrays.asList(
+            new Coord(0, 10), new Coord(9, 100),
+            new Coord(95, 101)
     );
 
-    private Face validFace = new Face(new Coordinate(10, 10), Arrays.asList(
-            new Edge(new Coordinate(2, 3), new Coordinate(2, 4)),
-            new Edge(new Coordinate(2, 4), new Coordinate(3, 4)),
-            new Edge(new Coordinate(3, 4), new Coordinate(2, 3))
+    private Face validFace = new Face(new Coord(10, 10), Arrays.asList(
+            new Edge(new Coord(2, 3), new Coord(2, 4)),
+            new Edge(new Coord(2, 4), new Coord(3, 4)),
+            new Edge(new Coord(3, 4), new Coord(2, 3))
     ));
 
     private List<Face> invalidFaces = Arrays.asList(
-            new Face(new Coordinate(10, 10), Arrays.asList(
-                    new Edge(new Coordinate(2, 3), new Coordinate(2, 100)),
-                    new Edge(new Coordinate(2, 100), new Coordinate(3, 4)),
-                    new Edge(new Coordinate(3, 4), new Coordinate(2, 3))
+            new Face(new Coord(10, 10), Arrays.asList(
+                    new Edge(new Coord(2, 3), new Coord(2, 100)),
+                    new Edge(new Coord(2, 100), new Coord(3, 4)),
+                    new Edge(new Coord(3, 4), new Coord(2, 3))
             )),
-            new Face(new Coordinate(10, 10), Arrays.asList(
-                    new Edge(new Coordinate(-1, 3), new Coordinate(2, 4)),
-                    new Edge(new Coordinate(2, 4), new Coordinate(3, 4)),
-                    new Edge(new Coordinate(3, 4), new Coordinate(-1, 3))
+            new Face(new Coord(10, 10), Arrays.asList(
+                    new Edge(new Coord(-1, 3), new Coord(2, 4)),
+                    new Edge(new Coord(2, 4), new Coord(3, 4)),
+                    new Edge(new Coord(3, 4), new Coord(-1, 3))
             )),
-            new Face(new Coordinate(10, 10), Arrays.asList(
-                    new Edge(new Coordinate(2, 3), new Coordinate(2, 4)),
-                    new Edge(new Coordinate(2, 4), new Coordinate(3, 0)),
-                    new Edge(new Coordinate(3, 0), new Coordinate(2, 3))
+            new Face(new Coord(10, 10), Arrays.asList(
+                    new Edge(new Coord(2, 3), new Coord(2, 4)),
+                    new Edge(new Coord(2, 4), new Coord(3, 0)),
+                    new Edge(new Coord(3, 0), new Coord(2, 3))
             ))
     );
 
@@ -60,7 +56,7 @@ public class BasicBordersTest {
         basicBorders = new BasicBorders();
         islandMap = new IslandMap();
         islandMap.setSize(100);
-        List<Coordinate> allCoords = new ArrayList<>();
+        List<Coord> allCoords = new ArrayList<>();
         allCoords.addAll(validCoords);
         allCoords.addAll(invalidCoords);
         islandMap.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(allCoords));
@@ -73,13 +69,27 @@ public class BasicBordersTest {
     @Test
     public void generateBordersTest() throws Exception {
         basicBorders.execute(islandMap);
-        BordersSet borders = islandMap.getProperty(new Key<>("BORDERS", BordersSet.class));
-        Set<Coordinate> borderVertices = borders.getBorderVertices();
+        Set<Coord> borderVertices = new HashSet<>();
+        for (Coord vertice : islandMap.getVertices()) {
+            if (vertice.getProperty(basicBorders.verticeBorderKey)) {
+                borderVertices.add(vertice);
+            }
+        }
         validCoords.forEach(coord -> assertFalse(borderVertices.contains(coord)));
         invalidCoords.forEach(coord -> assertTrue(borderVertices.contains(coord)));
-        Set<Face> borderFaces = borders.getBorderFaces();
+        Set<Face> borderFaces = new HashSet<>();
+        for (Face face : islandMap.getFaces()) {
+            if (face.getProperty(basicBorders.faceBorderKey)) {
+                borderFaces.add(face);
+            }
+        }
         assertFalse(borderFaces.contains(validFace));
         invalidFaces.forEach(face -> assertTrue(borderFaces.contains(face)));
+    }
+
+    @Test
+    public void nameTest() {
+        assertThat(basicBorders.getName(), is(basicBorders.getClass().getName()));
     }
 
 }

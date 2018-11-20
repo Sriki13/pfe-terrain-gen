@@ -7,7 +7,7 @@ public class FaceSet extends HashSet<Face> {
     public FaceSet() {
     }
 
-    public FaceSet(Collection<? extends Face> c) {
+    public FaceSet(Collection<Face> c) {
         super(c);
     }
 }

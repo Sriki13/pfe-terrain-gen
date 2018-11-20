@@ -6,8 +6,8 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
+import java.lang.Void;
+import java.lang.Void;
 import pfe.terrain.gen.exception.MissingRequiredException;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class ContractStoreTest {
     @Before
     public void init() {
         List<Contract> contracts = Arrays.asList(
-                new TestContract("1", Arrays.asList(new Key<>("EDGES", EdgeSet.class), new Key<>("MESH", FaceSet.class)),
+                new TestContract("1", Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("MESH", Void.class)),
                         Collections.singletonList(new Key<>("POINTS", CoordSet.class))),
                 new TestContract("2", Arrays.asList(new Key<>("POINTS", CoordSet.class), new Key<>("LINE", String.class)),
                         Collections.emptyList()),
@@ -38,9 +38,9 @@ public class ContractStoreTest {
         this.expectedCreated = new HashSet<>();
         expectedCreated.add(new Key<>("POINTS", CoordSet.class));
         expectedCreated.add(new Key<>("LINE", String.class));
-        expectedCreated.add(new Key<>("EDGES", EdgeSet.class));
+        expectedCreated.add(new Key<>("EDGES", Void.class));
         expectedCreated.add(new Key<>("RECTANGLE", Integer.class));
-        expectedCreated.add(new Key<>("MESH", FaceSet.class));
+        expectedCreated.add(new Key<>("MESH", Void.class));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ContractStoreTest {
 
     @Test
     public void getElementTest() throws Exception {
-        Contract contract = this.store.getContractCreating(new Key<>("MESH", FaceSet.class));
+        Contract contract = this.store.getContractCreating(new Key<>("MESH", Void.class));
         Assert.assertNotEquals(null, contract);
     }
 

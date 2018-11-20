@@ -1,21 +1,23 @@
 package pfe.terrain.gen.algo.algorithms;
 
 import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.biome.BiomeMap;
+import pfe.terrain.gen.algo.biome.Biome;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.geometry.BordersSet;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface BasicBiomeGenerator extends Contract {
+public abstract class BasicBiomeGenerator extends Contract {
+
+    public final Key<Boolean> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", Boolean.class);
+    public final Key<Biome> faceBiomeKey = new Key<>(facesPrefix + "BIOME", Biome.class);
 
     @Override
-    default Constraints getContract() {
+    public Constraints getContract() {
         return new Constraints(
-                Stream.of(new Key<>("BORDERS", BordersSet.class)).collect(Collectors.toSet()),
-                Stream.of(new Key<>("BIOMES", BiomeMap.class)).collect(Collectors.toSet())
+                Stream.of(faceBorderKey, faces).collect(Collectors.toSet()),
+                Stream.of(faceBiomeKey).collect(Collectors.toSet())
         );
     }
 
