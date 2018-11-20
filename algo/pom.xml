@@ -22,4 +22,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <modules>
+        <module>mesh</module>
+        <module>gridcreator</module>
+        <module>borders</module>
+        <module>biome</module>
+    </modules>
+
 </project>
