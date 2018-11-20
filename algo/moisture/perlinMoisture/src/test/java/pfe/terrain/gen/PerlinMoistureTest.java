@@ -1,9 +1,11 @@
 package pfe.terrain.gen;
 
 import com.flowpowered.noise.module.source.Perlin;
-import com.vividsolutions.jts.geom.Coordinate;
+import org.junit.Ignore;
 import org.junit.Test;
+import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.geometry.FaceSet;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -12,43 +14,64 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 public class PerlinMoistureTest {
 
     @Test
-    public void getFaceByCenterTest() {
-        Set<Face> faces = new HashSet<>();
-        for (float i = 0; i < 1; i += 0.025) {
-            for (float j = 0; j < 1; j += 0.025) {
-                faces.add(new Face(new Coordinate(i, j), new ArrayList<>()));
+    public void checkInterval() {
+        PerlinMoisture perlinMoisture = new PerlinMoisture();
+        FaceSet faces = new FaceSet();
+        int mapSize = 1024;
+        for (float i = 1; i < mapSize; i += 9) {
+            for (float j = 1; j < mapSize; j += 9) {
+                faces.add(new Face(new Coord(i, j), new ArrayList<>()));
             }
         }
-//        for (Face face : faces) {
-//            Coordinate c = face.getCenter();
-//            System.out.println(c);
-//            System.out.println(perlin.getValue(c.x, c.y, 0));
-//        }
-        final int width = 64;
+        Map<Face, Double> noiseValues = perlinMoisture.computeNoise(0, faces, mapSize, 1.0);
+        assertThat(noiseValues.keySet().size(), equalTo(faces.size()));
+        noiseValues.forEach((key, value) ->
+                assertThat(value, is(both(greaterThanOrEqualTo(0.0)).and(lessThanOrEqualTo(1.0))))
+        );
+
+    }
+
+    @Test
+    @Ignore
+    public void printPerlin() {
+        Set<Face> faces = new HashSet<>();
+        int mapSize = 1024;
+        for (float i = 1; i < mapSize; i += 9) {
+            for (float j = 1; j < mapSize; j += 9) {
+                faces.add(new Face(new Coord(i, j), new ArrayList<>()));
+            }
+        }
         final Perlin perlin = new Perlin();
         perlin.setSeed(1);
-        perlin.setFrequency(10.0);
-
-        final BufferedImage image = new BufferedImage(width, width, BufferedImage.TYPE_USHORT_GRAY);
-        short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
-        List<Double> values = new ArrayList<>(width * width);
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < width; x++) {
-                final double noise = perlin.getValue(x / (float) width, y / (float) width, 0);
-                //System.out.println(noise);
-                values.add(y * width + x, noise);
-                //data[y * width + x] = noise;
-            }
+        perlin.setFrequency(5.0);
+        List<Double> values = new ArrayList<Double>(Collections.nCopies(mapSize * mapSize, 1.0));
+        for (Face face : faces) {
+            final double noise = perlin.getValue(face.getCenter().x / mapSize, face.getCenter().y / mapSize, 0);
+            values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x), noise);
+            values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x + 1), noise);
+            values.set((int) (Math.floor((face.getCenter().y + 1) * mapSize) + face.getCenter().x), noise);
+            values.set((int) (Math.floor((face.getCenter().y + 1) * mapSize) + face.getCenter().x + 1), noise);
+            values.set((int) (Math.floor((face.getCenter().y - 1) * mapSize) + face.getCenter().x), noise);
+            values.set((int) (Math.floor((face.getCenter().y - 1) * mapSize) + face.getCenter().x + 1), noise);
+            values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x - 1), noise);
+            values.set((int) (Math.floor((face.getCenter().y + 1) * mapSize) + face.getCenter().x - 1), noise);
+            values.set((int) (Math.floor((face.getCenter().y - 1) * mapSize) + face.getCenter().x - 1), noise);
         }
         double max = Collections.max(values);
         double min = Collections.min(values);
         values.replaceAll(val -> (val - min) / (max - min));
-        //System.out.println(values);
+        final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);
+        short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
         for (int i = 0; i < values.size(); i++) {
-            data[i] = (short) Math.round(values.get(i) * 65536);
+            if (values.get(i) != null) {
+                data[i] = (short) Math.round(values.get(i) * 65535);
+            }
         }
         try {
             ImageIO.write(image, "PNG", new File("noise.png"));

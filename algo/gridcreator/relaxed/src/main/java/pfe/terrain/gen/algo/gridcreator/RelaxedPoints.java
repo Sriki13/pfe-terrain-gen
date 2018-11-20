@@ -17,13 +17,13 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RelaxedPoints implements PointsGenerator {
+public class RelaxedPoints extends PointsGenerator {
 
     @Override
     public void execute(IslandMap islandMap) throws DuplicateKeyException {
         int numberOfPoints = this.getDefaultNbPoint();
         CoordSet points = new CoordSet();
-        Random random = new Random();
+        Random random = new Random(islandMap.getSeed());
         for (int i = 0; i < numberOfPoints; i++) {
             points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }

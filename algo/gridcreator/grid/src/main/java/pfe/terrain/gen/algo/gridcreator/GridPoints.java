@@ -8,7 +8,7 @@ import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
-public class GridPoints implements PointsGenerator {
+public class GridPoints extends PointsGenerator {
 
     @Override
     public void execute(IslandMap islandMap) throws InvalidAlgorithmParameters, DuplicateKeyException {
@@ -26,7 +26,7 @@ public class GridPoints implements PointsGenerator {
                 points.add(new Coord(x * squareSide + halfSide, y * squareSide + halfSide));
             }
         }
-        islandMap.putProperty(new Key<>("POINTS",CoordSet.class), points);
+        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
 
 }

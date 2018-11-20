@@ -9,14 +9,14 @@ import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.Random;
 
-public class RandomPoints implements PointsGenerator {
+public class RandomPoints extends PointsGenerator {
 
 
     @Override
     public void execute(IslandMap islandMap) throws DuplicateKeyException {
         int numberOfPoints = this.getDefaultNbPoint();
         CoordSet points = new CoordSet();
-        Random random = new Random();
+        Random random = new Random(islandMap.getSeed());
         for (int i = 0; i < numberOfPoints; i++) {
             points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }
