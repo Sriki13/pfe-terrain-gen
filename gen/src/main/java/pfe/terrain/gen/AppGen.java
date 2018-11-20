@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
@@ -21,7 +22,7 @@ import java.util.*;
 /**
  * Hello world!
  */
-public class AppGen {
+public class AppGen implements Generator {
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException {
         AppGen gen = new AppGen();
