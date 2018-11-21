@@ -23,11 +23,11 @@ public class BasicSquareBiomesTest {
     private BasicSquareBiomes biomeMapper;
     private IslandMap islandMap;
 
-    private Face land = buildTestFace();
-    private Face ocean = buildTestFace();
+    private Face land = buildTestFace(0);
+    private Face ocean = buildTestFace(1);
 
-    private static Face buildTestFace() {
-        return new Face(new Coord(0, 0),
+    private static Face buildTestFace(int seed) {
+        return new Face(new Coord(seed, 0),
                 Collections.singletonList(
                         new Edge(new Coord(0, 0), new Coord(0, 0))
                 ));

@@ -9,7 +9,7 @@ import pfe.terrain.gen.algo.geometry.FaceSet;
 
 public class IslandMap extends Mappable {
 
-    private int size;
+    private Integer size;
     private int seed;
     private CoordSet vertices;
     private EdgeSet edges;
@@ -23,7 +23,7 @@ public class IslandMap extends Mappable {
 
     public IslandMap() {
         super();
-        this.size = 0;
+        this.size = null;
         this.vertices = null;
         this.edges = null;
         this.faces = null;
