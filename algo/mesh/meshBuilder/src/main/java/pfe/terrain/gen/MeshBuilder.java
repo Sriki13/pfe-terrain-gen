@@ -7,6 +7,7 @@ import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.algorithms.MeshGenerator;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
@@ -23,9 +24,9 @@ public class MeshBuilder extends MeshGenerator {
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> polygons = genPolygons(map);
-        map.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(genVertex(polygons)));
-        map.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(genEdges(polygons)));
-        map.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(genFaces(polygons)));
+        map.putProperty(Contract.vertices, new CoordSet(genVertex(polygons)));
+        map.putProperty(Contract.edges, new EdgeSet(genEdges(polygons)));
+        map.putProperty(Contract.faces, new FaceSet(genFaces(polygons)));
         genNeighbor(map);
     }
 
@@ -105,7 +106,10 @@ public class MeshBuilder extends MeshGenerator {
         Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             if (i == coordinates.length - 1) {
-                edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[0])));
+                Coord start = new Coord(coordinates[i]);
+                Coord end = new Coord(coordinates[0]);
+                if (start == end) continue;
+                edges.add(new Edge(start, end));
             } else {
                 Coord start = new Coord(coordinates[i]);
                 Coord end = new Coord(coordinates[i + 1]);
@@ -115,6 +119,7 @@ public class MeshBuilder extends MeshGenerator {
         }
         return edges;
     }
+
 
     private void genNeighbor(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
         Key<FaceSet> key = new Key<>("FACES", FaceSet.class);
