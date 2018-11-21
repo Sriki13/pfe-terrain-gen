@@ -64,13 +64,10 @@ public class MapGenerator implements Generator {
             OrderParser parser = new OrderParser();
             this.orderedContracts = parser.getList(result.toString());
             this.id = result.toString().hashCode();
-            this.orderedContracts.sort(new Comparator<OrderedContract>() {
-                @Override
-                public int compare(OrderedContract o1, OrderedContract o2) {
-                    if(o1 == o2) return 0;
-                    if(o1.getOrder() > o2.getOrder()) return 1;
-                    else return -1;
-                }
+            this.orderedContracts.sort((o1, o2) -> {
+                if(o1 == o2) return 0;
+                if(o1.getOrder() > o2.getOrder()) return 1;
+                else return -1;
             });
 
         } catch (Exception e) {
@@ -88,6 +85,7 @@ public class MapGenerator implements Generator {
                 try {
                     contracts.add((Contract) cl.newInstance());
                 } catch (Exception e){
+                    System.err.println(e.getMessage());
                 }
             }
         } catch (Exception e){
