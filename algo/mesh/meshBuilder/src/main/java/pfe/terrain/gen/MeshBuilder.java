@@ -107,7 +107,10 @@ public class MeshBuilder extends MeshGenerator {
             if (i == coordinates.length - 1) {
                 edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[0])));
             } else {
-                edges.add(new Edge(new Coord(coordinates[i]), new Coord(coordinates[i + 1])));
+                Coord start = new Coord(coordinates[i]);
+                Coord end = new Coord(coordinates[i + 1]);
+                if (start == end) continue;
+                edges.add(new Edge(start, end));
             }
         }
         return edges;
