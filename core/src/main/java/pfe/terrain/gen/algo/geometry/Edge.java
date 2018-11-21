@@ -28,13 +28,13 @@ public class Edge extends Mappable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Edge edge = (Edge) o;
-        return Objects.equals(start, edge.start) &&
-                Objects.equals(end, edge.end);
+        return (Objects.equals(start, edge.start) && Objects.equals(end, edge.end))
+                || (Objects.equals(start, edge.end) && Objects.equals(end, edge.start));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, end);
+        return Objects.hash(start.x + start.y + end.x + end.y);
     }
 
 }

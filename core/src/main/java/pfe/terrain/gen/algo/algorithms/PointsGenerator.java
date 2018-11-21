@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public abstract class PointsGenerator extends Contract {
 
     protected int getDefaultNbPoint() {
-        return 1024;
+        return 64;
     }
 
     protected Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);

@@ -28,7 +28,6 @@ public class ParserTest {
 
             }
 
-
             @Override
             public String getName() {
                 return "TEST1";
