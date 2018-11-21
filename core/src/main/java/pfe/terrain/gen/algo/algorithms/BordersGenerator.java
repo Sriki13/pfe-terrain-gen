@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 public abstract class BordersGenerator extends Contract {
 
     public final Key<BooleanType> verticeBorderKey =
-            new SerializableKey<>(verticesPrefix + "IS_BORDER", "is_border", BooleanType.class);
+            new SerializableKey<>(verticesPrefix + "IS_BORDER", "isBorder", BooleanType.class);
     public final Key<BooleanType> faceBorderKey =
-            new SerializableKey<>(facesPrefix + "IS_BORDER", "is_border", BooleanType.class);
+            new SerializableKey<>(facesPrefix + "IS_BORDER", "isBorder", BooleanType.class);
 
     @Override
     public Constraints getContract() {

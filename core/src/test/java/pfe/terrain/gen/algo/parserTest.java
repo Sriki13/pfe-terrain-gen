@@ -11,7 +11,7 @@ import pfe.terrain.gen.algo.parsing.OrderedContract;
 import java.util.Arrays;
 import java.util.List;
 
-public class parserTest {
+public class ParserTest {
     private OrderParser parser = new OrderParser();
 
 
@@ -53,8 +53,6 @@ public class parserTest {
         };
 
         String json = parser.writeList(Arrays.asList(first,second));
-
-        System.out.println(json);
 
         List<OrderedContract> contracts = parser.getList(json);
 
