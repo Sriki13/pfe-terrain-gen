@@ -16,7 +16,7 @@ public class ParserTest {
 
 
     @Test
-    public void toJson() throws Exception{
+    public void toJson() throws Exception {
         Contract first = new Contract() {
             @Override
             public Constraints getContract() {
@@ -52,18 +52,18 @@ public class ParserTest {
             }
         };
 
-        String json = parser.writeList(Arrays.asList(first,second));
+        String json = parser.writeList(Arrays.asList(first, second));
 
         List<OrderedContract> contracts = parser.getList(json);
 
 
-        Assert.assertEquals(2,contracts.size());
-        Assert.assertEquals(first.getName(),contracts.get(0).getName());
-        Assert.assertEquals(second.getName(),contracts.get(1).getName());
+        Assert.assertEquals(2, contracts.size());
+        Assert.assertEquals(first.getName(), contracts.get(0).getName());
+        Assert.assertEquals(second.getName(), contracts.get(1).getName());
     }
 
     @Test(expected = OrderParsingException.class)
-    public void wrongFormatException() throws Exception{
+    public void wrongFormatException() throws Exception {
         parser.getList("azeaze");
     }
 }
