@@ -11,6 +11,8 @@ import pfe.terrain.gen.algo.geometry.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for simple App.
@@ -87,7 +89,7 @@ public class AppTest {
             verticesEdge.add(edge.getStart());
         }
 
-        Assert.assertTrue(vertices.containsAll(verticesEdge));
+        assertTrue(vertices.containsAll(verticesEdge));
     }
 
     @Test
@@ -106,8 +108,8 @@ public class AppTest {
             edgesFace.addAll(face.getEdges());
         }
 
-        Assert.assertTrue(map.getVertices().containsAll(verticesFace));
-        Assert.assertTrue(map.getEdges().containsAll(edgesFace));
+        assertTrue(map.getVertices().containsAll(verticesFace));
+        assertTrue(map.getEdges().containsAll(edgesFace));
     }
 
     @Test
@@ -132,8 +134,8 @@ public class AppTest {
         for (Edge edge1 : edges) {
             for (Edge edge2 : edges) {
                 if (!(edge1.equals(edge2))) {
-                    assertThat(edge1.getEnd(), not(equalTo(edge2.getStart())));
-                    assertThat(edge1.getStart(), not(equalTo(edge2.getEnd())));
+                    assertFalse((edge1.getEnd().equals(edge2.getStart()))
+                            && (edge1.getStart().equals(edge2.getEnd())));
                 }
             }
         }
