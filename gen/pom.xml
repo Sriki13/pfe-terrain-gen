@@ -40,7 +40,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <classpathScope>./lib</classpathScope>
                     <executable>java</executable>
                     <mainClass>pfe.terrain.gen.AppGen</mainClass>
                 </configuration>
