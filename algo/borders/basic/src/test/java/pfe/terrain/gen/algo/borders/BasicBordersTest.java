@@ -5,6 +5,7 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
@@ -19,7 +20,7 @@ public class BasicBordersTest {
     private BasicBorders basicBorders;
 
     private List<Coord> validCoords = Arrays.asList(
-            new Coord(20, 50), new Coord(10, 86)
+            new Coord(20, 50), new Coord(11, 86)
     );
 
     private List<Coord> invalidCoords = Arrays.asList(
@@ -28,9 +29,9 @@ public class BasicBordersTest {
     );
 
     private Face validFace = new Face(new Coord(10, 10), Arrays.asList(
-            new Edge(new Coord(2, 3), new Coord(2, 4)),
-            new Edge(new Coord(2, 4), new Coord(3, 4)),
-            new Edge(new Coord(3, 4), new Coord(2, 3))
+            new Edge(new Coord(20, 30), new Coord(20, 40)),
+            new Edge(new Coord(20, 40), new Coord(30, 40)),
+            new Edge(new Coord(30, 40), new Coord(20, 30))
     ));
 
     private List<Face> invalidFaces = Arrays.asList(
@@ -41,13 +42,13 @@ public class BasicBordersTest {
             )),
             new Face(new Coord(10, 10), Arrays.asList(
                     new Edge(new Coord(-1, 3), new Coord(2, 4)),
-                    new Edge(new Coord(2, 4), new Coord(3, 4)),
+                    new Edge(new Coord(2, 40), new Coord(3, 40)),
                     new Edge(new Coord(3, 4), new Coord(-1, 3))
             )),
             new Face(new Coord(10, 10), Arrays.asList(
-                    new Edge(new Coord(2, 3), new Coord(2, 4)),
+                    new Edge(new Coord(20, 3), new Coord(2, 4)),
                     new Edge(new Coord(2, 4), new Coord(3, 0)),
-                    new Edge(new Coord(3, 0), new Coord(2, 3))
+                    new Edge(new Coord(3, 0), new Coord(20, 3))
             ))
     );
 
@@ -56,7 +57,7 @@ public class BasicBordersTest {
     public void setUp() throws DuplicateKeyException {
         basicBorders = new BasicBorders();
         islandMap = new IslandMap();
-        islandMap.putProperty(new Key<Integer>("SIZE",Integer.class),100);
+        islandMap.putProperty(Contract.size, 100);
         List<Coord> allCoords = new ArrayList<>();
         allCoords.addAll(validCoords);
         allCoords.addAll(invalidCoords);

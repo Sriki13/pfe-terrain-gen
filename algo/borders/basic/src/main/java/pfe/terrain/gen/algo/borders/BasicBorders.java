@@ -15,11 +15,12 @@ public class BasicBorders extends BordersGenerator {
 
     @Override
     public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException {
+        double offset = islandMap.getSize() * 0.1;
         Set<Coord> borderVertices = islandMap.getVertices().stream()
-                .filter(c -> isBorder(c, islandMap.getSize()))
+                .filter(c -> isBorder(c, islandMap.getSize(), offset))
                 .collect(Collectors.toSet());
         Set<Face> borderFaces = islandMap.getFaces().stream()
-                .filter(f -> isBorder(f, islandMap.getSize()))
+                .filter(f -> isBorder(f, islandMap.getSize(), offset))
                 .collect(Collectors.toSet());
         for (Coord coord : islandMap.getVertices()) {
             coord.putProperty(verticeBorderKey, new BooleanType(borderVertices.contains(coord)));
@@ -29,17 +30,17 @@ public class BasicBorders extends BordersGenerator {
         }
     }
 
-    private boolean isBorder(Coord coord, int islandSize) {
-        return !inBounds(coord.x, islandSize) || !inBounds(coord.y, islandSize);
+    private boolean isBorder(Coord coord, int islandSize, double offset) {
+        return !inBounds(coord.x, islandSize, offset) || !inBounds(coord.y, islandSize, offset);
     }
 
-    private boolean inBounds(double coord, int islandSize) {
-        return coord > 0 && coord < islandSize;
+    private boolean inBounds(double coord, int islandSize, double offset) {
+        return coord > offset && coord < islandSize - offset;
     }
 
-    private boolean isBorder(Face face, int islandSize) {
+    private boolean isBorder(Face face, int islandSize, double offset) {
         for (Coord coord : face.getVertices()) {
-            if (isBorder(coord, islandSize)) {
+            if (isBorder(coord, islandSize, offset)) {
                 return true;
             }
         }
