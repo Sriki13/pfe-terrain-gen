@@ -3,6 +3,7 @@ package pfe.terrain.generatorService;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.algo.generator.Generator;
+import pfe.terrain.generatorService.exception.CannotUseGeneratorException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,55 +12,56 @@ import java.util.Set;
 
 
 public class GeneratorLoader {
+    private String folderPath;
 
-    private List<String> files;
-    private List<Generator> generators;
+    public GeneratorLoader(String folderPath){
+        this.folderPath = folderPath;
+
+
+    }
 
     public GeneratorLoader(){
-        this.generators = new ArrayList<>();
-        this.files = new ArrayList<>();
+        this.folderPath = "./lib";
 
-        this.generators = this.loadClassesFromClassPath();
+
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 
     private List<String> getResourceFiles(String path) throws IOException {
         List<String> filenames = new ArrayList<>();
 
-        try (
-                InputStream in = GeneratorLoader.class.getResourceAsStream(path);
-                BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String resource;
+        File folder = new File(path);
+        if(!folder.canRead()){
+            throw new IOException();
+        }
 
-            while ((resource = br.readLine()) != null) {
-                if(resource.contains(".jar")) {
-                    filenames.add(resource);
-                }
+        for (final File fileEntry : folder.listFiles()) {
+            if(!fileEntry.isDirectory() && fileEntry.getName().contains(".jar")){
+                filenames.add(fileEntry.getCanonicalPath());
             }
         }
+
 
         return filenames;
     }
 
-    public List<String> getFiles() {
-        return files;
-    }
+    public List<Generator> load() throws IOException{
+        List<Generator> generators = new ArrayList<>();
 
-    public List<Generator> getGenerators(){return generators;}
-
-    private List<Generator> loadClassesFromClassPath(){
-        Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
-        Set<Class<? extends Generator>> subTypes = reflections.getSubTypesOf(Generator.class);
-        System.out.println(subTypes);
-        List<Generator> gens = new ArrayList<>();
-
-        for(Class cl : subTypes){
+        for(String path : this.getResourceFiles(this.folderPath)){
             try {
-                gens.add((Generator) cl.newInstance());
-            } catch (Exception e){
-                e.printStackTrace();
+                Generator gen = new BashGenerator(path);
+                generators.add(gen);
+                System.out.println("Loaded generator id : " + gen.getId() + " from : " + path);
+            } catch (CannotUseGeneratorException e){
+                System.err.println("cannot load generator : " + path);
             }
         }
-        return gens;
+
+        return generators;
     }
 
 }

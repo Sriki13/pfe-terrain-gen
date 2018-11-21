@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         GeneratorLoader generatorLoader = new GeneratorLoader();
-        GeneratorRunner runner = new GeneratorRunner(generatorLoader.getGenerators());
+        GeneratorRunner runner = new GeneratorRunner(generatorLoader.load());
 
 
         port(8080);
