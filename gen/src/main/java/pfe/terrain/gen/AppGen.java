@@ -25,7 +25,7 @@ public class AppGen {
 
         CommandParser parser = new CommandParser(gen);
 
-        System.out.println(parser.execute(args));
+        System.out.print(parser.execute(args));
     }
 
 }
