@@ -88,6 +88,7 @@ public class BashGenerator implements Generator {
             }
             br.close();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return sb.toString();
     }

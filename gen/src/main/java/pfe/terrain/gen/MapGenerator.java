@@ -10,6 +10,7 @@ import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
+import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
 import java.util.*;
@@ -37,7 +38,8 @@ public class MapGenerator implements Generator {
 
         this.execute();
         try{
-            return islandMap.getProperty(new Key<>("POINTS", CoordSet.class)).toString();
+            JSONExporter exporter = new JSONExporter();
+            return exporter.export(this.islandMap).toString();
         } catch (Exception e){
             return e.getMessage();
         }

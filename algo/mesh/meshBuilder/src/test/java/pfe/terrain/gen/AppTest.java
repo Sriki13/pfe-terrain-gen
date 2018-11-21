@@ -1,16 +1,35 @@
 package pfe.terrain.gen;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
+import pfe.terrain.gen.algo.geometry.*;
 
 /**
  * Unit test for simple App.
  */
 public class AppTest {
+
+    private IslandMap map;
+
+    @Before
+    public void initMapWithGrid() throws Exception{
+        this.map = new IslandMap();
+
+        CoordSet points = new CoordSet();
+
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                points.add(new Coord(i, j));
+            }
+        }
+        map.putProperty(new Key<>("SIZE", Integer.class), 20);
+        map.putProperty(new Key<>("POINTS", CoordSet.class), points);
+    }
+
 //    @Test
 //    public void getFaceByCenterTest(){
 //        int x=8;
@@ -48,21 +67,56 @@ public class AppTest {
 //    }
 
     @Test
-    public void meshTest() throws Exception {
-        IslandMap map = new IslandMap();
+    public void EdgeVerticesTest() throws Exception {
 
-        CoordSet points = new CoordSet();
-
-        for (int i = 0; i < 32; i++) {
-            for (int j = 0; j < 32; j++) {
-                points.add(new Coord(i, j));
-            }
-        }
-        map.putProperty(new Key<>("SIZE", Integer.class), 32);
-        map.putProperty(new Key<>("POINTS", CoordSet.class), points);
 
         MeshBuilder builder = new MeshBuilder();
-
         builder.execute(map, new Context());
+
+        CoordSet vertices = map.getVertices();
+        EdgeSet edges = map.getEdges();
+
+        CoordSet verticesEdge = new CoordSet();
+
+        for(Edge edge : edges){
+            verticesEdge.add(edge.getEnd());
+            verticesEdge.add(edge.getStart());
+        }
+
+        Assert.assertTrue(vertices.containsAll(verticesEdge));
     }
+
+    @Test
+    public void FaceVerticesTest() throws Exception{
+        MeshBuilder builder = new MeshBuilder();
+        builder.execute(map, new Context());
+
+        FaceSet faces = map.getFaces();
+
+        CoordSet verticesFace = new CoordSet();
+        EdgeSet edgesFace =  new EdgeSet();
+
+        for(Face face : faces){
+            verticesFace.add(face.getCenter());
+            verticesFace.addAll(face.getVertices());
+            edgesFace.addAll(face.getEdges());
+        }
+
+        Assert.assertTrue(map.getVertices().containsAll(verticesFace));
+        Assert.assertTrue(map.getEdges().containsAll(edgesFace));
+    }
+
+    @Test
+    public void samePointsEdgeTest() throws Exception{
+        MeshBuilder builder = new MeshBuilder();
+        builder.execute(map, new Context());
+
+        EdgeSet edges = map.getEdges();
+
+        for(Edge edge : edges){
+            Assert.assertNotEquals("Should be different " + edge.getEnd() + " " + edge.getStart(),edge.getEnd(),edge.getStart());
+        }
+    }
+
+
 }

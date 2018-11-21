@@ -1,5 +1,7 @@
 package pfe.terrain.gen;
 
+import pfe.terrain.gen.algo.biome.BasicSquareBiomes;
+import pfe.terrain.gen.algo.borders.BasicBorders;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.gridcreator.GridPoints;
 import pfe.terrain.gen.algo.gridcreator.RandomPoints;
@@ -25,7 +27,11 @@ public class App {
     public static void main(String[] args) throws IOException, InvalidContractException, Exception {
         App app = new App();
 
-        app.chooseAlgo(new BasicInitializer().getName(),new GridPoints().getName(),new MeshBuilder().getName());
+        app.chooseAlgo(new BasicInitializer().getName(),
+                new GridPoints().getName(),
+                new MeshBuilder().getName(),
+                new BasicSquareBiomes().getName(),
+                new BasicBorders().getName());
         app.setupGenerator();
 
 
@@ -49,6 +55,8 @@ public class App {
         Contract relaxedPoints = new RelaxedPoints();
         Contract randomPoints = new RandomPoints();
         Contract meshBuilder = new MeshBuilder();
+        Contract biomeBasicSquare = new BasicSquareBiomes();
+        Contract borderBasic = new BasicBorders();
 
         available = new ArrayList<>();
         available.add(gridPoints);
@@ -56,6 +64,8 @@ public class App {
         available.add(randomPoints);
         available.add(meshBuilder);
         available.add(initializator);
+        available.add(biomeBasicSquare);
+        available.add(borderBasic);
 
         priority = new ArrayList<>();
 
@@ -64,6 +74,8 @@ public class App {
         nameToJar.put(randomPoints, addSuffixPrefix("gridcreator.random"));
         nameToJar.put(relaxedPoints, addSuffixPrefix("gridcreator.relaxed"));
         nameToJar.put(meshBuilder, addSuffixPrefix("mesh.builder"));
+        nameToJar.put(biomeBasicSquare, addSuffixPrefix("biome.basicsquare"));
+        nameToJar.put(borderBasic, addSuffixPrefix("borders.basic"));
     }
 
     public List<Contract> getOrderedContract() throws InvalidContractException, UnsolvableException, MissingRequiredException {
