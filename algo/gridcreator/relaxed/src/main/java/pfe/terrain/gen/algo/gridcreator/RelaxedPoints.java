@@ -35,10 +35,10 @@ public class RelaxedPoints extends PointsGenerator {
     public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException, KeyTypeMismatch {
         int numberOfPoints = context.getPropertyOrDefault(nbPoints, getDefaultNbPoint());
         int relaxationIterations = context.getPropertyOrDefault(nbIter, 3);
-        CoordSet points = new CoordSet();
+        Set<Coordinate> points = new HashSet<>();
         Random random = new Random(islandMap.getSeed());
         for (int i = 0; i < numberOfPoints; i++) {
-            points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
+            points.add(new Coordinate(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
         }
         for (int i = 0; i < relaxationIterations; i++) {
             VoronoiDiagramBuilder voronoiBuilder = new VoronoiDiagramBuilder();
@@ -53,11 +53,11 @@ public class RelaxedPoints extends PointsGenerator {
             for (int j = 0; j < voronoiDiagram.getNumGeometries(); j++) {
                 centroids.add(voronoiDiagram.getGeometryN(j).getCentroid().getCoordinate());
             }
-            points = (CoordSet) centroids.stream()
-                    .map(c -> new Coord(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
+            points = centroids.stream()
+                    .map(c -> new Coordinate(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
                     .collect(Collectors.toSet());
         }
-        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
+        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), CoordSet.buildFromCoordinates(points));
     }
 
 
