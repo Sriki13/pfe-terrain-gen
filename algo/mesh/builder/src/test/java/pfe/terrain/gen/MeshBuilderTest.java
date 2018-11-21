@@ -8,6 +8,9 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.geometry.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -24,8 +27,8 @@ public class MeshBuilderTest {
 
         CoordSet points = new CoordSet();
 
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (double i = 0; i < 20; i += 0.5) {
+            for (double j = 0; j < 20; j += 0.5) {
                 points.add(new Coord(i, j));
             }
         }
@@ -128,12 +131,12 @@ public class MeshBuilderTest {
 
         EdgeSet edges = map.getEdges();
 
-        for (Edge edge1 : edges) {
-            for (Edge edge2 : edges) {
-                if (!(edge1.equals(edge2))) {
-                    assertFalse((edge1.getEnd().equals(edge2.getStart()))
-                            && (edge1.getStart().equals(edge2.getEnd())));
-                }
+        List<Edge> edgesList = new ArrayList<>(edges);
+
+        for (int i = 0; i < edgesList.size(); i++) {
+            for (int j = i + 1; j < edgesList.size(); j++) {
+                assertFalse((edgesList.get(i).getEnd().equals(edgesList.get(j).getStart()))
+                        && (edgesList.get(i).getStart().equals(edgesList.get(j).getEnd())));
             }
         }
     }

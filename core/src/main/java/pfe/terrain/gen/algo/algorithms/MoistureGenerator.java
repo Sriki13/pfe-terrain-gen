@@ -13,7 +13,6 @@ public abstract class MoistureGenerator extends Contract {
 
     @Override
     public Constraints getContract() {
-        return new Constraints(Stream.of(faces,seed).collect(Collectors.toSet()),
-                Stream.of(faceMoisture).collect(Collectors.toSet()));
+        return new Constraints(asSet(faces,seed), asSet(faceMoisture));
     }
 }

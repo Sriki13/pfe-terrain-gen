@@ -18,11 +18,11 @@ public abstract class InitializationGenerator extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(Collections.emptySet(),
-                Stream.of(seed, size).collect(Collectors.toSet()));
+                asSet(seed,size));
     }
 
     @Override
     public Set<Key> getRequestedParameters() {
-        return Stream.of(seed, size).collect(Collectors.toSet());
+        return asSet(seedParam,sizeParam);
     }
 }

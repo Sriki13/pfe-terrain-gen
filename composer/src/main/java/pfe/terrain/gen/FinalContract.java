@@ -15,19 +15,17 @@ import pfe.terrain.gen.algo.geometry.FaceSet;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FinalContract extends Contract {
 
     @Override
     public Constraints getContract() {
-        Set<Key> required = Stream.of(
+        Set<Key> required = asSet(
                 new Key<>("VERTICES", CoordSet.class),
                 new Key<>("EDGES", EdgeSet.class),
-                new Key<>("FACES", FaceSet.class)).collect(Collectors.toSet());
+                new Key<>("FACES", FaceSet.class));
 
-        return new Constraints(required,new HashSet<>());
+        return new Constraints(required, new HashSet<>());
 
     }
 
