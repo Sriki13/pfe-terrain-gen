@@ -8,6 +8,10 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.geometry.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -135,6 +139,22 @@ public class MeshBuilderTest {
                             && (edge1.getStart().equals(edge2.getEnd())));
                 }
             }
+        }
+    }
+
+    @Test
+    public void allEdgesAreDifferent() throws Exception{
+        MeshBuilder builder = new MeshBuilder();
+        builder.execute(map, new Context());
+
+        List<Edge> edges = new ArrayList<>();
+        edges.addAll(map.getEdges());
+
+
+        for(Edge edge : map.getEdges()){
+            edges.remove(edge);
+
+            Assert.assertFalse(edges.contains(edge));
         }
     }
 
