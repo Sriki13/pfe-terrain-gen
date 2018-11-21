@@ -17,10 +17,9 @@ public class GeneratorLoaderTest {
     }
 
     @Test
-    public void fileReadTest() throws Exception{
+    public void loadingTest() throws Exception{
         File file = new File(GeneratorLoaderTest.class.getResource("/").getFile());
 
-        System.out.println(file.getCanonicalPath());
         loader.setFolderPath(file.getCanonicalPath());
 
         List<Generator> gen = loader.load();
@@ -32,7 +31,6 @@ public class GeneratorLoaderTest {
     public void dummyJar() throws Exception{
         File file = new File(GeneratorLoaderTest.class.getResource("/dummy").getFile());
 
-        System.out.println(file.getCanonicalPath());
         loader.setFolderPath(file.getCanonicalPath());
 
         List<Generator> gen = loader.load();
@@ -47,7 +45,6 @@ public class GeneratorLoaderTest {
     public void notWorkingJar() throws Exception{
         File file = new File(GeneratorLoaderTest.class.getResource("/wrongJar").getFile());
 
-        System.out.println(file.getCanonicalPath());
         loader.setFolderPath(file.getCanonicalPath());
 
         List<Generator> gen = loader.load();

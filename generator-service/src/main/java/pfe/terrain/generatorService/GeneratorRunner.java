@@ -15,15 +15,14 @@ public class GeneratorRunner {
         this.generators.addAll(generators);
     }
 
-    public String getGeneratorList(){
-        StringBuilder builder = new StringBuilder();
+    public List<Integer> getGeneratorList(){
+        List<Integer> ids = new ArrayList<>();
 
         for(Generator gen : generators){
-            builder.append(gen.getId());
-            builder.append("\n");
+            ids.add(gen.getId());
         }
 
-        return builder.toString();
+        return ids;
     }
 
     public String executeById(int id) throws NoSuchGenerator{

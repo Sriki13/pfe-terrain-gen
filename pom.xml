@@ -13,6 +13,7 @@
         <module>algo</module>
         <module>core</module>
         <module>composer</module>
+        <module>generator-service</module>
     </modules>
 
     <properties>

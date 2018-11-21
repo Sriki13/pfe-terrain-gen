@@ -36,7 +36,7 @@ public class GeneratorRunnerTest {
 
     @Test
     public void listTest(){
-        Assert.assertTrue(runner.getGeneratorList().contains(String.valueOf(genId)));
+        Assert.assertTrue(runner.getGeneratorList().contains(genId));
 
     }
 
