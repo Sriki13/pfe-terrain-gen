@@ -8,6 +8,10 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.geometry.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+
 /**
  * Unit test for simple App.
  */
@@ -16,7 +20,7 @@ public class AppTest {
     private IslandMap map;
 
     @Before
-    public void initMapWithGrid() throws Exception{
+    public void initMapWithGrid() throws Exception {
         this.map = new IslandMap();
 
         CoordSet points = new CoordSet();
@@ -78,7 +82,7 @@ public class AppTest {
 
         CoordSet verticesEdge = new CoordSet();
 
-        for(Edge edge : edges){
+        for (Edge edge : edges) {
             verticesEdge.add(edge.getEnd());
             verticesEdge.add(edge.getStart());
         }
@@ -87,16 +91,16 @@ public class AppTest {
     }
 
     @Test
-    public void FaceVerticesTest() throws Exception{
+    public void FaceVerticesTest() throws Exception {
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
 
         FaceSet faces = map.getFaces();
 
         CoordSet verticesFace = new CoordSet();
-        EdgeSet edgesFace =  new EdgeSet();
+        EdgeSet edgesFace = new EdgeSet();
 
-        for(Face face : faces){
+        for (Face face : faces) {
             verticesFace.add(face.getCenter());
             verticesFace.addAll(face.getVertices());
             edgesFace.addAll(face.getEdges());
@@ -107,14 +111,31 @@ public class AppTest {
     }
 
     @Test
-    public void samePointsEdgeTest() throws Exception{
+    public void samePointsEdgeTest() throws Exception {
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
 
         EdgeSet edges = map.getEdges();
 
-        for(Edge edge : edges){
-            Assert.assertNotEquals("Should be different " + edge.getEnd() + " " + edge.getStart(),edge.getEnd(),edge.getStart());
+        for (Edge edge : edges) {
+            Assert.assertNotEquals("Should be different " + edge.getEnd() + " " + edge.getStart(), edge.getEnd(), edge.getStart());
+        }
+    }
+
+    @Test
+    public void sameEdgeDifferentWay() throws Exception {
+        MeshBuilder builder = new MeshBuilder();
+        builder.execute(map, new Context());
+
+        EdgeSet edges = map.getEdges();
+
+        for (Edge edge1 : edges) {
+            for (Edge edge2 : edges) {
+                if (!(edge1.equals(edge2))) {
+                    assertThat(edge1.getEnd(), not(equalTo(edge2.getStart())));
+                    assertThat(edge1.getStart(), not(equalTo(edge2.getEnd())));
+                }
+            }
         }
     }
 
