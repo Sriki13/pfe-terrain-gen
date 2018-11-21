@@ -7,14 +7,12 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MeshExporter {
 
     private int size;
+    private UUID uuid;
 
     private List<Face> faces;
     private List<Edge> edges;
@@ -26,6 +24,7 @@ public class MeshExporter {
 
     public MeshExporter(IslandMap islandMap) {
         this.size = islandMap.getSize();
+        this.uuid = UUID.nameUUIDFromBytes(Integer.toString(islandMap.getSeed()).getBytes());
         this.vertices = new ArrayList<>(islandMap.getVertices());
         this.faces = new ArrayList<>(islandMap.getFaces());
         this.edges = new ArrayList<>(islandMap.getEdges());
@@ -65,6 +64,7 @@ public class MeshExporter {
             facesArray.add(faceToObject(face));
         }
         mesh.add("faces", facesArray);
+        mesh.addProperty("uuid", uuid.toString());
         return mesh;
     }
 

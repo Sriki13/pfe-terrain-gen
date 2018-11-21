@@ -37,6 +37,7 @@ public class JSONExporterTest {
         assertThat(result.getAsJsonArray("vertex_props"), is(notNullValue()));
         assertThat(result.getAsJsonArray("edge_props"), is(notNullValue()));
         assertThat(result.getAsJsonArray("face_props"), is(notNullValue()));
+        assertThat(result.get("uuid"), is(notNullValue()));
     }
 
 }
