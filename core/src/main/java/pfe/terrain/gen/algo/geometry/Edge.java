@@ -34,7 +34,7 @@ public class Edge extends Mappable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(start.x + start.y + end.x + end.y);
+        return Objects.hash((int) start.x + (int) end.x);
     }
 
 }
