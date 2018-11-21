@@ -13,7 +13,8 @@ import pfe.terrain.gen.algo.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -28,9 +29,9 @@ public class BasicSquareBiomesTest {
 
     private static Face buildTestFace(int seed) {
         return new Face(new Coord(seed, 0),
-                Collections.singletonList(
+                Stream.of(
                         new Edge(new Coord(0, 0), new Coord(0, 0))
-                ));
+                ).collect(Collectors.toSet()));
     }
 
     @Before

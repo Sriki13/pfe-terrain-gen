@@ -28,7 +28,7 @@ public class App {
         App app = new App();
 
         app.chooseAlgo(new BasicInitializer().getName(),
-                new GridPoints().getName(),
+                new RelaxedPoints().getName(),
                 new MeshBuilder().getName(),
                 new BasicSquareBiomes().getName(),
                 new BasicBorders().getName());

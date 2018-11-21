@@ -10,6 +10,8 @@ import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -28,28 +30,28 @@ public class BasicBordersTest {
             new Coord(95, 101)
     );
 
-    private Face validFace = new Face(new Coord(10, 10), Arrays.asList(
+    private Face validFace = new Face(new Coord(10, 10), Stream.of(
             new Edge(new Coord(20, 30), new Coord(20, 40)),
             new Edge(new Coord(20, 40), new Coord(30, 40)),
             new Edge(new Coord(30, 40), new Coord(20, 30))
-    ));
+    ).collect(Collectors.toSet()));
 
     private List<Face> invalidFaces = Arrays.asList(
-            new Face(new Coord(10, 10), Arrays.asList(
+            new Face(new Coord(10, 10), Stream.of(
                     new Edge(new Coord(2, 3), new Coord(2, 100)),
                     new Edge(new Coord(2, 100), new Coord(3, 4)),
                     new Edge(new Coord(3, 4), new Coord(2, 3))
-            )),
-            new Face(new Coord(10, 10), Arrays.asList(
+            ).collect(Collectors.toSet())),
+            new Face(new Coord(10, 10), Stream.of(
                     new Edge(new Coord(-1, 3), new Coord(2, 4)),
                     new Edge(new Coord(2, 40), new Coord(3, 40)),
                     new Edge(new Coord(3, 4), new Coord(-1, 3))
-            )),
-            new Face(new Coord(10, 10), Arrays.asList(
+            ).collect(Collectors.toSet())),
+            new Face(new Coord(10, 10), Stream.of(
                     new Edge(new Coord(20, 3), new Coord(2, 4)),
                     new Edge(new Coord(2, 4), new Coord(3, 0)),
                     new Edge(new Coord(3, 0), new Coord(20, 3))
-            ))
+            ).collect(Collectors.toSet()))
     );
 
 

@@ -26,7 +26,7 @@ public class PerlinMoistureTest {
         int mapSize = 1024;
         for (float i = 1; i < mapSize; i += 9) {
             for (float j = 1; j < mapSize; j += 9) {
-                faces.add(new Face(new Coord(i, j), new ArrayList<>()));
+                faces.add(new Face(new Coord(i, j), new HashSet<>()));
             }
         }
         Map<Face, Double> noiseValues = perlinMoisture.computeNoise(0, faces, mapSize, 1.0);
@@ -44,13 +44,13 @@ public class PerlinMoistureTest {
         int mapSize = 1024;
         for (float i = 1; i < mapSize; i += 9) {
             for (float j = 1; j < mapSize; j += 9) {
-                faces.add(new Face(new Coord(i, j), new ArrayList<>()));
+                faces.add(new Face(new Coord(i, j), new HashSet<>()));
             }
         }
         final Perlin perlin = new Perlin();
         perlin.setSeed(1);
         perlin.setFrequency(5.0);
-        List<Double> values = new ArrayList<Double>(Collections.nCopies(mapSize * mapSize, 1.0));
+        List<Double> values = new ArrayList<>(Collections.nCopies(mapSize * mapSize, 1.0));
         for (Face face : faces) {
             final double noise = perlin.getValue(face.getCenter().x / mapSize, face.getCenter().y / mapSize, 0);
             values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x), noise);

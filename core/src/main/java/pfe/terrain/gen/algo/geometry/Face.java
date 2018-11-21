@@ -2,17 +2,20 @@ package pfe.terrain.gen.algo.geometry;
 
 import pfe.terrain.gen.algo.Mappable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class Face extends Mappable {
 
     private Coord center;
 
-    private List<Edge> edges;
+    private Set<Edge> edges;
 
     private Set<Face> neighbors;
 
-    public Face(Coord center, List<Edge> edges) {
+    public Face(Coord center, Set<Edge> edges) {
         super();
         this.center = center;
         this.edges = edges;
@@ -50,7 +53,7 @@ public class Face extends Mappable {
         return neighbors;
     }
 
-    public List<Edge> getEdges() {
+    public Set<Edge> getEdges() {
         return edges;
     }
 

@@ -10,6 +10,8 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.geometry.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
@@ -25,20 +27,18 @@ public class MeshExporterTest {
 
     private Coord firstFaceCenter = new Coord(1, 1);
     private Coord firstFaceLastPoint = new Coord(3, 4);
-    private List<Edge> firstFaceEdges = Arrays.asList(
+    private Set<Edge> firstFaceEdges = Stream.of(
             commonInFaces,
             new Edge(commonInFaces.getEnd(), firstFaceLastPoint),
-            new Edge(firstFaceLastPoint, commonInFaces.getStart())
-    );
+            new Edge(firstFaceLastPoint, commonInFaces.getStart())).collect(Collectors.toSet());
     private Face firstFace = new Face(firstFaceCenter, firstFaceEdges);
 
     private Coord secondFaceCenter = new Coord(2, 2);
     private Coord secondFaceLastPoint = new Coord(8, 9);
-    private List<Edge> secondFaceEdges = Arrays.asList(
+    private Set<Edge> secondFaceEdges = Stream.of(
             commonInFaces,
             new Edge(commonInFaces.getEnd(), secondFaceLastPoint),
-            new Edge(secondFaceLastPoint, commonInFaces.getStart())
-    );
+            new Edge(secondFaceLastPoint, commonInFaces.getStart())).collect(Collectors.toSet());
     private Face secondFace = new Face(secondFaceCenter, secondFaceEdges);
 
     private Edge loneEdge = new Edge(new Coord(8, 8), new Coord(9, 9));
@@ -117,11 +117,11 @@ public class MeshExporterTest {
         JsonArray verticesArray = json.getAsJsonArray("vertices");
         assertThat(edgesArray.size(), is(firstFaceEdges.size() + secondFaceEdges.size()));
         checkEdgesInJsonArray(firstFaceEdges, edgesArray, verticeMap);
-        checkEdgesInJsonArray(Collections.singletonList(loneEdge), edgesArray, verticeMap);
+        checkEdgesInJsonArray(Stream.of(loneEdge).collect(Collectors.toSet()), edgesArray, verticeMap);
         validateEdgeMap(edgesArray, verticesArray, meshExporter.getEdgesMap());
     }
 
-    private void checkEdgesInJsonArray(List<Edge> edges, JsonArray edgesArray, Map<Coord, Integer> verticeMap)
+    private void checkEdgesInJsonArray(Set<Edge> edges, JsonArray edgesArray, Map<Coord, Integer> verticeMap)
             throws Exception {
         for (Edge edge : edges) {
             Coord expected = new Coord(verticeMap.get(edge.getStart()), verticeMap.get(edge.getEnd()));

@@ -79,12 +79,11 @@ public class MeshBuilder extends MeshGenerator {
         return coordinates;
     }
 
-    private List<Edge> genEdges(List<Polygon> polygons) {
-        List<Edge> edges = new ArrayList<>();
+    private Set<Edge> genEdges(List<Polygon> polygons) {
+        Set<Edge> edges = new HashSet<>();
         for (Polygon polygon : polygons) {
             edges.addAll(extractEdges(polygon));
         }
-
         return edges;
     }
 
@@ -92,7 +91,7 @@ public class MeshBuilder extends MeshGenerator {
         List<Face> faces = new ArrayList<>();
 
         for (Polygon polygon : polygons) {
-            List<Edge> edges = extractEdges(polygon);
+            Set<Edge> edges = extractEdges(polygon);
             faces.add(new Face(new Coord(polygon.getCentroid().getCoordinate()), edges));
         }
 
@@ -100,8 +99,8 @@ public class MeshBuilder extends MeshGenerator {
     }
 
 
-    private List<Edge> extractEdges(Polygon polygon) {
-        List<Edge> edges = new ArrayList<>();
+    private Set<Edge> extractEdges(Polygon polygon) {
+        Set<Edge> edges = new HashSet<>();
         Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             if (i == coordinates.length - 1) {
