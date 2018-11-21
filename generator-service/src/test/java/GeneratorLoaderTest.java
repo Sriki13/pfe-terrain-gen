@@ -51,4 +51,15 @@ public class GeneratorLoaderTest {
 
         Assert.assertEquals(0,gen.size());
     }
+
+    @Test
+    public void emptydirTest() throws Exception{
+        File file = new File(GeneratorLoaderTest.class.getResource("/wrongJar").getFile());
+
+        loader.setFolderPath(file.getCanonicalPath());
+
+        List<Generator> gen = loader.load();
+
+        Assert.assertEquals(0,gen.size());
+    }
 }
