@@ -13,7 +13,7 @@ public abstract class MeshGenerator extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                Stream.of(new Key<>("POINTS", CoordSet.class)).collect(Collectors.toSet()),
+                Stream.of(new Key<>("POINTS", CoordSet.class), size).collect(Collectors.toSet()),
                 Stream.of(vertices, edges, faces).collect(Collectors.toSet()));
     }
 

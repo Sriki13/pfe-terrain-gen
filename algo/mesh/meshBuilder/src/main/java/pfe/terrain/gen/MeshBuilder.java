@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MeshBuilder extends MeshGenerator {
 
@@ -33,7 +34,8 @@ public class MeshBuilder extends MeshGenerator {
 
         VoronoiDiagramBuilder builder = new VoronoiDiagramBuilder();
 
-        builder.setSites(map.getProperty(new Key<>("POINTS", CoordSet.class)));
+        Set<Coordinate> coordinateSet = convertToCoordinateSet(map.getProperty(new Key<>("POINTS", CoordSet.class)));
+        builder.setSites(coordinateSet);
 
         Coordinate[] boundaries = {new Coordinate(0, 0),
                 new Coordinate(0, map.getSize()),
@@ -113,10 +115,10 @@ public class MeshBuilder extends MeshGenerator {
 
     private void genNeighbor(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
         Key<FaceSet> key = new Key<>("FACES", FaceSet.class);
-        Set<Coord> centers = getFacesCenters(map.getProperty(key));
+        CoordSet centers = getFacesCenters(map.getProperty(key));
 
         DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
-        builder.setSites(centers);
+        builder.setSites(convertToCoordinateSet(centers));
 
         Geometry geo = builder.getTriangles(new GeometryFactory());
 
@@ -144,8 +146,8 @@ public class MeshBuilder extends MeshGenerator {
 
     }
 
-    private Set<Coord> getFacesCenters(Set<Face> faces) {
-        Set<Coord> coords = new HashSet<>();
+    private CoordSet getFacesCenters(Set<Face> faces) {
+        CoordSet coords = new CoordSet();
 
         for (Face face : faces) {
             coords.add(face.getCenter());
@@ -154,4 +156,8 @@ public class MeshBuilder extends MeshGenerator {
         return coords;
     }
 
+
+    private Set<Coordinate> convertToCoordinateSet(CoordSet coordSet) throws NoSuchKeyException, KeyTypeMismatch {
+        return coordSet.stream().map(coord -> new Coordinate(coord.x, coord.y)).collect(Collectors.toSet());
+    }
 }
