@@ -1,14 +1,16 @@
 package pfe.terrain.gen;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.geometry.Coord;
+import pfe.terrain.gen.algo.geometry.CoordSet;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest
-{
+public class AppTest {
 //    @Test
 //    public void getFaceByCenterTest(){
 //        int x=8;
@@ -44,4 +46,23 @@ public class AppTest
 //            Assert.assertTrue(coords.contains(coord));
 //        }
 //    }
+
+    @Test
+    public void meshTest() throws Exception {
+        IslandMap map = new IslandMap();
+
+        CoordSet points = new CoordSet();
+
+        for (int i = 0; i < 32; i++) {
+            for (int j = 0; j < 32; j++) {
+                points.add(new Coord(i, j));
+            }
+        }
+        map.putProperty(new Key<>("SIZE", Integer.class), 32);
+        map.putProperty(new Key<>("POINTS", CoordSet.class), points);
+
+        MeshBuilder builder = new MeshBuilder();
+
+        builder.execute(map, new Context());
+    }
 }
