@@ -18,6 +18,8 @@ public class IslandMap extends Mappable {
     private Key<CoordSet> verticesKey = new Key<>("VERTICES", CoordSet.class);
     private Key<EdgeSet> edgesKey = new Key<>("EDGES", EdgeSet.class);
     private Key<FaceSet> facesKey = new Key<>("FACES", FaceSet.class);
+    private Key<Integer> sizeKey = new Key<>("SIZE", Integer.class);
+    private Key<Integer> seedKey = new Key<>("SEED", Integer.class);
 
     public IslandMap() {
         super();
@@ -36,19 +38,16 @@ public class IslandMap extends Mappable {
             this.edges = edgesKey.getType().cast(value);
         } else if (key.equals(facesKey)) {
             this.faces = facesKey.getType().cast(value);
+        } else if (key.equals(sizeKey)) {
+            this.size = sizeKey.getType().cast(value);
+        } else if (key.equals(seedKey)) {
+            this.seed = seedKey.getType().cast(value);
         }
         super.putProperty(key, value);
     }
 
     @Override
     public <T> T getProperty(Key<T> key) throws NoSuchKeyException, KeyTypeMismatch {
-        if (key.equals(verticesKey)) {
-            return key.getType().cast(vertices);
-        } else if (key.equals(edgesKey)) {
-            return key.getType().cast(edges);
-        } else if (key.equals(facesKey)) {
-            return key.getType().cast(faces);
-        }
         return super.getProperty(key);
     }
 
@@ -70,13 +69,5 @@ public class IslandMap extends Mappable {
 
     public int getSize() {
         return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public void setSeed(int seed) {
-        this.seed = seed;
     }
 }

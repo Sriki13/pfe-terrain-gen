@@ -24,7 +24,6 @@ public class MapGenerator implements Generator {
 
     public MapGenerator(){
         this.islandMap = new IslandMap();
-        islandMap.setSize(9);
 
         this.context = new Context();
 

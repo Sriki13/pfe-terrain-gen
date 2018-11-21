@@ -19,7 +19,6 @@ public class IslandMapTest {
     @Before
     public void init() {
         map = new IslandMap();
-        map.setSize(16);
     }
 
     @Test
