@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MeshBuilder extends MeshGenerator {
 
@@ -35,7 +34,7 @@ public class MeshBuilder extends MeshGenerator {
 
         VoronoiDiagramBuilder builder = new VoronoiDiagramBuilder();
 
-        Set<Coordinate> coordinateSet = convertToCoordinateSet(map.getProperty(new Key<>("POINTS", CoordSet.class)));
+        Set<Coordinate> coordinateSet = map.getProperty(new Key<>("POINTS", CoordSet.class)).convertToCoordinateSet();
         builder.setSites(coordinateSet);
 
         Coordinate[] boundaries = {new Coordinate(0, 0),
@@ -108,13 +107,15 @@ public class MeshBuilder extends MeshGenerator {
             if (i == coordinates.length - 1) {
                 Coord start = new Coord(coordinates[i]);
                 Coord end = new Coord(coordinates[0]);
-                if (start == end) continue;
-                edges.add(new Edge(start, end));
+                if (!start.equals(end)) {
+                    edges.add(new Edge(start, end));
+                }
             } else {
                 Coord start = new Coord(coordinates[i]);
                 Coord end = new Coord(coordinates[i + 1]);
-                if (start == end) continue;
-                edges.add(new Edge(start, end));
+                if (!start.equals(end)) {
+                    edges.add(new Edge(start, end));
+                }
             }
         }
         return edges;
@@ -126,7 +127,7 @@ public class MeshBuilder extends MeshGenerator {
         CoordSet centers = getFacesCenters(map.getProperty(key));
 
         DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
-        builder.setSites(convertToCoordinateSet(centers));
+        builder.setSites(centers.convertToCoordinateSet());
 
         Geometry geo = builder.getTriangles(new GeometryFactory());
 
@@ -162,10 +163,5 @@ public class MeshBuilder extends MeshGenerator {
         }
 
         return coords;
-    }
-
-
-    private Set<Coordinate> convertToCoordinateSet(CoordSet coordSet) throws NoSuchKeyException, KeyTypeMismatch {
-        return coordSet.stream().map(coord -> new Coordinate(coord.x, coord.y)).collect(Collectors.toSet());
     }
 }
