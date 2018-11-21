@@ -2,9 +2,6 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.generator.Generator;
 
-/**
- * Hello world!
- */
 public class AppGen {
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException {

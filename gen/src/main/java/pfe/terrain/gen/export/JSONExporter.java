@@ -3,8 +3,6 @@ package pfe.terrain.gen.export;
 import com.google.gson.JsonObject;
 import pfe.terrain.gen.algo.IslandMap;
 
-import java.util.UUID;
-
 public class JSONExporter {
 
     public JsonObject export(IslandMap islandMap) {
@@ -17,8 +15,7 @@ public class JSONExporter {
         result.add("edge_props", edgeExporter.getPropsArray());
         PropertyExporter faceExporter = new PropertyExporter<>(meshExporter.getFacesMap());
         result.add("face_props", faceExporter.getPropsArray());
-        result.addProperty("uuid", UUID.nameUUIDFromBytes(
-                Integer.toString(islandMap.getSeed()).getBytes()).toString());
+        result.addProperty("uuid", islandMap.getSeed());
         return result;
     }
 

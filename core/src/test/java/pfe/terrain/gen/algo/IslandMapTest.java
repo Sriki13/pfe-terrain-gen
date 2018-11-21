@@ -1,6 +1,5 @@
 package pfe.terrain.gen.algo;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -10,7 +9,6 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class IslandMapTest {

@@ -95,7 +95,9 @@ public class App {
             }
         }
         for (String jar : jars) {
-            Files.copy(Paths.get( jarPath+ jar), Paths.get(jarDestPath + jar));
+            if(jar.contains(".jar")) {
+                Files.copy(Paths.get(jarPath + jar), Paths.get(jarDestPath + jar));
+            }
         }
     }
 
