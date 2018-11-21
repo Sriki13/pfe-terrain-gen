@@ -13,6 +13,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MeshExporterTest {
@@ -69,6 +70,7 @@ public class MeshExporterTest {
     public void meshExportTest() throws Exception {
         JsonObject json = meshExporter.export();
         assertThat(json.get("size").getAsInt(), is(islandMap.getSize()));
+        assertThat(json.get("uuid"), is(notNullValue()));
         checkVertices(json);
         checkEdges(json, meshExporter.getVerticesMap());
         checkFaces(json);
