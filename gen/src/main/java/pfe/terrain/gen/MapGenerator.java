@@ -4,16 +4,17 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
-import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 public class MapGenerator implements Generator {
 
@@ -23,7 +24,7 @@ public class MapGenerator implements Generator {
     private int id;
     private Context context;
 
-    public MapGenerator(){
+    public MapGenerator() {
         this.islandMap = new IslandMap();
 
         this.context = new Context();
@@ -34,13 +35,13 @@ public class MapGenerator implements Generator {
 
     }
 
-    public String generate(){
+    public String generate() {
 
         this.execute();
-        try{
+        try {
             JSONExporter exporter = new JSONExporter();
             return exporter.export(this.islandMap).toString();
-        } catch (Exception e){
+        } catch (Exception e) {
             return e.getMessage();
         }
     }
@@ -50,7 +51,7 @@ public class MapGenerator implements Generator {
         return id;
     }
 
-    public void getContractOrder(){
+    public void getContractOrder() {
         try {
             StringBuilder result = new StringBuilder();
             InputStream stream = AppGen.class.getResourceAsStream("/order.json");
@@ -65,8 +66,8 @@ public class MapGenerator implements Generator {
             this.orderedContracts = parser.getList(result.toString());
             this.id = result.toString().hashCode();
             this.orderedContracts.sort((o1, o2) -> {
-                if(o1 == o2) return 0;
-                if(o1.getOrder() > o2.getOrder()) return 1;
+                if (o1 == o2) return 0;
+                if (o1.getOrder() > o2.getOrder()) return 1;
                 else return -1;
             });
 
@@ -75,7 +76,7 @@ public class MapGenerator implements Generator {
         }
     }
 
-    public void instantiateContracts(){
+    public void instantiateContracts() {
 
         try {
             Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
@@ -84,30 +85,30 @@ public class MapGenerator implements Generator {
             for (Class cl : subTypes) {
                 try {
                     contracts.add((Contract) cl.newInstance());
-                } catch (Exception e){
-                    System.err.println(e.getMessage());
+                } catch (InstantiationException e) {
+                    System.err.println(cl.getName() + " was not instantiated");
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void execute(){
-        for(OrderedContract ctr : orderedContracts){
-            try{
+    public void execute() {
+        for (OrderedContract ctr : orderedContracts) {
+            try {
                 this.executeByName(ctr.getName());
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    private void executeByName(String name) throws Exception{
-        for(Contract contract : contracts){
-            if(contract.getName().equals(name)){
-                contract.execute(islandMap,this.context);
+    private void executeByName(String name) throws Exception {
+        for (Contract contract : contracts) {
+            if (contract.getName().equals(name)) {
+                contract.execute(islandMap, this.context);
             }
         }
     }
