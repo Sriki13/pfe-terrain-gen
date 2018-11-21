@@ -37,7 +37,7 @@ public class GeneratorLoaderTest {
 
         Assert.assertEquals(1,gen.size());
 
-        Assert.assertEquals("Salut\n",gen.get(0).generate());
+        Assert.assertEquals("Salut",gen.get(0).generate());
         Assert.assertEquals(2,gen.get(0).getId());
     }
 

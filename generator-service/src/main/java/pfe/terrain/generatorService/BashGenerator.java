@@ -18,12 +18,12 @@ public class BashGenerator implements Generator {
     private int id;
     private boolean isSet = false;
 
-    public BashGenerator(String jarPath) throws CannotUseGeneratorException{
+    public BashGenerator(String jarPath) throws CannotUseGeneratorException {
         this.jarPath = jarPath;
 
         this.id = this.getId();
 
-        if(!isSet){
+        if (!isSet) {
             throw new CannotUseGeneratorException();
         }
     }
@@ -32,23 +32,23 @@ public class BashGenerator implements Generator {
     public String generate() {
         try {
             return this.jarRunner(CommandConstants.exec);
-        } catch (Exception e){
+        } catch (Exception e) {
             return "GENERATOR KO";
         }
     }
 
     @Override
     public int getId() {
-        if(isSet){
+        if (isSet) {
             return this.id;
         }
 
-        try{
+        try {
             String idString = this.jarRunner(CommandConstants.getId);
-            idString = idString.replace("\n","");
+            idString = idString.replace("\n", "");
             this.id = Integer.valueOf(idString);
             this.isSet = true;
-        }catch (Exception e){
+        } catch (Exception e) {
             this.isSet = false;
         }
 
@@ -56,7 +56,7 @@ public class BashGenerator implements Generator {
     }
 
 
-    private String jarRunner(String... param) throws IOException,InterruptedException{
+    private String jarRunner(String... param) throws IOException, InterruptedException {
         String separator = System.getProperty("file.separator");
         String path = System.getProperty("java.home")
                 + separator + "bin" + separator + "java";
@@ -71,10 +71,10 @@ public class BashGenerator implements Generator {
                 new ProcessBuilder(procParam);
 
         Process process = processBuilder.start();
+        processBuilder.redirectErrorStream(true);
+        String result = inputToString(process.getInputStream());
         process.waitFor();
-
-        return inputToString(process.getInputStream());
-
+        return result;
     }
 
     private String inputToString(InputStream inputStream) {
@@ -84,10 +84,10 @@ public class BashGenerator implements Generator {
             br = new BufferedReader(new InputStreamReader(inputStream));
             String line = null;
             while ((line = br.readLine()) != null) {
-                sb.append(line + System.getProperty("line.separator"));
+                sb.append(line /*+ System.getProperty("line.separator")*/);
             }
             br.close();
-        } catch (Exception e){
+        } catch (Exception e) {
         }
         return sb.toString();
     }
