@@ -7,12 +7,15 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-public abstract class AltitudeGenerator extends Contract {
+public abstract class HeightGenerator extends Contract {
 
-    protected final Key<BooleanType> verticeBorderKey = new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
-    protected final Key<BooleanType> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    public static final Key<BooleanType> verticeBorderKey =
+            new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
+    public static final Key<BooleanType> faceBorderKey =
+            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
 
-    protected Key<DoubleType> vertexHeightKey = new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
+    public static final Key<DoubleType> vertexHeightKey =
+            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
 
     @Override
     public Constraints getContract() {

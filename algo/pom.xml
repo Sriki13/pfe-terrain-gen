@@ -29,6 +29,7 @@
         <module>biome</module>
         <module>moisture</module>
         <module>initializer</module>
+        <module>height</module>
     </modules>
 
 </project>
