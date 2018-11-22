@@ -55,7 +55,6 @@ public class GeneratorLoader {
             try {
                 Generator gen = new BashGenerator(path);
                 generators.add(gen);
-                System.out.println("Loaded generator id : " + gen.getId() + " from : " + path);
             } catch (CannotUseGeneratorException e){
                 System.err.println("cannot load generator : " + path);
             }
