@@ -29,7 +29,7 @@ public enum Biome implements SerializableType {
     }
 
     @Override
-    public String toJSON() {
+    public String serialize() {
         return code;
     }
 

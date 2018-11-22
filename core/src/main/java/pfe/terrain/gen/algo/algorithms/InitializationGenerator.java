@@ -6,8 +6,6 @@ import pfe.terrain.gen.algo.constraints.Contract;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class InitializationGenerator extends Contract {
 

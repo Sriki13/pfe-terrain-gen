@@ -32,9 +32,13 @@ public class PropertyExporter<T extends Mappable> {
                 if (!(value instanceof SerializableType)) {
                     continue;
                 }
+                String serialized = ((SerializableType) properties.get(key)).serialize();
+                if (serialized == null) {
+                    continue;
+                }
                 JsonObject propertyObject = new JsonObject();
                 propertyObject.addProperty("p", key.getSerializedName());
-                propertyObject.addProperty("v", ((SerializableType) properties.get(key)).toJSON());
+                propertyObject.addProperty("v", serialized);
                 itemProperties.add(propertyObject);
             }
             if (itemProperties.size() > 0) {

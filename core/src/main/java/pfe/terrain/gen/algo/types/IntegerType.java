@@ -9,7 +9,7 @@ public class IntegerType implements SerializableType {
     }
 
     @Override
-    public String toJSON() {
+    public String serialize() {
         return Integer.toString(value);
     }
 

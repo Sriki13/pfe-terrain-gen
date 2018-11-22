@@ -7,9 +7,6 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.types.BooleanType;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public abstract class BasicBiomeGenerator extends Contract {
 
     public final Key<BooleanType> faceBorderKey =
