@@ -12,8 +12,15 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         GeneratorLoader generatorLoader = new GeneratorLoader();
+
+
         GeneratorRunner runner = new GeneratorRunner(generatorLoader.load());
 
+        System.out.println("Generator loaded : ");
+
+        for(Integer gen : runner.getGeneratorList()){
+            System.out.println(gen);
+        }
 
         port(8080);
         get("/list", (request, response) -> {

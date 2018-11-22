@@ -49,4 +49,25 @@ public class GeneratorRunnerTest {
     public void missingGen() throws Exception{
         runner.executeById(787877788);
     }
+
+    @Test
+    public void addTest() throws Exception{
+        Assert.assertEquals(1,this.runner.getGeneratorList().size());
+
+        this.runner.addGenerator(new Generator() {
+            @Override
+            public String generate() {
+                return "wow";
+            }
+
+            @Override
+            public int getId() {
+                return 0;
+            }
+        });
+
+        Assert.assertTrue(this.runner.getGeneratorList().contains(0));
+
+        Assert.assertEquals("wow",this.runner.executeById(0));
+    }
 }
