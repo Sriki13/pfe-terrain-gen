@@ -10,7 +10,7 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.types.OptionalBooleanType;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -39,8 +39,8 @@ public class BasicSquareBiomesTest {
         biomeMapper = new BasicSquareBiomes();
         islandMap = new IslandMap();
         islandMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(Arrays.asList(land, ocean)));
-        ocean.putProperty(biomeMapper.faceBorderKey, new BooleanType(true));
-        land.putProperty(biomeMapper.faceBorderKey, new BooleanType(false));
+        ocean.putProperty(biomeMapper.faceBorderKey, new OptionalBooleanType(true));
+        land.putProperty(biomeMapper.faceBorderKey, new OptionalBooleanType(false));
     }
 
     @Test

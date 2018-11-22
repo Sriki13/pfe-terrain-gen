@@ -10,6 +10,7 @@ import pfe.terrain.gen.algo.SerializableKey;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.IntegerType;
+import pfe.terrain.gen.algo.types.OptionalBooleanType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,10 @@ public class PropertyExporterTest {
         Coord vertexWithProperties = new Coord(0, 0);
         vertexWithProperties.putProperty(new SerializableKey<>("INTERNAL_KEY", "serialized", IntegerType.class), new IntegerType(2));
         vertexWithProperties.putProperty(new SerializableKey<>("INTERNAL_KEY_2", "serialized2", BooleanType.class), new BooleanType(true));
+        vertexWithProperties.putProperty(new SerializableKey<>("SERIALIZED BUT FALSE", "serializedButFalse", OptionalBooleanType.class),
+                new OptionalBooleanType(false));
+        vertexWithProperties.putProperty(new SerializableKey<>("SERIALIZED", "serializedAndTrue", OptionalBooleanType.class),
+                new OptionalBooleanType(true));
         vertexWithProperties.putProperty(new Key<>("NOT_SERIALIZED", Integer.class), -1);
         Coord basicVertex = new Coord(1, 1);
         indexes.put(vertexWithProperties, 55);
@@ -42,7 +47,7 @@ public class PropertyExporterTest {
         JsonObject vertexJson = propertiesArray.get(0).getAsJsonObject();
         assertThat(vertexJson.get("key").getAsInt(), is(55));
         JsonArray vals = vertexJson.getAsJsonArray("vals");
-        assertThat(vals.size(), is(2));
+        assertThat(vals.size(), is(3));
         for (JsonElement property : vals) {
             JsonObject propertyObject = property.getAsJsonObject();
             String name = propertyObject.get("p").getAsString();
@@ -51,6 +56,7 @@ public class PropertyExporterTest {
                     assertThat(propertyObject.get("v").getAsInt(), is(2));
                     break;
                 case "serialized2":
+                case "serializedAndTrue":
                     assertThat(propertyObject.get("v").getAsBoolean(), is(true));
                     break;
                 default:
