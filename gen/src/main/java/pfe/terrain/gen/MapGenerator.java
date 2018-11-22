@@ -14,10 +14,7 @@ import pfe.terrain.gen.exception.WrongTypeException;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class MapGenerator implements Generator {
 
@@ -66,7 +63,16 @@ public class MapGenerator implements Generator {
         return id;
     }
 
-    public void getContractOrder() {
+    @Override
+    public void setParams(Map<String, Object> map) {
+        try {
+            this.context = new MapContext(map, this.contracts);
+        } catch (WrongTypeException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getContractOrder() {
         try {
             StringBuilder result = new StringBuilder();
             InputStream stream = AppGen.class.getResourceAsStream("/order.json");
@@ -91,7 +97,7 @@ public class MapGenerator implements Generator {
         }
     }
 
-    public void instantiateContracts() {
+    private void instantiateContracts() {
 
         try {
             Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));

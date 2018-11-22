@@ -7,6 +7,8 @@ import pfe.terrain.gen.algo.CommandConstants;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.commands.Command;
 
+import java.util.Map;
+
 public class CommandParserTest {
 
     private CommandParser parser;
@@ -22,6 +24,11 @@ public class CommandParserTest {
             @Override
             public int getId() {
                 return 0;
+            }
+
+            @Override
+            public void setParams(Map<String, Object> map) {
+
             }
         };
         parser = new CommandParser(gen);
