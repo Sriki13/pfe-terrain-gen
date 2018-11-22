@@ -16,7 +16,7 @@
     "order": 3
   },
   {
-    "name": "pfe.terrain.gen.algo.biome.BasicSquareBiomes",
+    "name": "pfe.terrain.gen.algo.height.OpenSimplexHeight",
     "order": 4
   }
 ]

@@ -2,7 +2,7 @@ package pfe.terrain.gen.exception;
 
 public class MissingRequiredException extends Exception {
 
-    public MissingRequiredException(){
-        super("A required elements is missing");
+    public MissingRequiredException(String element) {
+        super("A required elements is missing: " + element);
     }
 }

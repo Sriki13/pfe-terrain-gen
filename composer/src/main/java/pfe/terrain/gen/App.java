@@ -32,10 +32,9 @@ public class App {
         app.chooseAlgo(new BasicInitializer().getName(),
                 new RelaxedPoints().getName(),
                 new MeshBuilder().getName(),
-                new BasicSquareBiomes().getName(),
                 new BasicBorders().getName(),
-                new OpenSimplexHeight().getName(),
-                new WaterFromHeight().getName()
+                new OpenSimplexHeight().getName()
+                //new WaterFromHeight().getName()
         );
         app.setupGenerator();
 
