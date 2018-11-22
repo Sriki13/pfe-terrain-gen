@@ -20,8 +20,8 @@ public abstract class BasicBiomeGenerator extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                Stream.of(faceBorderKey, faces).collect(Collectors.toSet()),
-                Stream.of(faceBiomeKey).collect(Collectors.toSet())
+                asSet(faceBorderKey, faces),
+                asSet(faceBiomeKey)
         );
     }
 

@@ -16,7 +16,7 @@
     </parent>
 
     <modules>
-        <module>meshBuilder</module>
+        <module>builder</module>
     </modules>
 
 </project>

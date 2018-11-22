@@ -16,7 +16,7 @@
     </parent>
 
     <modules>
-        <module>basicInitializer</module>
+        <module>basic</module>
     </modules>
 
 </project>

@@ -11,7 +11,15 @@ import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public abstract class Contract implements Parameters {
+
+    public static Set<Key> asSet(Key... params) {
+        return Stream.of(params).collect(Collectors.toSet());
+    }
 
     protected static final String verticesPrefix = "VERTICES_";
     protected static final String edgesPrefix = "EDGES_";

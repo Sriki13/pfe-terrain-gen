@@ -6,9 +6,6 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.types.BooleanType;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public abstract class BordersGenerator extends Contract {
 
     public final Key<BooleanType> verticeBorderKey =
@@ -19,8 +16,8 @@ public abstract class BordersGenerator extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                Stream.of(vertices, edges, faces).collect(Collectors.toSet()),
-                Stream.of(verticeBorderKey, faceBorderKey).collect(Collectors.toSet())
+                asSet(vertices, edges, faces),
+                asSet(verticeBorderKey, faceBorderKey)
         );
     }
 
