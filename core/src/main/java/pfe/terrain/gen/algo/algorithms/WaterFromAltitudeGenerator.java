@@ -13,5 +13,4 @@ public abstract class WaterFromAltitudeGenerator extends WaterGenerator {
                 asSet(faceWaterKey, vertexWaterKey, waterKindKey)
         );
     }
-
 }

@@ -19,9 +19,8 @@ public abstract class WaterGenerator extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, vertices, verticeBorderKey, faceBorderKey),
+                asSet(faces, vertices,seed),
                 asSet(faceWaterKey, vertexWaterKey, waterKindKey)
         );
     }
-
 }
