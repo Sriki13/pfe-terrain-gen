@@ -21,9 +21,9 @@ public abstract class Contract implements Parameters {
         return Stream.of(params).collect(Collectors.toSet());
     }
 
-    protected static final String verticesPrefix = "VERTICES_";
-    protected static final String edgesPrefix = "EDGES_";
-    protected static final String facesPrefix = "FACES_";
+    public static final String verticesPrefix = "VERTICES_";
+    public static final String edgesPrefix = "EDGES_";
+    public static final String facesPrefix = "FACES_";
 
     public static final Key<CoordSet> vertices = new Key<>("VERTICES", CoordSet.class);
     public static final Key<EdgeSet> edges = new Key<>("EDGES", EdgeSet.class);
