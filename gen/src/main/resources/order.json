@@ -18,5 +18,9 @@
   {
     "name": "pfe.terrain.gen.algo.height.OpenSimplexHeight",
     "order": 4
+  },
+  {
+    "name": "pfe.terrain.gen.water.WaterFromHeight",
+    "order": 5
   }
 ]

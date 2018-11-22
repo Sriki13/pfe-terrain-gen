@@ -11,28 +11,25 @@ import pfe.terrain.gen.algo.geometry.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Unit test for simple App.
- */
 public class MeshBuilderTest {
 
     private IslandMap map;
 
     @Before
     public void initMapWithGrid() throws Exception {
+        generateMap(20);
+    }
+
+    private void generateMap(int size) throws Exception {
         this.map = new IslandMap();
 
         CoordSet points = new CoordSet();
 
-        for (double i = 0; i < 20; i += 0.5) {
-            for (double j = 0; j < 20; j += 0.5) {
+        for (double i = 0; i < size; i += 0.5) {
+            for (double j = 0; j < size; j += 0.5) {
                 points.add(new Coord(i, j));
             }
         }
@@ -40,49 +37,10 @@ public class MeshBuilderTest {
         map.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
 
-//    @Test
-//    public void getFaceByCenterTest(){
-//        int x=8;
-//        int y = 9;
-//
-//
-//        Face face = new Face(new Coordinate(x,y),new ArrayList<>());
-//
-//        Set Faces = new HashSet();
-//        Faces.add(face);
-//
-//        map.setFaces(Faces);
-//
-//        Assert.assertEquals(face,map.getFaceFromCenter(new Coordinate(x,y)));
-//    }
-
-//    @Test
-//    public void getCenterTest(){
-//        Set<Face> faces = new HashSet<>();
-//        Set<Coordinate> coords = new HashSet();
-//
-//        for(int i = 0;i<10;i++){
-//            coords.add(new Coordinate(i,i));
-//        }
-//
-//        for(Coordinate coord : coords){
-//            faces.add(new Face(coord,new ArrayList<>()));
-//        }
-//
-//        map.setFaces(faces);
-//
-//        for(Coordinate coord : map.getFacesCenters()){
-//            Assert.assertTrue(coords.contains(coord));
-//        }
-//    }
-
     @Test
     public void EdgeVerticesTest() throws Exception {
-
-
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
-
         CoordSet vertices = map.getVertices();
         EdgeSet edges = map.getEdges();
 
@@ -92,7 +50,6 @@ public class MeshBuilderTest {
             verticesEdge.add(edge.getEnd());
             verticesEdge.add(edge.getStart());
         }
-
         assertTrue(vertices.containsAll(verticesEdge));
     }
 
@@ -100,18 +57,14 @@ public class MeshBuilderTest {
     public void FaceVerticesTest() throws Exception {
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
-
         FaceSet faces = map.getFaces();
-
         CoordSet verticesFace = new CoordSet();
         EdgeSet edgesFace = new EdgeSet();
-
         for (Face face : faces) {
             verticesFace.add(face.getCenter());
             verticesFace.addAll(face.getVertices());
             edgesFace.addAll(face.getEdges());
         }
-
         assertTrue(map.getVertices().containsAll(verticesFace));
         assertTrue(map.getEdges().containsAll(edgesFace));
     }
@@ -120,9 +73,7 @@ public class MeshBuilderTest {
     public void samePointsEdgeTest() throws Exception {
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
-
         EdgeSet edges = map.getEdges();
-
         for (Edge edge : edges) {
             Assert.assertNotEquals("Should be different " + edge.getEnd() + " " + edge.getStart(), edge.getEnd(), edge.getStart());
         }
@@ -132,11 +83,8 @@ public class MeshBuilderTest {
     public void sameEdgeDifferentWay() throws Exception {
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
-
         EdgeSet edges = map.getEdges();
-
         List<Edge> edgesList = new ArrayList<>(edges);
-
         for (int i = 0; i < edgesList.size(); i++) {
             for (int j = i + 1; j < edgesList.size(); j++) {
                 assertFalse((edgesList.get(i).getEnd().equals(edgesList.get(j).getStart()))
@@ -146,20 +94,51 @@ public class MeshBuilderTest {
     }
 
     @Test
-    public void allEdgesAreDifferent() throws Exception{
+    public void allEdgesAreDifferent() throws Exception {
         MeshBuilder builder = new MeshBuilder();
         builder.execute(map, new Context());
-
-        List<Edge> edges = new ArrayList<>();
-        edges.addAll(map.getEdges());
-
-
-        for(Edge edge : map.getEdges()){
+        List<Edge> edges = new ArrayList<>(map.getEdges());
+        for (Edge edge : map.getEdges()) {
             edges.remove(edge);
-
             Assert.assertFalse(edges.contains(edge));
         }
     }
 
+    @Test
+    public void allElementsPassedAsReference() throws Exception {
+        generateMap(5);
+        MeshBuilder builder = new MeshBuilder();
+        builder.execute(map, new Context());
+        for (Edge edge : map.getEdges()) {
+            assertTrue(findCoordInVertices(edge.getStart()));
+            assertTrue(findCoordInVertices(edge.getEnd()));
+        }
+        for (Face face : map.getFaces()) {
+            for (Coord vertex : map.getVertices()) {
+                assertTrue(findCoordInVertices(vertex));
+            }
+            for (Edge edge : face.getEdges()) {
+                assertTrue(findEdge(edge));
+            }
+        }
+    }
+
+    private boolean findCoordInVertices(Coord coord) {
+        for (Coord vertex : map.getVertices()) {
+            if (coord == vertex) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean findEdge(Edge search) {
+        for (Edge edge : map.getEdges()) {
+            if (edge == search) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

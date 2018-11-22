@@ -13,19 +13,26 @@ import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MeshBuilder extends MeshGenerator {
+
+    private CoordSet allCoords;
+    private Map<Edge, Edge> allEdgesMap;
 
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> polygons = genPolygons(map);
-        map.putProperty(Contract.vertices, new CoordSet(genVertex(polygons)));
-        map.putProperty(Contract.edges, new EdgeSet(genEdges(polygons)));
-        map.putProperty(Contract.faces, new FaceSet(genFaces(polygons)));
+        this.allCoords = new CoordSet(genVertex(polygons));
+        this.allEdgesMap = new HashMap<>();
+        FaceSet allFaces = new FaceSet(genFaces(polygons));
+        map.putProperty(Contract.vertices, allCoords);
+        map.putProperty(Contract.faces, allFaces);
+        EdgeSet allEdges = new EdgeSet(new HashSet<>());
+        for (Face face : allFaces) {
+            allEdges.addAll(face.getEdges());
+        }
+        map.putProperty(Contract.edges, allEdges);
         genNeighbor(map);
     }
 
@@ -65,8 +72,8 @@ public class MeshBuilder extends MeshGenerator {
         return res;
     }
 
-    private List<Coord> genVertex(List<Polygon> polygons) {
-        List<Coord> coordinates = new ArrayList<>();
+    private Set<Coord> genVertex(List<Polygon> polygons) {
+        Set<Coord> coordinates = new HashSet<>();
 
         for (Polygon polygon : polygons) {
             Coordinate[] vertices = polygon.getCoordinates();
@@ -79,16 +86,8 @@ public class MeshBuilder extends MeshGenerator {
         return coordinates;
     }
 
-    private Set<Edge> genEdges(List<Polygon> polygons) {
-        Set<Edge> edges = new HashSet<>();
-        for (Polygon polygon : polygons) {
-            edges.addAll(extractEdges(polygon));
-        }
-        return edges;
-    }
-
-    private List<Face> genFaces(List<Polygon> polygons) {
-        List<Face> faces = new ArrayList<>();
+    private Set<Face> genFaces(List<Polygon> polygons) {
+        Set<Face> faces = new HashSet<>();
 
         for (Polygon polygon : polygons) {
             Set<Edge> edges = extractEdges(polygon);
@@ -98,26 +97,46 @@ public class MeshBuilder extends MeshGenerator {
         return faces;
     }
 
+    private Coord findInAllCoords(Coordinate coordinate) {
+        for (Coord coord : allCoords) {
+            if (coord.matches(coordinate)) {
+                return coord;
+            }
+        }
+        throw new RuntimeException("Coord for edge was not found in vertices!");
+    }
+
+    private Edge findOrAddEdgeToMap(Edge search) {
+        Edge found = allEdgesMap.get(search);
+        if (found == null) {
+            allEdgesMap.put(search, search);
+            return search;
+        }
+        return found;
+    }
 
     private Set<Edge> extractEdges(Polygon polygon) {
         Set<Edge> edges = new HashSet<>();
         Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
         for (int i = 0; i < coordinates.length; i++) {
             if (i == coordinates.length - 1) {
-                Coord start = new Coord(coordinates[i]);
-                Coord end = new Coord(coordinates[0]);
-                if (!start.equals(end)) {
-                    edges.add(new Edge(start, end));
-                }
+                Coord start = findInAllCoords(coordinates[i]);
+                Coord end = findInAllCoords(coordinates[0]);
+                addNewEdgeToPolygonSet(edges, start, end);
             } else {
-                Coord start = new Coord(coordinates[i]);
-                Coord end = new Coord(coordinates[i + 1]);
-                if (!start.equals(end)) {
-                    edges.add(new Edge(start, end));
-                }
+                Coord start = findInAllCoords(coordinates[i]);
+                Coord end = findInAllCoords(coordinates[i + 1]);
+                addNewEdgeToPolygonSet(edges, start, end);
             }
         }
         return edges;
+    }
+
+    private void addNewEdgeToPolygonSet(Set<Edge> edges, Coord start, Coord end) {
+        if (!start.equals(end)) {
+            Edge edge = findOrAddEdgeToMap(new Edge(start, end));
+            edges.add(edge);
+        }
     }
 
 

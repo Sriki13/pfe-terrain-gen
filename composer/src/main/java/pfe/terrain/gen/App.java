@@ -33,8 +33,8 @@ public class App {
                 new RelaxedPoints().getName(),
                 new MeshBuilder().getName(),
                 new BasicBorders().getName(),
-                new OpenSimplexHeight().getName()
-                //new WaterFromHeight().getName()
+                new OpenSimplexHeight().getName(),
+                new WaterFromHeight().getName()
         );
         app.setupGenerator();
 

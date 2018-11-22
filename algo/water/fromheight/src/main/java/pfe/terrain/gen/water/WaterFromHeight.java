@@ -70,14 +70,14 @@ public class WaterFromHeight extends WaterFromHeightGenerator {
         }
         Set<Face> seen = new HashSet<>(borders);
         for (Face face : borders) {
-            analyseNeighbors(seen, oceanFaces, face);
+            analyzeNeighbors(seen, oceanFaces, face);
         }
         for (Face face : oceanFaces) {
             face.putProperty(waterKindKey, WaterKind.OCEAN);
         }
     }
 
-    private void analyseNeighbors(Set<Face> seen, Set<Face> oceanFaces, Face face)
+    private void analyzeNeighbors(Set<Face> seen, Set<Face> oceanFaces, Face face)
             throws NoSuchKeyException, KeyTypeMismatch {
         for (Face neighbor : face.getNeighbors()) {
             if (seen.contains(neighbor)) {
@@ -86,7 +86,7 @@ public class WaterFromHeight extends WaterFromHeightGenerator {
             seen.add(neighbor);
             if (face.getProperty(faceWaterKey).value) {
                 oceanFaces.add(neighbor);
-                analyseNeighbors(seen, oceanFaces, neighbor);
+                analyzeNeighbors(seen, oceanFaces, neighbor);
             }
         }
     }
