@@ -6,11 +6,13 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.gridcreator.GridPoints;
 import pfe.terrain.gen.algo.gridcreator.RandomPoints;
 import pfe.terrain.gen.algo.gridcreator.RelaxedPoints;
+import pfe.terrain.gen.algo.height.OpenSimplexHeight;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.NoSuchContractException;
 import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.water.WaterFromHeight;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,8 +32,10 @@ public class App {
         app.chooseAlgo(new BasicInitializer().getName(),
                 new RelaxedPoints().getName(),
                 new MeshBuilder().getName(),
-                new BasicSquareBiomes().getName(),
-                new BasicBorders().getName());
+                new BasicBorders().getName(),
+                new OpenSimplexHeight().getName(),
+                new WaterFromHeight().getName()
+        );
         app.setupGenerator();
 
 
@@ -57,6 +61,8 @@ public class App {
         Contract meshBuilder = new MeshBuilder();
         Contract biomeBasicSquare = new BasicSquareBiomes();
         Contract borderBasic = new BasicBorders();
+        Contract simplexHeight = new OpenSimplexHeight();
+        Contract waterFromHeight = new WaterFromHeight();
 
         available = new ArrayList<>();
         available.add(gridPoints);
@@ -66,6 +72,8 @@ public class App {
         available.add(initializator);
         available.add(biomeBasicSquare);
         available.add(borderBasic);
+        available.add(simplexHeight);
+        available.add(waterFromHeight);
 
         priority = new ArrayList<>();
 
@@ -76,14 +84,16 @@ public class App {
         nameToJar.put(meshBuilder, addSuffixPrefix("mesh.builder"));
         nameToJar.put(biomeBasicSquare, addSuffixPrefix("biome.basicsquare"));
         nameToJar.put(borderBasic, addSuffixPrefix("borders.basic"));
+        nameToJar.put(simplexHeight, addSuffixPrefix("height.opensimplex"));
+        nameToJar.put(waterFromHeight, addSuffixPrefix("water.fromheight"));
     }
 
     public List<Contract> getOrderedContract() throws InvalidContractException, UnsolvableException, MissingRequiredException {
-        ChocoDependencySolver solver = new ChocoDependencySolver(this.available,this.priority,new FinalContract());
+        ChocoDependencySolver solver = new ChocoDependencySolver(this.available, this.priority, new FinalContract());
         return solver.orderContracts();
     }
 
-    public void createJar(List<Contract> include,String jarPath,String jarDestPath) throws IOException {
+    public void createJar(List<Contract> include, String jarPath, String jarDestPath) throws IOException {
         List<String> jars = include.stream()
                 .map(item -> nameToJar.get(item))
                 .collect(Collectors.toList());
@@ -95,13 +105,13 @@ public class App {
             }
         }
         for (String jar : jars) {
-            if(jar.contains(".jar")) {
+            if (jar.contains(".jar")) {
                 Files.copy(Paths.get(jarPath + jar), Paths.get(jarDestPath + jar));
             }
         }
     }
 
-    public void createOrderTextFile(List<Contract> contracts, String destPath) throws IOException{
+    public void createOrderTextFile(List<Contract> contracts, String destPath) throws IOException {
         OrderParser parser = new OrderParser();
         String json = parser.writeList(contracts);
 
@@ -114,21 +124,21 @@ public class App {
         writer.close();
     }
 
-    public void setupGenerator(){
-        try{
+    public void setupGenerator() {
+        try {
             List<Contract> contracts = getOrderedContract();
-            this.createJar(contracts,this.jarPath,this.jarDestPath);
-            this.createOrderTextFile(contracts,this.destPath);
-        }catch (Exception e){
+            this.createJar(contracts, this.jarPath, this.jarDestPath);
+            this.createOrderTextFile(contracts, this.destPath);
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
 
-    public String getAlgoList(){
+    public String getAlgoList() {
         StringBuilder builder = new StringBuilder();
 
-        for(Contract ctr : available){
+        for (Contract ctr : available) {
             builder.append(ctr.getName());
             builder.append("\n");
         }
@@ -136,15 +146,15 @@ public class App {
         return builder.toString();
     }
 
-    public void chooseAlgo(String... algos) throws NoSuchContractException{
-        for(String name : algos){
+    public void chooseAlgo(String... algos) throws NoSuchContractException {
+        for (String name : algos) {
             this.priority.add(findContractByName(name));
         }
     }
 
     private Contract findContractByName(String name) throws NoSuchContractException {
-        for(Contract ctr : available){
-            if(ctr.getName().equals(name)){
+        for (Contract ctr : available) {
+            if (ctr.getName().equals(name)) {
                 return ctr;
             }
         }

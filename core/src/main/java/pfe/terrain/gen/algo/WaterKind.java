@@ -5,7 +5,8 @@ import pfe.terrain.gen.algo.types.SerializableType;
 public enum WaterKind implements SerializableType {
 
     OCEAN("OCEAN"),
-    LAKE("LAKE");
+    LAKE("LAKE"),
+    NONE(null);
 
     private String name;
 

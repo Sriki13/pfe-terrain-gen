@@ -22,6 +22,10 @@ public class Coord extends Mappable {
         this.y = wrapped.y;
     }
 
+    public boolean matches(Coordinate coordinate) {
+        return this.x == coordinate.x && this.y == coordinate.y;
+    }
+
     @Override
     public String toString() {
         return "Coord{x=" + x + ", y=" + y + '}';
