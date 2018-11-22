@@ -6,12 +6,13 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.exception.WrongTypeException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class MapContext extends Context {
 
-    public MapContext(Map<String,Object> map, Contract... contracts) throws WrongTypeException{
+    public MapContext(Map<String,Object> map, List<Contract> contracts) throws WrongTypeException{
 
         Set<Key> contractParams = new HashSet<>();
 

@@ -8,6 +8,9 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
+import pfe.terrain.gen.contextParser.ContextParser;
+import pfe.terrain.gen.contextParser.MapContext;
+import pfe.terrain.gen.exception.WrongTypeException;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
@@ -33,6 +36,18 @@ public class MapGenerator implements Generator {
         this.getContractOrder();
         this.instantiateContracts();
 
+    }
+
+    public MapGenerator(String jsonContext) throws WrongTypeException {
+        this.islandMap = new IslandMap();
+
+        this.contracts = new ArrayList<>();
+        this.getContractOrder();
+        this.instantiateContracts();
+
+        ContextParser parser = new ContextParser(jsonContext);
+
+        this.context = new MapContext(parser.getMap(),this.contracts);
     }
 
     public String generate() {
