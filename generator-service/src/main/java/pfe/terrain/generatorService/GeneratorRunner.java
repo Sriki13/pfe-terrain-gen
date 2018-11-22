@@ -4,6 +4,7 @@ import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.generatorService.exception.NoSuchGenerator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class GeneratorRunner {
@@ -32,5 +33,13 @@ public class GeneratorRunner {
             }
         }
         throw new NoSuchGenerator();
+    }
+
+    public void addGenerator(Generator gen){
+        this.generators.add(gen);
+    }
+
+    public void addGenerators(Collection<Generator> generatorCollection){
+        this.generators.addAll(generatorCollection);
     }
 }
