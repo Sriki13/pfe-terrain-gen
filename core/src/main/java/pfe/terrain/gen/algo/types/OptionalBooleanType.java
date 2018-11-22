@@ -7,7 +7,7 @@ public class OptionalBooleanType extends BooleanType {
     }
 
     @Override
-    public String toJSON() {
+    public String serialize() {
         if (!value) {
             return null;
         } else return "true";

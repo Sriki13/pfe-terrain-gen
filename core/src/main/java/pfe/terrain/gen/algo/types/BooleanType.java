@@ -9,7 +9,7 @@ public class BooleanType implements SerializableType {
     }
 
     @Override
-    public String toJSON() {
+    public String serialize() {
         return Boolean.toString(value);
     }
 

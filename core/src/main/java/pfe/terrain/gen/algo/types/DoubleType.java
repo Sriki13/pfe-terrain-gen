@@ -9,7 +9,7 @@ public class DoubleType implements SerializableType {
     }
 
     @Override
-    public String toJSON() {
+    public String serialize() {
         return Double.toString(value);
     }
 
