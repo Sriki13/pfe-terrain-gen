@@ -15,10 +15,7 @@ import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.contextParser.MapContext;
 import pfe.terrain.gen.exception.WrongTypeException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MapContextTest {
 
@@ -60,7 +57,7 @@ public class MapContextTest {
         map.put("wave",10.0);
         map.put("terrain","we");
 
-        MapContext context = new MapContext(map,this.contract);
+        MapContext context = new MapContext(map, Arrays.asList(this.contract));
 
         assertEquals(false,context.getProperty(hill));
         assertEquals(new Integer(12),context.getProperty(mountain));
@@ -75,7 +72,7 @@ public class MapContextTest {
         map.put("hill",false);
         map.put("mountains",12);
 
-        MapContext context = new MapContext(map,this.contract);
+        MapContext context = new MapContext(map,Arrays.asList(this.contract));
 
         assertEquals(false,context.getProperty(hill));
         assertEquals(new Integer(12),context.getProperty(mountain));
@@ -88,7 +85,7 @@ public class MapContextTest {
         map.put("hill",13);
         map.put("mountains",12);
 
-        MapContext context = new MapContext(map,this.contract);
+        MapContext context = new MapContext(map,Arrays.asList(this.contract));
 
     }
 
@@ -98,7 +95,7 @@ public class MapContextTest {
 
         map.put("wave",13);
 
-        MapContext context = new MapContext(map,this.contract);
+        MapContext context = new MapContext(map,Arrays.asList(this.contract));
 
     }
 }
