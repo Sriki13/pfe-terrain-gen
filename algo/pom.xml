@@ -30,6 +30,7 @@
         <module>moisture</module>
         <module>initializer</module>
         <module>height</module>
+        <module>water</module>
     </modules>
 
 </project>

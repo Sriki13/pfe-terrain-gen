@@ -10,7 +10,7 @@ import java.util.Set;
 public abstract class PointsGenerator extends Contract {
 
     protected int getDefaultNbPoint() {
-        return 64;
+        return 1000;
     }
 
     protected Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);

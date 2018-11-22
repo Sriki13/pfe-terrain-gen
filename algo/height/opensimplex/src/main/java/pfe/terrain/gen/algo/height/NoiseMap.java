@@ -13,6 +13,8 @@ import java.util.Set;
 
 public class NoiseMap {
 
+    private static final double SEA_LEVEL = -0.2;
+
     private Map<Coord, Double> heightMap;
     private OpenSimplexNoise noise;
 
@@ -41,14 +43,16 @@ public class NoiseMap {
 
     public void putValuesInRange() {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            heightMap.put(entry.getKey(), (entry.getValue() + 1) * 10);
+            double value = entry.getValue() + 1;
+            heightMap.put(entry.getKey(), (value * 20) - 20);
         }
     }
 
     public void ensureBordersAreLow() throws NoSuchKeyException, KeyTypeMismatch {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             Coord vertex = entry.getKey();
-            if (vertex.getProperty(HeightGenerator.verticeBorderKey).value) {
+            if (vertex.getProperty(HeightGenerator.verticeBorderKey).value
+                    && heightMap.get(vertex) > 0) {
                 heightMap.put(vertex, 0.0);
             }
         }

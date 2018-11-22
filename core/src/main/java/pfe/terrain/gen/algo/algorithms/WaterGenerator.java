@@ -9,9 +9,12 @@ import pfe.terrain.gen.algo.types.BooleanType;
 
 public abstract class WaterGenerator extends Contract {
 
-    protected Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    protected Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    protected Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    public static final Key<BooleanType> vertexBorderKey = new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
+    public static final Key<BooleanType> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+
+    public static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
 
     @Override
     public Constraints getContract() {

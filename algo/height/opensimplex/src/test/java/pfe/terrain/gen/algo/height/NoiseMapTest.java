@@ -14,14 +14,16 @@ import static org.junit.Assert.assertThat;
 
 public class NoiseMapTest {
 
+    public static final int TEST_SIZE = 50;
+
     private Set<Coord> vertices;
     private NoiseMap noiseMap;
 
     @Before
     public void setUp() throws Exception {
         vertices = new HashSet<>();
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < TEST_SIZE; i++) {
+            for (int j = 0; j < TEST_SIZE; j++) {
                 Coord vertex = new Coord(i, j);
                 if (isBorder(vertex)) {
                     vertex.putProperty(HeightGenerator.verticeBorderKey, new BooleanType(true));
@@ -35,7 +37,7 @@ public class NoiseMapTest {
     }
 
     private boolean isBorder(Coord vertex) {
-        return vertex.x == 0 || vertex.y == 0 || vertex.x == 9 || vertex.y == 9;
+        return vertex.x == 0 || vertex.y == 0 || vertex.x == TEST_SIZE - 1 || vertex.y == TEST_SIZE - 1;
     }
 
     @Test
@@ -50,10 +52,10 @@ public class NoiseMapTest {
         noiseMap.putHeightProperty();
         for (Coord vertex : vertices) {
             double value = vertex.getProperty(HeightGenerator.vertexHeightKey).value;
-            assertThat(value, is(greaterThanOrEqualTo(0.0)));
+            assertThat(value, is(greaterThanOrEqualTo(-20.0)));
             assertThat(value, is(lessThanOrEqualTo(20.0)));
             if (isBorder(vertex)) {
-                assertThat(value, closeTo(0.0, 0.01));
+                assertThat(value, lessThanOrEqualTo(0.0));
             }
         }
     }
