@@ -68,7 +68,7 @@ public class HeightFromWater extends Contract {
                 }
                 allEdges.remove(e);
             }
-            height+=5;
+            height+=5.1;
         }
 
         // Set center as mean height to conform
