@@ -3,11 +3,11 @@ package pfe.terrain.gen.commands;
 import pfe.terrain.gen.algo.CommandConstants;
 import pfe.terrain.gen.algo.generator.Generator;
 
-public class ListCommand implements Command {
+public class IdCommand implements Command {
 
     private Generator gen;
 
-    public ListCommand(Generator gen){
+    public IdCommand(Generator gen){
         this.gen = gen;
     }
 
@@ -22,7 +22,7 @@ public class ListCommand implements Command {
     }
 
     @Override
-    public String execute() {
+    public String execute(String... params) {
         return String.valueOf(gen.getId());
     }
 }

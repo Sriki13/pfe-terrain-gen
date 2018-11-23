@@ -24,16 +24,23 @@ public class MapContext extends Context {
 
             for(Key key : contractParams){
                 if(key.getId().equals(name)){
-                    try{
-                        key.getType().cast(map.get(name));
-                    } catch (Exception e){
-                        throw new WrongTypeException();
-                    }
 
-                    this.putProperty(key,map.get(name));
+                    this.putProperty(key,tryConvertion(map.get(name),key.getType()));
                     break;
                 }
             }
+        }
+    }
+
+    public Object tryConvertion(Object val,Class type) throws WrongTypeException{
+        try {
+            if (type == Integer.class) {
+                return ((Double) val).intValue();
+            }
+
+            return type.cast(val);
+        } catch (Exception e){
+            throw new WrongTypeException();
         }
     }
 }

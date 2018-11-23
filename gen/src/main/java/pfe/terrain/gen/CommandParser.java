@@ -4,9 +4,11 @@ import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.commands.Command;
 import pfe.terrain.gen.commands.DescriptionCommand;
 import pfe.terrain.gen.commands.ExecuteCommand;
-import pfe.terrain.gen.commands.ListCommand;
+import pfe.terrain.gen.commands.IdCommand;
+import pfe.terrain.gen.exception.WrongArgsException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandParser {
@@ -19,12 +21,21 @@ public class CommandParser {
 
         commandList = new ArrayList<>();
         commandList.add(new ExecuteCommand(gen));
-        commandList.add(new ListCommand(gen));
+        commandList.add(new IdCommand(gen));
 
         this.help = new DescriptionCommand(commandList);
 
         commandList.add(help);
     }
+
+    public CommandParser(Command... commands){
+
+
+        commandList = new ArrayList<>();
+        commandList.addAll(Arrays.asList(commands));
+    }
+
+
 
     public String execute(String... param){
         if(param.length == 0){
@@ -33,7 +44,11 @@ public class CommandParser {
 
         for(Command command : commandList){
             if(command.getName().equals(param[0])){
-                return command.execute();
+                try {
+                    return command.execute(param);
+                }catch( WrongArgsException e){
+                    return e.getMessage();
+                }
             }
         }
 
@@ -42,7 +57,6 @@ public class CommandParser {
 
     private String wrongCommand(){
         String builder = "No such command\n";
-        builder += help.execute();
 
         return builder;
     }

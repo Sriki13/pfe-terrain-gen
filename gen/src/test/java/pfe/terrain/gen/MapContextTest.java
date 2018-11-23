@@ -53,7 +53,7 @@ public class MapContextTest {
         Map<String,Object> map = new HashMap<>();
 
         map.put("hill",false);
-        map.put("mountains",12);
+        map.put("mountains",12.0);
         map.put("wave",10.0);
         map.put("terrain","we");
 
@@ -70,7 +70,7 @@ public class MapContextTest {
         Map<String,Object> map = new HashMap<>();
 
         map.put("hill",false);
-        map.put("mountains",12);
+        map.put("mountains",12.0);
 
         MapContext context = new MapContext(map,Arrays.asList(this.contract));
 
@@ -89,11 +89,11 @@ public class MapContextTest {
 
     }
 
-    @Test(expected = WrongTypeException.class)
+    @Test
     public void wrongNumberType() throws Exception{
         Map<String,Object> map = new HashMap<>();
 
-        map.put("wave",13);
+        map.put("mountains",13.0);
 
         MapContext context = new MapContext(map,Arrays.asList(this.contract));
 

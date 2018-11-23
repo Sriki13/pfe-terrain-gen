@@ -22,7 +22,7 @@ public class DescriptionCommand implements Command {
     }
 
     @Override
-    public String execute() {
+    public String execute(String... params) {
         StringBuilder builder = new StringBuilder();
 
         for(Command command : commands){
