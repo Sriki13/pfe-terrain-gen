@@ -18,21 +18,22 @@ import java.util.Set;
 
 public class HeightFromWater extends Contract {
 
-    public static final Key<BooleanType> verticeBorderKey =
-            new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
-    public static final Key<BooleanType> faceBorderKey =
-            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    private Key<Double> hardnessP = new Key<>("hardness", Double.class);
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
 
-    public static final Key<BooleanType> faceWaterKey = new Key<>(facesPrefix + "IS_WATER", BooleanType.class);
     public static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
+
+    @Override
+    public Set<Key> getRequestedParameters() {
+        return asSet(hardnessP);
+    }
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, edges, vertices, faceBorderKey, vertexWaterKey),
+                asSet(faces, edges, vertices, vertexWaterKey),
                 asSet(vertexHeightKey)
         );
     }
@@ -40,6 +41,7 @@ public class HeightFromWater extends Contract {
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        double hardness = context.getPropertyOrDefault(hardnessP, 0.5);
         Set<Coord> coordsToProcess = new HashSet<>();
         double height = 0.0;
         CoordSet vertices = map.getVertices();
@@ -68,7 +70,7 @@ public class HeightFromWater extends Contract {
                 }
                 allEdges.remove(e);
             }
-            height+=5;
+            height += 0.25 + 5 * hardness;
         }
 
         // Set center as mean height to conform
