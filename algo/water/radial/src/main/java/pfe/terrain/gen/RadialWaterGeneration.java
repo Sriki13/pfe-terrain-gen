@@ -43,6 +43,7 @@ public class RadialWaterGeneration extends Contract {
         double factor = context.getPropertyOrDefault(islandScatterK, 0.0);
         Shape shape = new Shape(islandSize, factor + 1, new Random(map.getSeed()));
         int size = map.getSize();
+        int i = 0;
         for (Face face : map.getFaces()) {
             BooleanType isWater = new BooleanType(shape.isWater(2 * (face.getCenter().x / size - 0.5), 2 * (face.getCenter().y / size - 0.5)));
             face.putProperty(faceWaterKey, isWater);
@@ -54,6 +55,7 @@ public class RadialWaterGeneration extends Contract {
             face.getCenter().putProperty(vertexWaterKey, isWater);
             for (Coord coord : face.getVertices()) {
                 coord.putProperty(vertexWaterKey, isWater);
+                i++;
             }
         }
     }

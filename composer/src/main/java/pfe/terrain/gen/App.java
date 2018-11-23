@@ -7,6 +7,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.gridcreator.GridPoints;
 import pfe.terrain.gen.algo.gridcreator.RandomPoints;
 import pfe.terrain.gen.algo.gridcreator.RelaxedPoints;
+import pfe.terrain.gen.algo.height.HeightFromWater;
 import pfe.terrain.gen.algo.height.OpenSimplexHeight;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.exception.InvalidContractException;
@@ -34,7 +35,9 @@ public class App {
                 new RelaxedPoints().getName(),
                 new MeshBuilder().getName(),
                 new BasicBorders().getName(),
-                new RadialWaterGeneration().getName()
+                new RadialWaterGeneration().getName(),
+                new HeightFromWater().getName(),
+                new HeightBiomes().getName()
         );
         app.setupGenerator();
     }
@@ -61,8 +64,9 @@ public class App {
         Contract borderBasic = new BasicBorders();
         Contract simplexHeight = new OpenSimplexHeight();
         Contract waterFromHeight = new WaterFromHeight();
-        Contract heightBiomes = new HeightBiomes();
         Contract radialWater = new RadialWaterGeneration();
+        Contract heightFromWater = new HeightFromWater();
+        Contract heightBiomes = new HeightBiomes();
 
         available = new ArrayList<>();
         available.add(gridPoints);
@@ -76,6 +80,7 @@ public class App {
         available.add(waterFromHeight);
         available.add(heightBiomes);
         available.add(radialWater);
+        available.add(heightFromWater);
 
         priority = new ArrayList<>();
 
@@ -90,6 +95,7 @@ public class App {
         nameToJar.put(waterFromHeight, addSuffixPrefix("water.fromheight"));
         nameToJar.put(heightBiomes, addSuffixPrefix("biome.height"));
         nameToJar.put(radialWater, addSuffixPrefix("water.radial"));
+        nameToJar.put(heightFromWater, addSuffixPrefix("height.fromwater"));
     }
 
     public List<Contract> getOrderedContract() throws InvalidContractException, UnsolvableException, MissingRequiredException {
