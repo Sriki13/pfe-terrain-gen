@@ -28,8 +28,8 @@ public class MeshBuilderTest {
 
         CoordSet points = new CoordSet();
 
-        for (double i = 0; i < size; i += 0.5) {
-            for (double j = 0; j < size; j += 0.5) {
+        for (double i = 0; i < size; i += 1) {
+            for (double j = 0; j < size; j += 1) {
                 points.add(new Coord(i, j));
             }
         }
@@ -114,7 +114,7 @@ public class MeshBuilderTest {
             assertTrue(findCoordInVertices(edge.getEnd()));
         }
         for (Face face : map.getFaces()) {
-            for (Coord vertex : map.getVertices()) {
+            for (Coord vertex : face.getVertices()) {
                 assertTrue(findCoordInVertices(vertex));
             }
             for (Edge edge : face.getEdges()) {
@@ -123,8 +123,37 @@ public class MeshBuilderTest {
         }
     }
 
+    @Test
+    public void facesContainsAllVertices() throws Exception {
+        generateMap(5);
+        MeshBuilder builder = new MeshBuilder();
+        builder.execute(map, new Context());
+        CoordSet verticesFromFace = new CoordSet();
+        for (Face face : map.getFaces()) {
+            verticesFromFace.addAll(face.getVertices());
+            verticesFromFace.add(face.getCenter());
+        }
+        for (Coord coord : verticesFromFace) {
+            assertTrue(findCoordInVertices(coord));
+        }
+        for (Coord coord : map.getVertices()) {
+            assertTrue(findCoordInVertices(coord, verticesFromFace));
+        }
+        assertTrue(map.getVertices().containsAll(verticesFromFace));
+        assertTrue(verticesFromFace.containsAll(map.getVertices()));
+    }
+
     private boolean findCoordInVertices(Coord coord) {
         for (Coord vertex : map.getVertices()) {
+            if (coord == vertex) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean findCoordInVertices(Coord coord, CoordSet mySet) {
+        for (Coord vertex : mySet) {
             if (coord == vertex) {
                 return true;
             }
@@ -140,5 +169,4 @@ public class MeshBuilderTest {
         }
         return false;
     }
-
 }
