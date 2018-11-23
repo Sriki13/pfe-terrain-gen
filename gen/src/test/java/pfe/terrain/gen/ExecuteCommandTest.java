@@ -54,14 +54,14 @@ public class ExecuteCommandTest {
     public void fromFile() throws Exception{
         File file = new File(ExecuteCommandTest.class.getResource("/param.json").getFile());
 
-        String content = command.execute("execute","-f",file.getCanonicalPath());
+        String content = command.execute("executeAll","-f",file.getCanonicalPath());
 
         assertEquals("test",content);
     }
 
     @Test
     public void fromCli() throws Exception {
-        String content = command.execute("execute","-c","{\"salut\" : 12}");
+        String content = command.execute("executeAll","-c","{\"salut\" : 12}");
 
         assertEquals("test",content);
     }

@@ -6,11 +6,12 @@ import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.MapContext;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.WrongTypeException;
+import pfe.terrain.gen.algo.exception.*;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
+import pfe.terrain.gen.exception.MissingContractException;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
@@ -26,6 +27,7 @@ public class MapGenerator implements Generator {
     private IslandMap islandMap;
     private int id;
     private Context context;
+    private String orderFilePath = "/order.json";
 
     public MapGenerator() {
         this.islandMap = new IslandMap();
@@ -52,8 +54,8 @@ public class MapGenerator implements Generator {
 
     public String generate() {
 
-        this.execute();
         try {
+            this.executeAll();
             JSONExporter exporter = new JSONExporter();
             return exporter.export(this.islandMap).toString();
         } catch (Exception e) {
@@ -79,7 +81,7 @@ public class MapGenerator implements Generator {
     private void getContractOrder() {
         try {
             StringBuilder result = new StringBuilder();
-            InputStream stream = AppGen.class.getResourceAsStream("/order.json");
+            InputStream stream = AppGen.class.getResourceAsStream(this.orderFilePath);
             Scanner scanner = new Scanner(stream);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -119,23 +121,25 @@ public class MapGenerator implements Generator {
         }
     }
 
-    public void execute() {
+    private void executeAll() throws Exception{
         for (OrderedContract ctr : orderedContracts) {
-            try {
-                this.executeByName(ctr.getName());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
+            execute(ctr);
         }
     }
 
-    private void executeByName(String name) throws Exception {
+    public void execute(OrderedContract contract) throws Exception{
+        this.executeByName(contract.getName());
+
+    }
+
+    private void executeByName(String name) throws MissingContractException, InvalidAlgorithmParameters, DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
         for (Contract contract : contracts) {
             if (contract.getName().equals(name)) {
                 contract.execute(islandMap, this.context);
+                return;
             }
         }
+        throw new MissingContractException(name);
     }
 
 }
