@@ -4,10 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.CommandConstants;
+import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
-import pfe.terrain.gen.commands.Command;
 
-import java.util.Map;
+import java.util.List;
 
 public class CommandParserTest {
 
@@ -27,8 +28,13 @@ public class CommandParserTest {
             }
 
             @Override
-            public void setParams(Map<String, Object> map) {
+            public void setParams(Context map) {
 
+            }
+
+            @Override
+            public List<Contract> getContracts() {
+                return null;
             }
         };
         parser = new CommandParser(gen);

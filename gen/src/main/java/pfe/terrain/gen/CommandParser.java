@@ -5,7 +5,7 @@ import pfe.terrain.gen.commands.Command;
 import pfe.terrain.gen.commands.DescriptionCommand;
 import pfe.terrain.gen.commands.ExecuteCommand;
 import pfe.terrain.gen.commands.IdCommand;
-import pfe.terrain.gen.exception.WrongArgsException;
+import pfe.terrain.gen.algo.exception.WrongArgsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

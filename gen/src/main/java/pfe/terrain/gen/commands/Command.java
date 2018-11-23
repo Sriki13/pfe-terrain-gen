@@ -1,6 +1,6 @@
 package pfe.terrain.gen.commands;
 
-import pfe.terrain.gen.exception.WrongArgsException;
+import pfe.terrain.gen.algo.exception.WrongArgsException;
 
 public interface Command {
     String getDescription();

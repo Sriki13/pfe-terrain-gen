@@ -1,14 +1,12 @@
 package pfe.terrain.generatorService;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.algo.generator.Generator;
+import pfe.terrain.generatorService.controller.BashGenerator;
 import pfe.terrain.generatorService.exception.CannotUseGeneratorException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 public class GeneratorLoader {

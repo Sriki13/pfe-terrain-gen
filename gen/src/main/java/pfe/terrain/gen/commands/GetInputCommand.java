@@ -1,7 +1,7 @@
 package pfe.terrain.gen.commands;
 
 import pfe.terrain.gen.contextParser.Utils;
-import pfe.terrain.gen.exception.WrongArgsException;
+import pfe.terrain.gen.algo.exception.WrongArgsException;
 
 public class GetInputCommand implements Command {
     @Override

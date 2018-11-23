@@ -2,11 +2,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.generator.Generator;
-import pfe.terrain.generatorService.BashGenerator;
+import pfe.terrain.generatorService.controller.BashGenerator;
 import pfe.terrain.generatorService.exception.CannotUseGeneratorException;
 
 import java.io.File;
-import java.io.IOException;
 
 public class BashGeneratorTest {
 

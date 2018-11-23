@@ -3,7 +3,7 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.commands.GetFileCommand;
-import pfe.terrain.gen.exception.WrongArgsException;
+import pfe.terrain.gen.algo.exception.WrongArgsException;
 
 import java.io.File;
 

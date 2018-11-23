@@ -1,12 +1,15 @@
 package pfe.terrain.gen;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.commands.ExecuteCommand;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -18,7 +21,7 @@ public class ExecuteCommandTest {
     @Before
     public void init(){
         this.command = new ExecuteCommand(new Generator() {
-            Map<String,Object> map;
+            Context map;
 
             @Override
             public String generate() {
@@ -31,8 +34,13 @@ public class ExecuteCommandTest {
             }
 
             @Override
-            public void setParams(Map<String, Object> map) {
+            public void setParams(Context map) {
                 this.map = map;
+            }
+
+            @Override
+            public List<Contract> getContracts() {
+                return new ArrayList<>();
             }
         });
     }

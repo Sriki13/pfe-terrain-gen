@@ -1,6 +1,8 @@
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.generatorService.GeneratorRunner;
 import pfe.terrain.generatorService.exception.NoSuchGenerator;
@@ -27,6 +29,16 @@ public class GeneratorRunnerTest {
             @Override
             public int getId() {
                 return genId;
+            }
+
+            @Override
+            public void setParams(Context map) {
+
+            }
+
+            @Override
+            public List<Contract> getContracts() {
+                return null;
             }
         });
 
@@ -63,6 +75,16 @@ public class GeneratorRunnerTest {
             @Override
             public int getId() {
                 return 0;
+            }
+
+            @Override
+            public void setParams(Context map) {
+
+            }
+
+            @Override
+            public List<Contract> getContracts() {
+                return null;
             }
         });
 

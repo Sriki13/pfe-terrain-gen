@@ -8,9 +8,9 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
-import pfe.terrain.gen.contextParser.ContextParser;
-import pfe.terrain.gen.contextParser.MapContext;
-import pfe.terrain.gen.exception.WrongTypeException;
+import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.algo.MapContext;
+import pfe.terrain.gen.algo.exception.WrongTypeException;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
@@ -64,12 +64,13 @@ public class MapGenerator implements Generator {
     }
 
     @Override
-    public void setParams(Map<String, Object> map) {
-        try {
-            this.context = new MapContext(map, this.contracts);
-        } catch (WrongTypeException e){
-            e.printStackTrace();
-        }
+    public void setParams(Context map) {
+        this.context = map;
+    }
+
+    @Override
+    public List<Contract> getContracts() {
+        return this.getContracts();
     }
 
     private void getContractOrder() {

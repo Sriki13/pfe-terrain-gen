@@ -1,10 +1,9 @@
 package pfe.terrain.gen;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.commands.GetInputCommand;
-import pfe.terrain.gen.exception.WrongArgsException;
+import pfe.terrain.gen.algo.exception.WrongArgsException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
