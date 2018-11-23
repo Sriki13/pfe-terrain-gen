@@ -11,9 +11,18 @@ import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
+import java.util.Set;
+
 import static pfe.terrain.gen.algo.Biome.*;
 
 public class HeightBiomes extends Contract {
+
+    private static final Key<Double> heightStepKey = new Key<>("heightBiomeStep", Double.class);
+
+    @Override
+    public Set<Key> getRequestedParameters() {
+        return asSet(heightStepKey);
+    }
 
     public static final Key<BooleanType> faceWaterKey =
             new Key<>(facesPrefix + "IS_WATER", BooleanType.class);
@@ -43,7 +52,7 @@ public class HeightBiomes extends Contract {
         for (Face face : map.getFaces()) {
             Biome biome = getWaterBiomeIfPresent(face);
             if (biome == null) {
-                biome = getBiomeFromElevation(face);
+                biome = getBiomeFromElevation(face, context.getPropertyOrDefault(heightStepKey, 4.0));
             }
             face.putProperty(faceBiomeKey, biome);
         }
@@ -60,17 +69,18 @@ public class HeightBiomes extends Contract {
         return null;
     }
 
-    private Biome getBiomeFromElevation(Face face) throws NoSuchKeyException, KeyTypeMismatch {
+    private Biome getBiomeFromElevation(Face face, double heightStep)
+            throws NoSuchKeyException, KeyTypeMismatch {
         double elevation = 0;
         for (Coord vertex : face.getVertices()) {
             elevation += vertex.getProperty(heightKey).value;
         }
         elevation = elevation / face.getVertices().size();
-        if (elevation < 2) return BEACH;
-        if (elevation < 6) return GRASSLAND;
-        if (elevation < 10) return TEMPERATE_RAIN_FOREST;
-        if (elevation < 14) return SHRUBLAND;
-        if (elevation < 16) return ALPINE;
+        if (elevation < heightStep / 2) return BEACH;
+        if (elevation < 2 * heightStep) return GRASSLAND;
+        if (elevation < 5 * heightStep) return TEMPERATE_RAIN_FOREST;
+        if (elevation < 7 * heightStep) return SHRUBLAND;
+        if (elevation < 8.5 * heightStep) return ALPINE;
         return SNOW;
     }
 

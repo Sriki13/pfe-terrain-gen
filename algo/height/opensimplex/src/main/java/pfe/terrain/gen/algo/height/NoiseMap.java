@@ -42,13 +42,6 @@ public class NoiseMap {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - seaLevel);
         }
-        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            if (entry.getValue() < -20) {
-                heightMap.put(entry.getKey(), -20.0);
-            } else if (entry.getValue() > 20) {
-                heightMap.put(entry.getKey(), 20.0);
-            }
-        }
     }
 
     public void ensureBordersAreLow() throws NoSuchKeyException, KeyTypeMismatch {
