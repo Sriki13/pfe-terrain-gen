@@ -1,5 +1,6 @@
 {
   "nbPoints": 2000,
   "seed": 0,
-  "heightBiomeStep": 10
+  "heightBiomeStep": 10,
+  "hardness" : 1.0
 }
