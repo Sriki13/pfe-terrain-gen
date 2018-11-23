@@ -34,9 +34,7 @@ public class App {
                 new RelaxedPoints().getName(),
                 new MeshBuilder().getName(),
                 new BasicBorders().getName(),
-                new OpenSimplexHeight().getName(),
-                new WaterFromHeight().getName(),
-                new HeightBiomes().getName()
+                new RadialWaterGeneration().getName()
         );
         app.setupGenerator();
     }
@@ -64,6 +62,7 @@ public class App {
         Contract simplexHeight = new OpenSimplexHeight();
         Contract waterFromHeight = new WaterFromHeight();
         Contract heightBiomes = new HeightBiomes();
+        Contract radialWater = new RadialWaterGeneration();
 
         available = new ArrayList<>();
         available.add(gridPoints);
@@ -76,6 +75,7 @@ public class App {
         available.add(simplexHeight);
         available.add(waterFromHeight);
         available.add(heightBiomes);
+        available.add(radialWater);
 
         priority = new ArrayList<>();
 
@@ -89,6 +89,7 @@ public class App {
         nameToJar.put(simplexHeight, addSuffixPrefix("height.opensimplex"));
         nameToJar.put(waterFromHeight, addSuffixPrefix("water.fromheight"));
         nameToJar.put(heightBiomes, addSuffixPrefix("biome.height"));
+        nameToJar.put(radialWater, addSuffixPrefix("water.radial"));
     }
 
     public List<Contract> getOrderedContract() throws InvalidContractException, UnsolvableException, MissingRequiredException {

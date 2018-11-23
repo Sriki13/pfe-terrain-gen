@@ -99,7 +99,7 @@ public class MeshBuilder extends Contract {
 
         for (Polygon polygon : polygons) {
             Set<Edge> edges = extractEdges(polygon);
-            faces.add(new Face(new Coord(polygon.getCentroid().getCoordinate()), edges));
+            faces.add(new Face(findInAllCoords(polygon.getCentroid().getCoordinate()), edges));
         }
 
         return faces;

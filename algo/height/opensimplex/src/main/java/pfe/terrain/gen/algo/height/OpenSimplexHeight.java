@@ -36,10 +36,11 @@ public class OpenSimplexHeight extends Contract {
     private static final Key<Double> frequencyKey = new Key<>("simplexFrequency", Double.class);
     private static final Key<Double> seaLevel = new Key<>("simplexSeaLevel", Double.class);
     private static final Key<Double> simplexPower = new Key<>("simplexPower", Double.class);
+    private static final Key<Boolean> fixCliffs = new Key<>("simplexFixCliffs", Boolean.class);
 
     @Override
     public Set<Key> getRequestedParameters() {
-        return asSet(intensityKey, frequencyKey, seaLevel, simplexPower);
+        return asSet(intensityKey, frequencyKey, seaLevel, simplexPower, fixCliffs);
     }
 
     @Override
@@ -58,5 +59,8 @@ public class OpenSimplexHeight extends Contract {
         elevation.ensureBordersAreLow();
         elevation.putHeightProperty();
 
+        if (context.getPropertyOrDefault(fixCliffs, true)) {
+            new CliffFixer().fixBorderCliffs(map);
+        }
     }
 }
