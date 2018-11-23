@@ -4,17 +4,20 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.MapContext;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.exception.WrongTypeException;
 import pfe.terrain.gen.algo.generator.Generator;
+import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
-import pfe.terrain.gen.algo.parsing.ContextParser;
-import pfe.terrain.gen.algo.MapContext;
-import pfe.terrain.gen.algo.exception.WrongTypeException;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 public class MapGenerator implements Generator {
 
@@ -70,7 +73,7 @@ public class MapGenerator implements Generator {
 
     @Override
     public List<Contract> getContracts() {
-        return this.getContracts();
+        return this.contracts;
     }
 
     private void getContractOrder() {

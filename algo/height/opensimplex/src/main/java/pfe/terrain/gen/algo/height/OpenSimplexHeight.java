@@ -34,10 +34,11 @@ public class OpenSimplexHeight extends Contract {
 
     private static final Key<Double> intensityKey = new Key<>("simplexIntensity", Double.class);
     private static final Key<Double> frequencyKey = new Key<>("simplexFrequency", Double.class);
+    private static final Key<Double> seaLevel = new Key<>("simplexSeaLevel", Double.class);
 
     @Override
     public Set<Key> getRequestedParameters() {
-        return asSet(intensityKey, frequencyKey);
+        return asSet(intensityKey, frequencyKey, seaLevel);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class OpenSimplexHeight extends Contract {
         elevation.addSimplexNoise(intensity / 4, frequency / 4);
 
         elevation.redistribute(3);
-        elevation.putValuesInRange();
+        elevation.putValuesInRange(context.getPropertyOrDefault(seaLevel, 16.0));
         elevation.ensureBordersAreLow();
         elevation.putHeightProperty();
 

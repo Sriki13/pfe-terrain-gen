@@ -1,19 +1,44 @@
 package pfe.terrain.gen.water;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.WaterKind;
+import pfe.terrain.gen.algo.*;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class WaterFromHeight extends WaterFromHeightGenerator {
+public class WaterFromHeight extends Contract {
+
+    public static final Key<DoubleType> heightKey =
+            new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
+
+    public static final Key<BooleanType> vertexBorderKey =
+            new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
+
+    public static final Key<BooleanType> faceBorderKey =
+            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    public static final Key<BooleanType> faceWaterKey =
+            new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+
+    public static final Key<BooleanType> vertexWaterKey =
+            new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<WaterKind> waterKindKey =
+            new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(
+                asSet(faces, vertices, heightKey, faceBorderKey, vertexBorderKey),
+                asSet(faceWaterKey, vertexWaterKey, waterKindKey)
+        );
+    }
 
 
 
