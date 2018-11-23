@@ -39,14 +39,14 @@ public class OpenSimplexHeight extends Contract {
 
     @Override
     public Set<Key> getRequestedParameters() {
-        return asSet(intensityKey, frequencyKey, seaLevel);
+        return asSet(intensityKey, frequencyKey, seaLevel, simplexPower);
     }
 
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-        double intensity = context.getPropertyOrDefault(intensityKey, 0.7);
-        double frequency = context.getPropertyOrDefault(frequencyKey, 0.05);
+        double intensity = context.getPropertyOrDefault(intensityKey, 3.0);
+        double frequency = context.getPropertyOrDefault(frequencyKey, 0.002);
         NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSeed());
 
         elevation.addSimplexNoise(intensity, frequency);
@@ -54,7 +54,7 @@ public class OpenSimplexHeight extends Contract {
         elevation.addSimplexNoise(intensity / 4, frequency / 4);
 
         elevation.redistribute(context.getPropertyOrDefault(simplexPower, 1.0));
-        elevation.putValuesInRange(context.getPropertyOrDefault(seaLevel, 16.0));
+        elevation.putValuesInRange(context.getPropertyOrDefault(seaLevel, 32.0));
         elevation.ensureBordersAreLow();
         elevation.putHeightProperty();
 

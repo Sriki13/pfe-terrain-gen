@@ -1,5 +1,5 @@
 language: java
 jdk: oraclejdk8
 
- notifications:
-    slack: si5-2018-2019-pns:Qay3sY9mRk9ItOQ4tuD8Rarr
+notifications:
+  slack: si5-2018-2019-pns:Qay3sY9mRk9ItOQ4tuD8Rarr
