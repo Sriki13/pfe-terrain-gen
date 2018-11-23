@@ -13,8 +13,6 @@ import java.util.Set;
 
 public class NoiseMap {
 
-    private static final double SEA_LEVEL = -0.2;
-
     private Map<Coord, Double> heightMap;
     private OpenSimplexNoise noise;
 
@@ -43,8 +41,7 @@ public class NoiseMap {
 
     public void putValuesInRange() {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            double value = entry.getValue() + 1;
-            heightMap.put(entry.getKey(), (value * 20) - 20);
+            heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - 16);
         }
     }
 

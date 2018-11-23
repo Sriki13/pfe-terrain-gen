@@ -10,7 +10,7 @@ import pfe.terrain.gen.algo.types.BooleanType;
 public abstract class BasicBiomeGenerator extends Contract {
 
     public final Key<BooleanType> faceBorderKey =
-            new SerializableKey<>(facesPrefix + "IS_BORDER", "is_border", BooleanType.class);
+            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
     public final Key<Biome> faceBiomeKey =
             new SerializableKey<>(facesPrefix + "BIOME", "biome", Biome.class);
 
