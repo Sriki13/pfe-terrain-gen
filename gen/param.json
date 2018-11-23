@@ -1,4 +1,5 @@
 {
-  "nbPoints": 16,
-  "seed" : 3
+  "nbPoints": 2000,
+  "seed": 0,
+  "heightBiomeStep": 10
 }

@@ -50,7 +50,7 @@ public class HeightFromWater extends Contract {
                 coordsToProcess.add(vertex);
             }
         }
-        EdgeSet allEdges = map.getEdges();
+        EdgeSet allEdges = new EdgeSet(map.getEdges());
         EdgeSet edgesToProcess;
         int coordsSize = -1;
 
@@ -68,7 +68,7 @@ public class HeightFromWater extends Contract {
                 }
                 allEdges.remove(e);
             }
-            height++;
+            height+=5;
         }
 
         // Set center as mean height to conform
