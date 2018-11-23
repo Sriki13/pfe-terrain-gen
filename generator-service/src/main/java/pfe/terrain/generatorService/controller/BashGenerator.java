@@ -86,7 +86,7 @@ public class BashGenerator implements Generator {
 
     @Override
     public List<Contract> getContracts() {
-        return null;
+        return new ArrayList<>();
     }
 
 
