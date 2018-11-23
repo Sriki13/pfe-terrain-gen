@@ -70,7 +70,7 @@ public class MapGenerator implements Generator {
 
     @Override
     public List<Contract> getContracts() {
-        return this.getContracts();
+        return this.contracts;
     }
 
     private void getContractOrder() {

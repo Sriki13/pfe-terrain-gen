@@ -14,7 +14,7 @@ public class ExecuteCommand implements Command{
     public ExecuteCommand(Generator gen){
         this.gen = gen;
 
-        this.commandParser = new CommandParser(new GetFileCommand(),new GetInputCommand());
+        this.commandParser = new CommandParser(new GetFileCommand(),new GetInputCommand(), new GetParamCLICommand());
     }
 
     @Override

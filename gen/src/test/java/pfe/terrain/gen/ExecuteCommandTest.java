@@ -59,5 +59,12 @@ public class ExecuteCommandTest {
         assertEquals("test",content);
     }
 
+    @Test
+    public void fromCli() throws Exception {
+        String content = command.execute("execute","-c","{\"salut\" : 12}");
+
+        assertEquals("test",content);
+    }
+
 
 }

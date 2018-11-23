@@ -2,12 +2,10 @@ package pfe.terrain.generatorService;
 
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.generatorService.controller.ServiceController;
-import pfe.terrain.generatorService.parser.AnswerParser;
-
-import java.io.File;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
+import static spark.Spark.post;
 
 public class Main {
 
@@ -24,10 +22,18 @@ public class Main {
             return controller.getGenList();
         });
 
-        get("/:id/execute",(request,response) -> {
+        get("/:id/execute", (request, response) -> {
             response.type("application/json");
             return controller.executeById(Integer.valueOf(request.params(":id")));
         });
 
+        post("/:id/context", (request, response) -> {
+            response.type("application/json");
+
+            controller.setContext(Integer.valueOf(request.params(":id")),
+                    request.body());
+
+            return "{\"status\" : \"OK\"}";
+        });
     }
 }

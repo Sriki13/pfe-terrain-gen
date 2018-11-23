@@ -1,7 +1,6 @@
 package pfe.terrain.generatorService;
 
 import pfe.terrain.gen.algo.generator.Generator;
-import pfe.terrain.generatorService.controller.BashGenerator;
 import pfe.terrain.generatorService.exception.CannotUseGeneratorException;
 
 import java.io.*;

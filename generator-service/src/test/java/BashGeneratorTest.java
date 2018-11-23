@@ -1,8 +1,9 @@
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.generator.Generator;
-import pfe.terrain.generatorService.controller.BashGenerator;
+import pfe.terrain.generatorService.BashGenerator;
 import pfe.terrain.generatorService.exception.CannotUseGeneratorException;
 
 import java.io.File;
@@ -31,6 +32,12 @@ public class BashGeneratorTest {
     @Test (expected = CannotUseGeneratorException.class)
     public void initException() throws Exception{
         new BashGenerator("aezeé");
+    }
+
+    @Test
+    public void runWithContext(){
+        generator.setParams(new Context());
+        Assert.assertNotNull(generator.generate());
     }
 
 }

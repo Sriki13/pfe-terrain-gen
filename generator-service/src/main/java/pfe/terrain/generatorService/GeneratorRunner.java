@@ -1,5 +1,6 @@
 package pfe.terrain.generatorService;
 
+import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.generatorService.exception.NoSuchGenerator;
 
@@ -27,12 +28,15 @@ public class GeneratorRunner {
     }
 
     public String executeById(int id) throws NoSuchGenerator{
-        for(Generator gen : generators){
-            if(gen.getId() == id){
-                return gen.generate();
-            }
-        }
-        throw new NoSuchGenerator();
+        return getById(id).generate();
+    }
+
+    public String executebyIdWithContext(int id, Context context) throws NoSuchGenerator{
+        Generator gen = getById(id);
+
+        gen.setParams(context);
+
+        return gen.generate();
     }
 
     public void addGenerator(Generator gen){
@@ -41,5 +45,14 @@ public class GeneratorRunner {
 
     public void addGenerators(Collection<Generator> generatorCollection){
         this.generators.addAll(generatorCollection);
+    }
+
+    private Generator getById(int id) throws NoSuchGenerator{
+        for(Generator gen : generators){
+            if(gen.getId() == id){
+                return gen;
+            }
+        }
+        throw new NoSuchGenerator();
     }
 }
