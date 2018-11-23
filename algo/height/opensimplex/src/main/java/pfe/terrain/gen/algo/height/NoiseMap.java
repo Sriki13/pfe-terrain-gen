@@ -1,6 +1,5 @@
 package pfe.terrain.gen.algo.height;
 
-import pfe.terrain.gen.algo.algorithms.HeightGenerator;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
@@ -12,8 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class NoiseMap {
-
-    private static final double SEA_LEVEL = -0.2;
 
     private Map<Coord, Double> heightMap;
     private OpenSimplexNoise noise;
@@ -43,15 +40,14 @@ public class NoiseMap {
 
     public void putValuesInRange() {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            double value = entry.getValue() + 1;
-            heightMap.put(entry.getKey(), (value * 20) - 20);
+            heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - 16);
         }
     }
 
     public void ensureBordersAreLow() throws NoSuchKeyException, KeyTypeMismatch {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             Coord vertex = entry.getKey();
-            if (vertex.getProperty(HeightGenerator.verticeBorderKey).value
+            if (vertex.getProperty(OpenSimplexHeight.verticeBorderKey).value
                     && heightMap.get(vertex) > 0) {
                 heightMap.put(vertex, 0.0);
             }
@@ -60,7 +56,7 @@ public class NoiseMap {
 
     public void putHeightProperty() throws DuplicateKeyException {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            entry.getKey().putProperty(HeightGenerator.vertexHeightKey, new DoubleType(entry.getValue()));
+            entry.getKey().putProperty(OpenSimplexHeight.vertexHeightKey, new DoubleType(entry.getValue()));
         }
     }
 

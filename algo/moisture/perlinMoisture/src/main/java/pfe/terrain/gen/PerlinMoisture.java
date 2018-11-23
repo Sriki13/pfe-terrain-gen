@@ -4,13 +4,16 @@ import com.flowpowered.noise.module.source.Perlin;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.algorithms.MoistureGenerator;
+import pfe.terrain.gen.algo.SerializableKey;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.Collections;
@@ -19,14 +22,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class PerlinMoisture extends MoistureGenerator {
+public class PerlinMoisture extends Contract {
+
+    private final SerializableKey<DoubleType> faceMoisture = new SerializableKey<>(facesPrefix + "HAS_MOISTURE", "moisture", DoubleType.class);
+    private final Key<Double> minMoisture = new Key<>(facesPrefix + "MIN_MOISTURE", Double.class);
+    private final Key<Double> maxMoisture = new Key<>(facesPrefix + "MAX_MOISTURE", Double.class);
+
+    private final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(asSet(faces, seed), asSet(faceMoisture));
+    }
 
     private Key<Double> biomeQuantity = new Key<>("biomeQuantity", Double.class);
 
     public Set<Key> getRequestedParameters() {
-        Set<Key> keys = super.getRequestedParameters();
-        keys.add(biomeQuantity);
-        return keys;
+        return asSet(minMoisture, maxMoisture, faceWaterKey, biomeQuantity);
     }
 
     @Override

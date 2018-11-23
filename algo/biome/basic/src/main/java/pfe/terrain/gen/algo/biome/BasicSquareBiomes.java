@@ -1,18 +1,31 @@
 package pfe.terrain.gen.algo.biome;
 
-import pfe.terrain.gen.algo.Biome;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.algorithms.BasicBiomeGenerator;
+import pfe.terrain.gen.algo.*;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class BasicSquareBiomes extends BasicBiomeGenerator {
+public class BasicSquareBiomes extends Contract {
+
+    public final Key<BooleanType> faceBorderKey =
+            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    public final Key<Biome> faceBiomeKey =
+            new SerializableKey<>(facesPrefix + "BIOME", "biome", Biome.class);
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(
+                asSet(faceBorderKey, faces),
+                asSet(faceBiomeKey)
+        );
+    }
 
     @Override
     public void execute(IslandMap map, Context context)

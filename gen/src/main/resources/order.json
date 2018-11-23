@@ -22,5 +22,9 @@
   {
     "name": "pfe.terrain.gen.water.WaterFromHeight",
     "order": 5
+  },
+  {
+    "name": "pfe.terrain.gen.algo.biome.HeightBiomes",
+    "order": 6
   }
 ]

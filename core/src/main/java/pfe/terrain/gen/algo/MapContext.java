@@ -16,7 +16,7 @@ public class MapContext extends Context {
 
         Set<Key> contractParams = new HashSet<>();
 
-        for(Contract contract : contracts){
+        for (Contract contract : contracts) {
             contractParams.addAll(contract.getRequestedParameters());
         }
 
@@ -42,7 +42,7 @@ public class MapContext extends Context {
             }
 
             return type.cast(val);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new WrongTypeException();
         }
     }

@@ -8,10 +8,10 @@ import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.HashSet;
@@ -19,17 +19,24 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RelaxedPoints extends PointsGenerator {
+public class RelaxedPoints extends Contract {
 
+    private int getDefaultNbPoint() {
+        return 100;
+    }
+
+    private Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);
     private Key<Integer> nbIter = new Key<>("nbIterations", Integer.class);
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        Set<Key> keys = super.getRequestedParameters();
-        keys.add(nbIter);
-        return keys;
+    public Constraints getContract() {
+        return new Constraints(asSet(size, seed), asSet(new Key<>("POINTS", CoordSet.class)));
     }
 
+    @Override
+    public Set<Key> getRequestedParameters() {
+        return asSet(nbIter, nbPoints);
+    }
 
     @Override
     public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException, KeyTypeMismatch {
