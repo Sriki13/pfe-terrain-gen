@@ -2,16 +2,34 @@ package pfe.terrain.gen.algo.borders;
 
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.algorithms.BordersGenerator;
+import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.SerializableKey;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.OptionalBooleanType;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BasicBorders extends BordersGenerator {
+public class BasicBorders extends Contract {
+
+    public final Key<BooleanType> verticeBorderKey =
+            new SerializableKey<>(verticesPrefix + "IS_BORDER", "isBorder", BooleanType.class);
+    public final Key<BooleanType> faceBorderKey =
+            new SerializableKey<>(facesPrefix + "IS_BORDER", "isBorder", BooleanType.class);
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(
+                asSet(vertices, edges, faces),
+                asSet(verticeBorderKey, faceBorderKey)
+        );
+    }
+
 
     @Override
     public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException {

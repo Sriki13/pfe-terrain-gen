@@ -3,14 +3,33 @@ package pfe.terrain.gen.algo.gridcreator;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.algorithms.PointsGenerator;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
-public class GridPoints extends PointsGenerator {
+import java.util.Set;
+
+public class GridPoints extends Contract {
+
+    private int getDefaultNbPoint() {
+        return 100;
+    }
+
+    private Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);
+
+    @Override
+    public Set<Key> getRequestedParameters() {
+        return asSet(nbPoints);
+    }
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(asSet(size, seed), asSet(new Key<>("POINTS", CoordSet.class)));
+    }
 
     @Override
     public void execute(IslandMap islandMap, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, KeyTypeMismatch {

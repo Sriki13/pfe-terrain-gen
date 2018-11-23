@@ -1,10 +1,8 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.WaterKind;
-import pfe.terrain.gen.algo.algorithms.WaterGenerator;
+import pfe.terrain.gen.algo.*;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
@@ -14,17 +12,29 @@ import pfe.terrain.gen.algo.types.BooleanType;
 import java.util.Random;
 import java.util.Set;
 
-public class RadialWaterGeneration extends WaterGenerator {
+public class RadialWaterGeneration extends Contract {
 
     private Key<Double> islandSizeK = new Key<>("islandSize", Double.class);
     private Key<Double> islandScatterK = new Key<>("islandScatter", Double.class);
 
+    public static final Key<BooleanType> vertexBorderKey = new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
+    public static final Key<BooleanType> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+
+    public static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(
+                asSet(faces, vertices, seed),
+                asSet(faceWaterKey, vertexWaterKey, waterKindKey)
+        );
+    }
+
     @Override
     public Set<Key> getRequestedParameters() {
-        Set<Key> keys = super.getRequestedParameters();
-        keys.add(islandScatterK);
-        keys.add(islandSizeK);
-        return keys;
+        return asSet(islandScatterK, islandSizeK);
     }
 
     @Override

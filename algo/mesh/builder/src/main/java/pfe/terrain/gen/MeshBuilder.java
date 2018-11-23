@@ -6,7 +6,7 @@ import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.algorithms.MeshGenerator;
+import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
@@ -15,10 +15,18 @@ import pfe.terrain.gen.algo.geometry.*;
 
 import java.util.*;
 
-public class MeshBuilder extends MeshGenerator {
+public class MeshBuilder extends Contract {
 
     private CoordSet allCoords;
     private Map<Edge, Edge> allEdgesMap;
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(
+                asSet(new Key<>("POINTS", CoordSet.class), size),
+                asSet(vertices, edges, faces)
+        );
+    }
 
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
