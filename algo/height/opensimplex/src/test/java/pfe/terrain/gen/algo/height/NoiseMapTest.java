@@ -2,7 +2,6 @@ package pfe.terrain.gen.algo.height;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.algorithms.HeightGenerator;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.types.BooleanType;
 
@@ -26,9 +25,9 @@ public class NoiseMapTest {
             for (int j = 0; j < TEST_SIZE; j++) {
                 Coord vertex = new Coord(i, j);
                 if (isBorder(vertex)) {
-                    vertex.putProperty(HeightGenerator.verticeBorderKey, new BooleanType(true));
+                    vertex.putProperty(OpenSimplexHeight.verticeBorderKey, new BooleanType(true));
                 } else {
-                    vertex.putProperty(HeightGenerator.verticeBorderKey, new BooleanType(false));
+                    vertex.putProperty(OpenSimplexHeight.verticeBorderKey, new BooleanType(false));
                 }
                 vertices.add(vertex);
             }
@@ -51,7 +50,7 @@ public class NoiseMapTest {
         noiseMap.ensureBordersAreLow();
         noiseMap.putHeightProperty();
         for (Coord vertex : vertices) {
-            double value = vertex.getProperty(HeightGenerator.vertexHeightKey).value;
+            double value = vertex.getProperty(OpenSimplexHeight.vertexHeightKey).value;
             assertThat(value, is(greaterThanOrEqualTo(-20.0)));
             assertThat(value, is(lessThanOrEqualTo(20.0)));
             if (isBorder(vertex)) {

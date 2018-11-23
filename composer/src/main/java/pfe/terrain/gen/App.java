@@ -1,6 +1,7 @@
 package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.biome.BasicSquareBiomes;
+import pfe.terrain.gen.algo.biome.HeightBiomes;
 import pfe.terrain.gen.algo.borders.BasicBorders;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.gridcreator.GridPoints;
@@ -34,11 +35,10 @@ public class App {
                 new MeshBuilder().getName(),
                 new BasicBorders().getName(),
                 new OpenSimplexHeight().getName(),
-                new WaterFromHeight().getName()
+                new WaterFromHeight().getName(),
+                new HeightBiomes().getName()
         );
         app.setupGenerator();
-
-
     }
 
     private HashMap<Contract, String> nameToJar = new HashMap<>();
@@ -54,7 +54,7 @@ public class App {
     private String jarDestPath = "../gen/lib/";
 
     public App() {
-        Contract initializator = new BasicInitializer();
+        Contract initializer = new BasicInitializer();
         Contract gridPoints = new GridPoints();
         Contract relaxedPoints = new RelaxedPoints();
         Contract randomPoints = new RandomPoints();
@@ -63,22 +63,24 @@ public class App {
         Contract borderBasic = new BasicBorders();
         Contract simplexHeight = new OpenSimplexHeight();
         Contract waterFromHeight = new WaterFromHeight();
+        Contract heightBiomes = new HeightBiomes();
 
         available = new ArrayList<>();
         available.add(gridPoints);
         available.add(relaxedPoints);
         available.add(randomPoints);
         available.add(meshBuilder);
-        available.add(initializator);
+        available.add(initializer);
         available.add(biomeBasicSquare);
         available.add(borderBasic);
         available.add(simplexHeight);
         available.add(waterFromHeight);
+        available.add(heightBiomes);
 
         priority = new ArrayList<>();
 
         nameToJar.put(gridPoints, addSuffixPrefix("gridcreator.grid"));
-        nameToJar.put(initializator, addSuffixPrefix("initializer.basic"));
+        nameToJar.put(initializer, addSuffixPrefix("initializer.basic"));
         nameToJar.put(randomPoints, addSuffixPrefix("gridcreator.random"));
         nameToJar.put(relaxedPoints, addSuffixPrefix("gridcreator.relaxed"));
         nameToJar.put(meshBuilder, addSuffixPrefix("mesh.builder"));
@@ -86,6 +88,7 @@ public class App {
         nameToJar.put(borderBasic, addSuffixPrefix("borders.basic"));
         nameToJar.put(simplexHeight, addSuffixPrefix("height.opensimplex"));
         nameToJar.put(waterFromHeight, addSuffixPrefix("water.fromheight"));
+        nameToJar.put(heightBiomes, addSuffixPrefix("biome.height"));
     }
 
     public List<Contract> getOrderedContract() throws InvalidContractException, UnsolvableException, MissingRequiredException {

@@ -12,34 +12,31 @@ import java.util.Set;
 
 public class MapContext extends Context {
 
-    public MapContext(Map<String,Object> map, List<Contract> contracts) throws WrongTypeException{
-
+    public MapContext(Map<String, Object> map, List<Contract> contracts) throws WrongTypeException {
         Set<Key> contractParams = new HashSet<>();
 
-        for(Contract contract : contracts){
+        for (Contract contract : contracts) {
             contractParams.addAll(contract.getRequestedParameters());
         }
 
-        for(String name : map.keySet()){
-
-            for(Key key : contractParams){
-                if(key.getId().equals(name)){
-
-                    this.putProperty(key,tryConvertion(map.get(name),key.getType()));
+        for (String name : map.keySet()) {
+            for (Key key : contractParams) {
+                if (key.getId().equals(name)) {
+                    this.putProperty(key, tryConversion(map.get(name), key.getType()));
                     break;
                 }
             }
         }
     }
 
-    public Object tryConvertion(Object val,Class type) throws WrongTypeException{
+    public Object tryConversion(Object val, Class type) throws WrongTypeException {
         try {
             if (type == Integer.class) {
                 return ((Double) val).intValue();
             }
 
             return type.cast(val);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new WrongTypeException();
         }
     }
