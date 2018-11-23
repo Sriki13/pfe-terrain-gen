@@ -39,15 +39,15 @@ public class WaterFromHeightTest {
         Face face = new Face(new Coord(seed, 5), new HashSet<>(Collections.singleton(
                 new Edge(generateCoord(0, seed, z, border), generateCoord(seed, 0, -5, border))
         )));
-        face.putProperty(WaterFromHeightGenerator.faceBorderKey, new BooleanType(border));
+        face.putProperty(WaterFromHeight.faceBorderKey, new BooleanType(border));
         allFaces.add(face);
         return face;
     }
 
     private Coord generateCoord(int x, int y, int z, boolean border) throws Exception {
         Coord coord = new Coord(x, y);
-        coord.putProperty(WaterFromHeightGenerator.heightKey, new DoubleType(z));
-        coord.putProperty(WaterFromHeightGenerator.vertexBorderKey, new BooleanType(border));
+        coord.putProperty(WaterFromHeight.heightKey, new DoubleType(z));
+        coord.putProperty(WaterFromHeight.vertexBorderKey, new BooleanType(border));
         allCoords.add(coord);
         return coord;
     }
@@ -65,13 +65,13 @@ public class WaterFromHeightTest {
         assertOcean(ocean);
         assertOcean(neighbor);
         assertOcean(neighborNeighbor);
-        assertThat(lake.getProperty(WaterFromHeightGenerator.faceWaterKey).value, is(true));
-        assertThat(lake.getProperty(WaterFromHeightGenerator.waterKindKey), is(LAKE));
+        assertThat(lake.getProperty(WaterFromHeight.faceWaterKey).value, is(true));
+        assertThat(lake.getProperty(WaterFromHeight.waterKindKey), is(LAKE));
     }
 
     private void assertOcean(Face ocean) throws Exception {
-        assertThat(ocean.getProperty(WaterFromHeightGenerator.faceWaterKey).value, is(true));
-        assertThat(ocean.getProperty(WaterFromHeightGenerator.waterKindKey), is(OCEAN));
+        assertThat(ocean.getProperty(WaterFromHeight.faceWaterKey).value, is(true));
+        assertThat(ocean.getProperty(WaterFromHeight.waterKindKey), is(OCEAN));
     }
 
     @Test
@@ -79,8 +79,8 @@ public class WaterFromHeightTest {
         Face land = generateFace(false, true, 1);
         Face border = generateFace(true, true, 2);
         generator.execute(islandMap, new Context());
-        assertThat(land.getProperty(WaterFromHeightGenerator.faceWaterKey).value, is(false));
-        assertThat(land.getProperty(WaterFromHeightGenerator.waterKindKey), is(NONE));
+        assertThat(land.getProperty(WaterFromHeight.faceWaterKey).value, is(false));
+        assertThat(land.getProperty(WaterFromHeight.waterKindKey), is(NONE));
         assertOcean(border);
     }
 

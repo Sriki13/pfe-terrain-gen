@@ -9,7 +9,7 @@ public class AppGen {
 
         CommandParser parser = new CommandParser(gen);
 
-        System.out.print(parser.execute(args));
+        System.out.println(parser.execute(args));
     }
 
 }

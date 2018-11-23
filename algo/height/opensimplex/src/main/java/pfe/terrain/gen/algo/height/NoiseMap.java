@@ -38,9 +38,16 @@ public class NoiseMap {
         }
     }
 
-    public void putValuesInRange() {
+    public void putValuesInRange(double seaLevel) {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - 16);
+            heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - seaLevel);
+        }
+        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
+            if (entry.getValue() < -20) {
+                heightMap.put(entry.getKey(), -20.0);
+            } else if (entry.getValue() > 20) {
+                heightMap.put(entry.getKey(), 20.0);
+            }
         }
     }
 
