@@ -49,7 +49,7 @@ public class MapGenerator implements Generator {
 
         ContextParser parser = new ContextParser(jsonContext);
 
-        this.context = new MapContext(parser.getMap(),this.contracts);
+        this.context = new MapContext(parser.getMap(), this.contracts);
     }
 
     public String generate() {
@@ -121,13 +121,13 @@ public class MapGenerator implements Generator {
         }
     }
 
-    private void executeAll() throws Exception{
+    private void executeAll() throws Exception {
         for (OrderedContract ctr : orderedContracts) {
             execute(ctr);
         }
     }
 
-    public void execute(OrderedContract contract) throws Exception{
+    public void execute(OrderedContract contract) throws Exception {
         this.executeByName(contract.getName());
 
     }
@@ -135,7 +135,7 @@ public class MapGenerator implements Generator {
     private void executeByName(String name) throws MissingContractException, InvalidAlgorithmParameters, DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
         for (Contract contract : contracts) {
             if (contract.getName().equals(name)) {
-                contract.execute(islandMap, this.context);
+                contract.debugExecute(islandMap, this.context);
                 return;
             }
         }

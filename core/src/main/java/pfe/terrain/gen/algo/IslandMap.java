@@ -1,11 +1,10 @@
 package pfe.terrain.gen.algo;
 
+import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.geometry.*;
 
 public class IslandMap extends Mappable {
 
@@ -48,6 +47,17 @@ public class IslandMap extends Mappable {
 
     @Override
     public <T> T getProperty(Key<T> key) throws NoSuchKeyException, KeyTypeMismatch {
+        if (key.equals(verticesKey)) {
+            return key.getType().cast(vertices);
+        } else if (key.equals(edgesKey)) {
+            return key.getType().cast(edges);
+        } else if (key.equals(facesKey)) {
+            return key.getType().cast(faces);
+        } else if (key.equals(sizeKey)) {
+            return key.getType().cast(size);
+        } else if (key.equals(seedKey)) {
+            return key.getType().cast(seed);
+        }
         return super.getProperty(key);
     }
 
@@ -69,5 +79,28 @@ public class IslandMap extends Mappable {
 
     public int getSize() {
         return size;
+    }
+
+    public <T> boolean assertContaining(Key<T> key) {
+        try {
+            if (key.getId().startsWith(Contract.verticesPrefix)) {
+                for (Coord coord : vertices) {
+                    coord.getProperty(key);
+                }
+            } else if (key.getId().startsWith(Contract.edgesPrefix)) {
+                for (Edge edge : edges) {
+                    edge.getProperty(key);
+                }
+            } else if (key.getId().startsWith(Contract.facesPrefix)) {
+                for (Face face : faces) {
+                    face.getProperty(key);
+                }
+            } else {
+                getProperty(key);
+            }
+        } catch (NoSuchKeyException | KeyTypeMismatch e) {
+            return false;
+        }
+        return true;
     }
 }

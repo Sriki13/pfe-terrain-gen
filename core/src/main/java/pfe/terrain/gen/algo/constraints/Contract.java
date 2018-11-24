@@ -12,6 +12,8 @@ import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
 
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +34,28 @@ public abstract class Contract implements Parameters {
     public static final Key<Integer> seed = new Key<>("SEED", Integer.class);
 
     public abstract Constraints getContract();
+
+    public void debugExecute(IslandMap map, Context context) throws NoSuchKeyException, InvalidAlgorithmParameters, KeyTypeMismatch, DuplicateKeyException {
+        Logger logger = Logger.getLogger(this.getClass().getName());
+        String algorithmName = this.getClass().getSimpleName();
+        logger.info("Executing algorithm " + algorithmName);
+        long startTime = System.nanoTime();
+        execute(map, context);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000;
+        logger.info("Done executing algorithm " + algorithmName + " in " + duration + " microseconds");
+        logger.info("\nVerifying contract...");
+        for (Key key : getContract().getCreated()) {
+            logger.info("Verifying presence of key : " + key);
+            if (!(map.assertContaining(key))) {
+                logger.log(Level.SEVERE, "Unrespected contract for " + algorithmName);
+                throw new NoSuchKeyException(key.getId());
+            }
+            logger.info(key.toString() + " is set");
+        }
+        logger.info("Execution and Verification done without problems\n\n");
+    }
+
 
     public abstract void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch;
 

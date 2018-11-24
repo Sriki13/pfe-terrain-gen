@@ -17,7 +17,7 @@ public class Context extends Mappable {
 
     public <T> T getPropertyOrDefault(Key<T> key, T defaultValue) throws KeyTypeMismatch {
         if (properties.keySet().stream().noneMatch(cKey -> cKey.getId().equals(key.getId()))) {
-            Logger.getLogger(this.getClass().getName()).warning("Key : " + key + " was not found in parameters pool, defaulting to " + defaultValue);
+            Logger.getLogger(this.getClass().getName()).info("Key : " + key + " was not found in parameters pool, defaulting to " + defaultValue);
             return defaultValue;
         }
         T value = key.getType().cast(properties.get(key));
