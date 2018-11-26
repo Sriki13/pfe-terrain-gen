@@ -8,8 +8,6 @@ import java.util.TreeMap;
 
 public class WhittakerDiagram {
 
-
-
     private TreeMap<Double, TreeMap<Double, Biome>> whittaker;
     private double ice;
 

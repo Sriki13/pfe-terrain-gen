@@ -25,8 +25,6 @@ import java.util.logging.Logger;
 public class PerlinMoisture extends Contract {
 
     private final SerializableKey<DoubleType> faceMoisture = new SerializableKey<>(facesPrefix + "HAS_MOISTURE", "moisture", DoubleType.class);
-    private final Key<Double> minMoisture = new Key<>(facesPrefix + "MIN_MOISTURE", Double.class);
-    private final Key<Double> maxMoisture = new Key<>(facesPrefix + "MAX_MOISTURE", Double.class);
 
     private final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
 
@@ -35,7 +33,10 @@ public class PerlinMoisture extends Contract {
         return new Constraints(asSet(faces, seed), asSet(faceMoisture));
     }
 
-    private Key<Double> biomeQuantity = new Key<>("biomeQuantity", Double.class);
+
+    private final Key<Double> minMoisture = new Key<>("minMoisture", Double.class);
+    private final Key<Double> maxMoisture = new Key<>("maxMoisture", Double.class);
+    private final Key<Double> biomeQuantity = new Key<>("biomeQuantity", Double.class);
 
     public Set<Key> getRequestedParameters() {
         return asSet(minMoisture, maxMoisture, faceWaterKey, biomeQuantity);
