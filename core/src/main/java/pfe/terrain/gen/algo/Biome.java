@@ -28,6 +28,15 @@ public enum Biome implements SerializableType {
         this.code = code;
     }
 
+    public static Biome findByCode(String code) {
+        for (Biome v : values()) {
+            if (v.code.equals(code)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String serialize() {
         return code;
