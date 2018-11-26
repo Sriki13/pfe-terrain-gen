@@ -92,11 +92,11 @@ public class MeshBuilder extends Contract {
             Coord[] coords = new Coord[coordinates.length];
             for (int i = 0; i < coordinates.length; i++) {
                 coords[i] = new Coord(coordinates[i]);
-                if (allCoords.containsKey(coords[i])) {
-                    coords[i] = allCoords.get(coords[i]);
-                }
-                else {
-                    allCoords.put(coords[i],coords[i]);
+                Coord tmp = allCoords.get(coords[i]);
+                if (tmp == null) {
+                    allCoords.put(coords[i], coords[i]);
+                } else {
+                    coords[i] = tmp;
                 }
             }
             List<Edge> borders = new ArrayList<>(coords.length);
@@ -105,14 +105,14 @@ public class MeshBuilder extends Contract {
                     if (coords[i].equals(coords[0])) continue;
                     borders.add(new Edge(coords[i], coords[0]));
                 } else {
-                    if (coords[i].equals(coords[i+1])) continue;
+                    if (coords[i].equals(coords[i + 1])) continue;
                     borders.add(new Edge(coords[i], coords[i + 1]));
                 }
-                if (allEdgesMap.containsKey(borders.get(i))) {
-                    borders.set(i, allEdgesMap.get(borders.get(i)));
-                }
-                else {
-                    allEdgesMap.put(borders.get(i),borders.get(i));
+                Edge tmp = allEdgesMap.get(borders.get(i));
+                if (tmp == null) {
+                    allEdgesMap.put(borders.get(i), borders.get(i));
+                } else {
+                    borders.set(i, tmp);
                 }
             }
             facesSet.add(new Face(center, new EdgeSet(borders)));
