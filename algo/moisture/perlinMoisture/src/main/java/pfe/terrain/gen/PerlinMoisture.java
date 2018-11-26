@@ -30,16 +30,15 @@ public class PerlinMoisture extends Contract {
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asSet(faces, seed), asSet(faceMoisture));
+        return new Constraints(asSet(faces, seed, faceWaterKey), asSet(faceMoisture));
     }
-
 
     private final Key<Double> minMoisture = new Key<>("minMoisture", Double.class);
     private final Key<Double> maxMoisture = new Key<>("maxMoisture", Double.class);
     private final Key<Double> biomeQuantity = new Key<>("biomeQuantity", Double.class);
 
     public Set<Key> getRequestedParameters() {
-        return asSet(minMoisture, maxMoisture, faceWaterKey, biomeQuantity);
+        return asSet(minMoisture, maxMoisture, biomeQuantity);
     }
 
     @Override
