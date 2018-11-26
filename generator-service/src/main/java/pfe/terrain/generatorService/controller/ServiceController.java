@@ -16,9 +16,12 @@ import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.reflection.ContractReflection;
+import pfe.terrain.generatorService.graph.GraphGenerator;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class ServiceController {
 
@@ -29,8 +32,8 @@ public class ServiceController {
     public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
-        
-        ChocoDependencySolver solver = new ChocoDependencySolver(contracts,contracts,new FinalContract());
+
+        ChocoDependencySolver solver = new ChocoDependencySolver(contracts, contracts, new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
 
@@ -42,10 +45,10 @@ public class ServiceController {
         return this.generator.generate();
     }
 
-    public Map<String,Object> setContext(String contextString){
+    public Map<String,Object> setContext(String contextString) {
         ContextParser parser = new ContextParser(contextString);
 
-        this.context = new MapContext(parser.getMap(),this.generator.getContracts());
+        this.context = new MapContext(parser.getMap(), this.generator.getContracts());
         generator.setParams(this.context);
 
         Map<String,Object> map = new HashMap<>();
@@ -73,8 +76,39 @@ public class ServiceController {
         return keys;
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this.context;
+    }
+
+    private List<Contract> getContracts() {
+        List<Contract> contracts = new ArrayList<>();
+        try {
+            Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
+            Set<Class<? extends Contract>> subTypes = reflections.getSubTypesOf(Contract.class);
+
+            for (Class cl : subTypes) {
+                try {
+                    contracts.add((Contract) cl.newInstance());
+                } catch (InstantiationException e) {
+                    System.err.println(cl.getName() + " was not instantiated");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contracts;
+    }
+
+    public String getGraph() {
+        GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
+        graphGenerator.generateGraph();
+        return graphGenerator.exportAsJSON();
+    }
+
+    public void generateGraphImage() throws IOException {
+        GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
+        graphGenerator.generateGraph();
+        graphGenerator.exportAsPNG("graph.png");
     }
 
 }
