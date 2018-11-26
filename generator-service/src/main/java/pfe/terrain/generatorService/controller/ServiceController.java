@@ -13,11 +13,6 @@ import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
-import pfe.terrain.generatorService.GeneratorLoader;
-import pfe.terrain.generatorService.GeneratorRunner;
-import pfe.terrain.generatorService.exception.NoSuchGenerator;
-import pfe.terrain.generatorService.parser.AnswerParser;
-import pfe.terrain.generatorService.parser.LazyContext;
 
 import java.io.IOException;
 import java.util.*;
@@ -29,7 +24,6 @@ public class ServiceController {
     private Context context;
 
     public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException {
-        GeneratorLoader generatorLoader = new GeneratorLoader();
 
         List<Contract> contracts = this.getContracts();
         System.out.println(contracts);

@@ -16,8 +16,6 @@ import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
-import pfe.terrain.generatorService.BashGenerator;
-import pfe.terrain.generatorService.GeneratorLoader;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.exception.NoSuchGenerator;
 
@@ -69,9 +67,7 @@ public class ControllerTest {
 
     @Test
     public void runWithContext() throws Exception{
-        File file = new File(BashGeneratorTest.class.getResource("/generator.jar").getFile());
 
-        Generator generator = new BashGenerator(file.getCanonicalPath());
 
 
         controller.setContext("{\"salut\" : 12}");

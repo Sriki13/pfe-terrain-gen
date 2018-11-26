@@ -9,8 +9,6 @@ public interface Generator {
 
     String generate();
 
-    int getId();
-
     void setParams(Context map);
 
     List<Contract> getContracts();
