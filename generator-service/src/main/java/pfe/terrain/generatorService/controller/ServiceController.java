@@ -43,11 +43,23 @@ public class ServiceController {
         return this.generator.generate();
     }
 
-    public void setContext(String contextString){
+    public Map<String,Object> setContext(String contextString){
         ContextParser parser = new ContextParser(contextString);
 
         this.context = new MapContext(parser.getMap(),this.generator.getContracts());
         generator.setParams(this.context);
+
+        Map<String,Object> map = new HashMap<>();
+
+        for(Key key : this.context.getProperties().keySet()){
+            try {
+                map.put(key.getId(), this.context.getProperty(key));
+            } catch (Exception e){
+                System.err.println("can't put key " + key.getId() + "into map");
+            }
+        }
+
+        return map;
     }
 
     public List<Parameter> getParameters(){

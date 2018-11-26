@@ -26,4 +26,8 @@ public class JsonParser {
         Gson gson = new Gson();
         return gson.toJson(maps);
     }
+
+    public String parseMap(Map<String,Object> map){
+        return new Gson().toJson(map);
+    }
 }

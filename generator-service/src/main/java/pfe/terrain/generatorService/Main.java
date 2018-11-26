@@ -15,7 +15,7 @@ public class Main {
 
 
         ServiceController controller = new ServiceController();
-
+        JsonParser parser = new JsonParser();
         port(8080);
 
 
@@ -26,15 +26,11 @@ public class Main {
 
         post("/context", (request, response) -> {
             response.type("application/json");
-
-            controller.setContext(request.body());
-
-            return "{\"status\" : \"OK\"}";
+            return parser.parseMap(controller.setContext(request.body()));
         });
 
         get("/parameters", (request, response) -> {
             response.type("application/json");
-            JsonParser parser = new JsonParser();
             return parser.parseKeys(controller.getParameters());
         });
     }
