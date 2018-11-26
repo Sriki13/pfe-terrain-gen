@@ -1,6 +1,9 @@
 package pfe.terrain.gen;
 
-import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.Context;
@@ -17,8 +20,10 @@ import java.util.*;
 
 public class MeshBuilder extends Contract {
 
-    private CoordSet allCoords;
+    private Map<Coord, Coord> allCoords;
     private Map<Edge, Edge> allEdgesMap;
+    private CoordSet verticesSet;
+    private FaceSet facesSet;
 
     @Override
     public Constraints getContract() {
@@ -31,17 +36,16 @@ public class MeshBuilder extends Contract {
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> polygons = genPolygons(map);
-        this.allCoords = new CoordSet(genVertex(polygons));
+        this.allCoords = new HashMap<>();
         this.allEdgesMap = new HashMap<>();
-        FaceSet allFaces = new FaceSet(genFaces(polygons));
-        map.putProperty(Contract.vertices, allCoords);
-        map.putProperty(Contract.faces, allFaces);
-        EdgeSet allEdges = new EdgeSet(new HashSet<>());
-        for (Face face : allFaces) {
-            allEdges.addAll(face.getEdges());
-        }
-        map.putProperty(Contract.edges, allEdges);
-        genNeighbor(map);
+        this.verticesSet = new CoordSet();
+        this.facesSet = new FaceSet();
+        genStuff(polygons);
+        genNeighbor();
+        map.putProperty(faces, facesSet);
+        verticesSet.addAll(new CoordSet(allCoords.keySet()));
+        map.putProperty(vertices, verticesSet);
+        map.putProperty(edges, new EdgeSet(allEdgesMap.keySet()));
     }
 
     private List<Polygon> genPolygons(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
@@ -80,77 +84,43 @@ public class MeshBuilder extends Contract {
         return res;
     }
 
-    private Set<Coord> genVertex(List<Polygon> polygons) {
-        Set<Coord> coordinates = new HashSet<>();
-
+    private void genStuff(List<Polygon> polygons) {
         for (Polygon polygon : polygons) {
-            Coordinate[] vertices = polygon.getCoordinates();
-            for (Coordinate vertex : vertices) {
-                coordinates.add(new Coord(vertex));
+            Coord center = new Coord(polygon.getCentroid().getCoordinate());
+            verticesSet.add(center);
+            Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
+            Coord[] coords = new Coord[coordinates.length];
+            for (int i = 0; i < coordinates.length; i++) {
+                coords[i] = new Coord(coordinates[i]);
+                if (allCoords.containsKey(coords[i])) {
+                    coords[i] = allCoords.get(coords[i]);
+                }
+                else {
+                    allCoords.put(coords[i],coords[i]);
+                }
             }
-            Point centroid = polygon.getCentroid();
-            coordinates.add(new Coord(centroid.getX(), centroid.getY()));
-        }
-        return coordinates;
-    }
-
-    private Set<Face> genFaces(List<Polygon> polygons) {
-        Set<Face> faces = new HashSet<>();
-
-        for (Polygon polygon : polygons) {
-            Set<Edge> edges = extractEdges(polygon);
-            faces.add(new Face(findInAllCoords(polygon.getCentroid().getCoordinate()), edges));
-        }
-
-        return faces;
-    }
-
-    private Coord findInAllCoords(Coordinate coordinate) {
-        for (Coord coord : allCoords) {
-            if (coord.matches(coordinate)) {
-                return coord;
+            List<Edge> borders = new ArrayList<>(coords.length);
+            for (int i = 0; i < coords.length; i++) {
+                if (i == coords.length - 1) {
+                    if (coords[i].equals(coords[0])) continue;
+                    borders.add(new Edge(coords[i], coords[0]));
+                } else {
+                    if (coords[i].equals(coords[i+1])) continue;
+                    borders.add(new Edge(coords[i], coords[i + 1]));
+                }
+                if (allEdgesMap.containsKey(borders.get(i))) {
+                    borders.set(i, allEdgesMap.get(borders.get(i)));
+                }
+                else {
+                    allEdgesMap.put(borders.get(i),borders.get(i));
+                }
             }
-        }
-        throw new RuntimeException("Coord for edge was not found in vertices!");
-    }
-
-    private Edge findOrAddEdgeToMap(Edge search) {
-        Edge found = allEdgesMap.get(search);
-        if (found == null) {
-            allEdgesMap.put(search, search);
-            return search;
-        }
-        return found;
-    }
-
-    private Set<Edge> extractEdges(Polygon polygon) {
-        Set<Edge> edges = new HashSet<>();
-        Coordinate[] coordinates = polygon.getBoundary().getCoordinates();
-        for (int i = 0; i < coordinates.length; i++) {
-            if (i == coordinates.length - 1) {
-                Coord start = findInAllCoords(coordinates[i]);
-                Coord end = findInAllCoords(coordinates[0]);
-                addNewEdgeToPolygonSet(edges, start, end);
-            } else {
-                Coord start = findInAllCoords(coordinates[i]);
-                Coord end = findInAllCoords(coordinates[i + 1]);
-                addNewEdgeToPolygonSet(edges, start, end);
-            }
-        }
-        return edges;
-    }
-
-    private void addNewEdgeToPolygonSet(Set<Edge> edges, Coord start, Coord end) {
-        if (!start.equals(end)) {
-            Edge edge = findOrAddEdgeToMap(new Edge(start, end));
-            edges.add(edge);
+            facesSet.add(new Face(center, new EdgeSet(borders)));
         }
     }
 
-
-    private void genNeighbor(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
-        Key<FaceSet> key = new Key<>("FACES", FaceSet.class);
-        CoordSet centers = getFacesCenters(map.getProperty(key));
+    private void genNeighbor() {
+        CoordSet centers = getFacesCenters(facesSet);
 
         DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
         builder.setSites(centers.convertToCoordinateSet());
@@ -162,7 +132,7 @@ public class MeshBuilder extends Contract {
         for (Polygon polygon : polygons) {
             Set<Face> faces = new HashSet<>();
             for (Coordinate coordinate : polygon.getCoordinates()) {
-                faces.add(getFaceFromCenter(map.getProperty(key), new Coord(coordinate)));
+                faces.add(getFaceFromCenter(facesSet, new Coord(coordinate)));
             }
 
             for (Face face : faces) {

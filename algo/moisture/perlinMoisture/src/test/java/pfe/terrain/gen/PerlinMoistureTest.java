@@ -33,37 +33,28 @@ public class PerlinMoistureTest {
     public void checkInterval() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         PerlinMoisture perlinMoisture = new PerlinMoisture();
         FaceSet faces = new FaceSet();
-        int mapSize = 1024;
+        int mapSize = 256;
         generateFaces(faces, mapSize);
         Map<Face, Double> noiseValues = perlinMoisture.computeNoise(0, faces, mapSize, 1.0, 0.0, 1.0);
         assertThat(noiseValues.keySet().size(), equalTo(faces.size()));
         noiseValues.forEach((key, value) ->
                 assertThat(value, is(both(greaterThanOrEqualTo(0.0)).and(lessThanOrEqualTo(1.0))))
         );
-
     }
 
     @Test
     @Ignore
     public void printPerlin() throws DuplicateKeyException {
         Set<Face> faces = new HashSet<>();
-        int mapSize = 1024;
+        int mapSize = 256;
         generateFaces(faces, mapSize);
         final Perlin perlin = new Perlin();
         perlin.setSeed(1);
-        perlin.setFrequency(5.0);
+        perlin.setFrequency(1.0);
         List<Double> values = new ArrayList<>(Collections.nCopies(mapSize * mapSize, 1.0));
         for (Face face : faces) {
             final double noise = perlin.getValue(face.getCenter().x / mapSize, face.getCenter().y / mapSize, 0);
             values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x), noise);
-            values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x + 1), noise);
-            values.set((int) (Math.floor((face.getCenter().y + 1) * mapSize) + face.getCenter().x), noise);
-            values.set((int) (Math.floor((face.getCenter().y + 1) * mapSize) + face.getCenter().x + 1), noise);
-            values.set((int) (Math.floor((face.getCenter().y - 1) * mapSize) + face.getCenter().x), noise);
-            values.set((int) (Math.floor((face.getCenter().y - 1) * mapSize) + face.getCenter().x + 1), noise);
-            values.set((int) (Math.floor(face.getCenter().y * mapSize) + face.getCenter().x - 1), noise);
-            values.set((int) (Math.floor((face.getCenter().y + 1) * mapSize) + face.getCenter().x - 1), noise);
-            values.set((int) (Math.floor((face.getCenter().y - 1) * mapSize) + face.getCenter().x - 1), noise);
         }
         double max = Collections.max(values);
         double min = Collections.min(values);
@@ -82,9 +73,9 @@ public class PerlinMoistureTest {
         }
     }
 
-    public void generateFaces(Set<Face> faces, int mapSize) throws DuplicateKeyException {
-        for (float i = 1; i < mapSize; i += 9) {
-            for (float j = 1; j < mapSize; j += 9) {
+    private void generateFaces(Set<Face> faces, int mapSize) throws DuplicateKeyException {
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
                 Face face = new Face(new Coord(i, j), new HashSet<>());
                 face.putProperty(faceWaterKey, new BooleanType(true));
                 faces.add(face);
