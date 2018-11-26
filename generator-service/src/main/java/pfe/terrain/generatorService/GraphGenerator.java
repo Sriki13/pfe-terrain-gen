@@ -47,9 +47,9 @@ public class GraphGenerator {
             if (properties.containsKey(key.getId())) {
                 continue;
             }
-            String name = key.getId();
+            String name = key.getId() + "\n" + key.getType().getSimpleName();
             if (key.isSerialized()) {
-                name += "(serialized as " + key.getSerializedName() + ")";
+                name += "\n(serialized as " + key.getSerializedName() + ")";
             }
             properties.put(key.getId(), mutNode(name).add(Color.BLACK).add(Shape.RECTANGLE));
         }
@@ -65,8 +65,16 @@ public class GraphGenerator {
                 properties.get(key.getId()).addLink(contractNode));
     }
 
-    public String exportAsDotString() {
-        return Graphviz.fromGraph(graph).width(900).toString();
+    public String exportAsJSON() {
+        return export(Format.JSON);
+    }
+
+    public String exportAsXDot() {
+        return export(Format.XDOT);
+    }
+
+    private String export(Format format) {
+        return Graphviz.fromGraph(graph).render(format).toString();
     }
 
     public void exportAsPNG(String filename) throws IOException {
