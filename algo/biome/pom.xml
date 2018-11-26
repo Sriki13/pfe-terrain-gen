@@ -17,6 +17,7 @@
     <modules>
         <module>basic</module>
         <module>height</module>
+        <module>heightmoisture</module>
     </modules>
 
 </project>
