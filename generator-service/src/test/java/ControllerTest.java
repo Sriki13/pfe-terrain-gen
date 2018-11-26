@@ -20,9 +20,7 @@ import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.exception.NoSuchGenerator;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,14 +28,16 @@ import static org.junit.Assert.assertEquals;
 public class ControllerTest {
     private ServiceController controller;
 
-    private class GeneratorContract extends Contract {
+    private class TestContract extends Contract {
+
+        @Override
+        public Set<Key> getRequestedParameters() {
+            return asSet(new Key<>("salut",Integer.class));
+        }
 
         @Override
         public Constraints getContract() {
-            return new Constraints(new HashSet(),asSet(
-                    new Key<>("VERTICES", CoordSet.class),
-                    new Key<>("EDGES", EdgeSet.class),
-                    new Key<>("FACES", FaceSet.class)));
+            return new Constraints(new HashSet<>(),new HashSet<>());
         }
 
         @Override
@@ -48,12 +48,22 @@ public class ControllerTest {
 
     @Before
     public void init() throws Exception{
-        controller = new ServiceController(Arrays.asList(new GeneratorContract()));
-    }
+        controller = new ServiceController(new Generator() {
+            @Override
+            public String generate() {
+                return "salut";
+            }
 
-    @Test
-    public void execTest() throws Exception{
-        assertEquals("test",controller.execute());
+            @Override
+            public void setParams(Context map) {
+
+            }
+
+            @Override
+            public List<Contract> getContracts() {
+                return Arrays.asList(new TestContract());
+            }
+        });
     }
 
     @Test
@@ -62,22 +72,25 @@ public class ControllerTest {
 
         Context context = controller.getContext();
 
-        Assert.assertEquals(12.0,context.getProperty(new Key<>("salut",Object.class)));
+        assertEquals(new Integer(12),context.getProperty(new Key<>("salut",Integer.class)));
     }
 
     @Test
     public void runWithContext() throws Exception{
 
-
-
         controller.setContext("{\"salut\" : 12}");
 
         Context context = controller.getContext();
 
-        Assert.assertEquals(12.0,context.getProperty(new Key<>("salut",Object.class)));
+        assertEquals(new Integer(12),context.getProperty(new Key<>("salut",Integer.class)));
 
         String map = controller.execute();
 
         Assert.assertNotEquals("",map);
+    }
+
+    @Test
+    public void execTest(){
+        assertEquals("salut",controller.execute());
     }
 }

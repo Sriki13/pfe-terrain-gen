@@ -5,10 +5,6 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
@@ -17,6 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class FinalContract extends Contract {
+
+    public static final String FINAL_CONTRACT_NAME = "Final";
 
     @Override
     public Constraints getContract() {
@@ -30,13 +28,13 @@ public class FinalContract extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
 
     }
 
     @Override
     public String getName() {
-        return "Final";
+        return FINAL_CONTRACT_NAME;
     }
 
 
