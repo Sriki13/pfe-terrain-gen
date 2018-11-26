@@ -77,7 +77,7 @@ public class HeightFromWater extends Contract {
         for (Face face : map.getFaces()) {
             double sum = 0;
             int total = 0;
-            for (Coord border : face.getVertices()) {
+            for (Coord border : face.getBorderVertices()) {
                 sum += border.getProperty(vertexHeightKey).value;
                 total++;
             }

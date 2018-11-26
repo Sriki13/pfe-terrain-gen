@@ -41,7 +41,7 @@ public class Face extends Mappable {
         return center;
     }
 
-    public Set<Coord> getVertices() {
+    public Set<Coord> getBorderVertices() {
         Set<Coord> result = new HashSet<>();
         for (Edge edge : edges) {
             result.add(edge.getStart());

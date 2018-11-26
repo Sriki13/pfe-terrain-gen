@@ -57,7 +57,7 @@ public class BasicBorders extends Contract {
     }
 
     private boolean isBorder(Face face, int islandSize, double offset) {
-        for (Coord coord : face.getVertices()) {
+        for (Coord coord : face.getBorderVertices()) {
             if (isBorder(coord, islandSize, offset)) {
                 return true;
             }

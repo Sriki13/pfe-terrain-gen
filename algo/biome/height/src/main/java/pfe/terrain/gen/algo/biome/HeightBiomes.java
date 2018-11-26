@@ -49,10 +49,11 @@ public class HeightBiomes extends Contract {
     @Override
     public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+        double step = context.getPropertyOrDefault(heightStepKey, 4.0);
         for (Face face : map.getFaces()) {
             Biome biome = getWaterBiomeIfPresent(face);
             if (biome == null) {
-                biome = getBiomeFromElevation(face, context.getPropertyOrDefault(heightStepKey, 4.0));
+                biome = getBiomeFromElevation(face, step);
             }
             face.putProperty(faceBiomeKey, biome);
         }
@@ -72,10 +73,10 @@ public class HeightBiomes extends Contract {
     private Biome getBiomeFromElevation(Face face, double heightStep)
             throws NoSuchKeyException, KeyTypeMismatch {
         double elevation = 0;
-        for (Coord vertex : face.getVertices()) {
+        for (Coord vertex : face.getBorderVertices()) {
             elevation += vertex.getProperty(heightKey).value;
         }
-        elevation = elevation / face.getVertices().size();
+        elevation = elevation / face.getBorderVertices().size();
         if (elevation < heightStep / 2) return BEACH;
         if (elevation < 2 * heightStep) return GRASSLAND;
         if (elevation < 5 * heightStep) return TEMPERATE_RAIN_FOREST;

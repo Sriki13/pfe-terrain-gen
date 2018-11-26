@@ -62,7 +62,7 @@ public class MeshBuilderTest {
         EdgeSet edgesFace = new EdgeSet();
         for (Face face : faces) {
             verticesFace.add(face.getCenter());
-            verticesFace.addAll(face.getVertices());
+            verticesFace.addAll(face.getBorderVertices());
             edgesFace.addAll(face.getEdges());
         }
         assertTrue(map.getVertices().containsAll(verticesFace));
@@ -114,7 +114,7 @@ public class MeshBuilderTest {
             assertTrue(findCoordInVertices(edge.getEnd()));
         }
         for (Face face : map.getFaces()) {
-            for (Coord vertex : face.getVertices()) {
+            for (Coord vertex : face.getBorderVertices()) {
                 assertTrue(findCoordInVertices(vertex));
             }
             for (Edge edge : face.getEdges()) {
@@ -130,7 +130,7 @@ public class MeshBuilderTest {
         builder.execute(map, new Context());
         CoordSet verticesFromFace = new CoordSet();
         for (Face face : map.getFaces()) {
-            verticesFromFace.addAll(face.getVertices());
+            verticesFromFace.addAll(face.getBorderVertices());
             verticesFromFace.add(face.getCenter());
         }
         for (Coord coord : verticesFromFace) {

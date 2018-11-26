@@ -34,20 +34,18 @@ public class WaterFromHeightTest {
     }
 
     private Face generateFace(boolean border, boolean hasLandVertices, int seed) throws Exception {
-        int z = -5;
-        if (hasLandVertices) z = 5;
+        int z = hasLandVertices ? 5 : -5;
         Face face = new Face(new Coord(seed, 5), new HashSet<>(Collections.singleton(
-                new Edge(generateCoord(0, seed, z, border), generateCoord(seed, 0, -5, border))
+                new Edge(generateCoord(0, seed, z), generateCoord(seed, 0, -5))
         )));
         face.putProperty(WaterFromHeight.faceBorderKey, new BooleanType(border));
         allFaces.add(face);
         return face;
     }
 
-    private Coord generateCoord(int x, int y, int z, boolean border) throws Exception {
+    private Coord generateCoord(int x, int y, int z) throws Exception {
         Coord coord = new Coord(x, y);
         coord.putProperty(WaterFromHeight.heightKey, new DoubleType(z));
-        coord.putProperty(WaterFromHeight.vertexBorderKey, new BooleanType(border));
         allCoords.add(coord);
         return coord;
     }
@@ -77,17 +75,9 @@ public class WaterFromHeightTest {
     @Test
     public void mappingLandTest() throws Exception {
         Face land = generateFace(false, true, 1);
-        Face border = generateFace(true, true, 2);
         generator.execute(islandMap, new Context());
         assertThat(land.getProperty(WaterFromHeight.faceWaterKey).value, is(false));
         assertThat(land.getProperty(WaterFromHeight.waterKindKey), is(NONE));
-        assertOcean(border);
-    }
-
-    @Test
-    public void dontCreateTsunamis() throws Exception {
-        Face border = generateFace(true, true, 1);
-
     }
 
 }
