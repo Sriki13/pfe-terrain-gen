@@ -1,6 +1,6 @@
 package pfe.terrain.generatorService.controller;
 
-import pfe.terrain.gen.ChocoDependencySolver;
+import pfe.terrain.gen.DependencySolver;
 import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.MapGenerator;
 import pfe.terrain.gen.algo.Context;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 public class ServiceController {
 
@@ -32,7 +33,7 @@ public class ServiceController {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
-        ChocoDependencySolver solver = new ChocoDependencySolver(contracts, contracts, new FinalContract());
+        DependencySolver solver = new DependencySolver(contracts,contracts,new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
 

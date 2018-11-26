@@ -1,11 +1,16 @@
 package pfe.terrain.gen;
 
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.Solver;
+import org.chocosolver.solver.explanations.*;
 import org.chocosolver.solver.Solution;
+import org.chocosolver.solver.search.loop.learn.LearnCBJ;
+import org.chocosolver.solver.search.loop.learn.LearnDBT;
 import org.chocosolver.solver.variables.IntVar;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
@@ -15,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class ChocoDependencySolver {
+public class DependencySolver {
 
     private ContractStore toUse;
     private ContractStore available;
@@ -23,7 +28,7 @@ public class ChocoDependencySolver {
 
     private List<Contract> ordered;
 
-    public ChocoDependencySolver(List<Contract> available, List<Contract> priority, Contract finalMap) throws InvalidContractException {
+    public DependencySolver(List<Contract> available, List<Contract> priority, Contract finalMap) throws InvalidContractException {
         this.available = new ContractStore(available);
         this.toUse = new ContractStore(priority);
         this.ordered = new ArrayList<>();
@@ -36,7 +41,7 @@ public class ChocoDependencySolver {
      * @throws UnsolvableException thrown if the problem is not solvable by the system
      * @throws MissingRequiredException thrown if required element cannot be found
      */
-    public List<Contract> orderContracts() throws UnsolvableException,MissingRequiredException {
+    public List<Contract> orderContracts() throws UnsolvableException,MissingRequiredException, DuplicatedProductionException {
 
         Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element
@@ -54,8 +59,27 @@ public class ChocoDependencySolver {
             toUse.add(available.getContractCreating(resource));
         }
 
+        checkDuplicate(toUse.getContracts());
 
         return order(toUse.getContracts());
+    }
+
+    private void checkDuplicate(List<Contract> contracts) throws DuplicatedProductionException{
+        for(int i = 0 ; i< contracts.size() ; i ++){
+            for(int j = 0; j < contracts.size() ; j ++){
+                if (i==j) continue;
+                Contract a = contracts.get(i);
+                Contract b = contracts.get(j);
+
+                for(Key key : a.getContract().getCreated()){
+                    if(b.getContract().getCreated().contains(key)){
+                        throw new DuplicatedProductionException(a,b);
+                    }
+                }
+
+
+            }
+        }
     }
 
     /**
