@@ -40,8 +40,6 @@ public class WaterFromHeight extends Contract {
         );
     }
 
-
-
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
@@ -55,7 +53,7 @@ public class WaterFromHeight extends Contract {
         for (Coord vertex : map.getVertices()) {
             boolean isWater = false;
             if (vertex.getProperty(vertexBorderKey).value
-                    || vertex.getProperty(heightKey).value > 0) {
+                    || vertex.getProperty(heightKey).value >= 0) {
                 isWater = true;
             }
             vertex.putProperty(vertexWaterKey, new BooleanType(isWater));
@@ -100,7 +98,19 @@ public class WaterFromHeight extends Contract {
             analyzeNeighbors(seen, oceanFaces, face);
         }
         for (Face face : oceanFaces) {
-            face.putProperty(waterKindKey, WaterKind.OCEAN);
+            WaterKind kind = WaterKind.OCEAN;
+            Boolean isWater = true;
+            if (face.getProperty(faceBorderKey).value) {
+                for (Coord vertex : face.getVertices()) {
+                    if (!vertex.getProperty(vertexWaterKey).value) {
+                        kind = WaterKind.NONE;
+                        isWater = false;
+                        break;
+                    }
+                }
+            }
+            face.putProperty(waterKindKey, kind);
+            face.putProperty(faceWaterKey, new BooleanType(isWater));
         }
     }
 

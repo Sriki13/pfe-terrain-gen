@@ -84,4 +84,10 @@ public class WaterFromHeightTest {
         assertOcean(border);
     }
 
+    @Test
+    public void dontCreateTsunamis() throws Exception {
+        Face border = generateFace(true, true, 1);
+
+    }
+
 }

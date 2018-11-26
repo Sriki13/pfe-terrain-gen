@@ -9,6 +9,8 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.geometry.Coord;
+import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -58,6 +60,14 @@ public class OpenSimplexHeight extends Contract {
         elevation.putValuesInRange(context.getPropertyOrDefault(seaLevel, 32.0));
         elevation.ensureBordersAreLow();
         elevation.putHeightProperty();
+
+        for (Face face : map.getFaces()) {
+            double average = 0;
+            for (Coord coord : face.getVertices()) {
+                average += coord.getProperty(vertexHeightKey).value;
+            }
+            face.getCenter().putProperty(vertexHeightKey, new DoubleType(average / face.getVertices().size()));
+        }
 
         if (context.getPropertyOrDefault(fixCliffs, true)) {
             new CliffFixer().fixBorderCliffs(map);

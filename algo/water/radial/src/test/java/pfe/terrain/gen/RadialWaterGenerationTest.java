@@ -1,6 +1,7 @@
 package pfe.terrain.gen;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -65,6 +66,7 @@ public class RadialWaterGenerationTest {
     }
 
     @Test
+    @Ignore
     public void printIslandOutline() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         faces = map.getFaces();
         final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);
