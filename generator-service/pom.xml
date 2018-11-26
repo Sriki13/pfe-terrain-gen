@@ -114,6 +114,13 @@
                             <mainClass>pfe.terrain.generatorService.GraphMain</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>mapGen</id>
+                        <configuration>
+                            <executable>java</executable>
+                            <mainClass>pfe.terrain.generatorService.GenMap</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
                     <executable>java</executable>
@@ -122,33 +129,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>mapGen</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <executable>java</executable>
-                            <mainClass>pfe.terrain.generatorService.GenMap</mainClass>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

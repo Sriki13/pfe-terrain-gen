@@ -1,7 +1,5 @@
 package pfe.terrain.generatorService.controller;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import pfe.terrain.gen.ChocoDependencySolver;
 import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.MapGenerator;
@@ -14,14 +12,15 @@ import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.reflection.ContractReflection;
-import pfe.terrain.generatorService.graph.GraphGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class ServiceController {
 
@@ -37,7 +36,7 @@ public class ServiceController {
         this.generator = new MapGenerator(solver.orderContracts());
     }
 
-    public ServiceController(Generator generator) throws InvalidContractException, UnsolvableException, MissingRequiredException {
+    public ServiceController(Generator generator) {
         this.generator = generator;
     }
 
@@ -78,25 +77,6 @@ public class ServiceController {
 
     public Context getContext() {
         return this.context;
-    }
-
-    private List<Contract> getContracts() {
-        List<Contract> contracts = new ArrayList<>();
-        try {
-            Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
-            Set<Class<? extends Contract>> subTypes = reflections.getSubTypesOf(Contract.class);
-
-            for (Class cl : subTypes) {
-                try {
-                    contracts.add((Contract) cl.newInstance());
-                } catch (InstantiationException e) {
-                    System.err.println(cl.getName() + " was not instantiated");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return contracts;
     }
 
     public String getGraph() {
