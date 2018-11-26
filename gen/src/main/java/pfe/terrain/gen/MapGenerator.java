@@ -40,6 +40,12 @@ public class MapGenerator implements Generator {
 
     }
 
+    public MapGenerator(List<Contract> contracts){
+        this.contracts = contracts;
+        this.islandMap = new IslandMap();
+        this.context = new Context();
+    }
+
     public MapGenerator(String jsonContext) throws WrongTypeException {
         this.islandMap = new IslandMap();
 
@@ -51,6 +57,8 @@ public class MapGenerator implements Generator {
 
         this.context = new MapContext(parser.getMap(), this.contracts);
     }
+
+
 
     public String generate() {
 
@@ -122,8 +130,8 @@ public class MapGenerator implements Generator {
     }
 
     private void executeAll() throws Exception {
-        for (OrderedContract ctr : orderedContracts) {
-            execute(ctr);
+        for (Contract ctr : contracts) {
+            ctr.debugExecute(this.islandMap,this.context);
         }
     }
 

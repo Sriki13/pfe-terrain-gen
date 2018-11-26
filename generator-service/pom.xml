@@ -31,6 +31,51 @@
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>gen</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>composer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.gridcreator.relaxed</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.mesh.builder</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.borders.basic</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.water.radial</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.height.fromwater</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.biome.height</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.initializer.basic</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -49,7 +94,6 @@
                 <configuration>
                     <executable>java</executable>
                     <mainClass>pfe.terrain.generatorService.Main</mainClass>
-                    <commandlineArgs>-cp ./lib/</commandlineArgs>
                 </configuration>
             </plugin>
         </plugins>

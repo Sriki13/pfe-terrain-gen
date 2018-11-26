@@ -10,28 +10,23 @@ import static spark.Spark.post;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+
+
+
         ServiceController controller = new ServiceController();
 
-        System.out.println("Generator loaded : ");
-
-        System.out.println(controller.getGenList());
-
         port(8080);
-        get("/list", (request, response) -> {
+
+
+        get("/execute", (request, response) -> {
             response.type("application/json");
-            return controller.getGenList();
+            return controller.execute();
         });
 
-        get("/:id/execute", (request, response) -> {
-            response.type("application/json");
-            return controller.executeById(Integer.valueOf(request.params(":id")));
-        });
-
-        post("/:id/context", (request, response) -> {
+        post("/context", (request, response) -> {
             response.type("application/json");
 
-            controller.setContext(Integer.valueOf(request.params(":id")),
-                    request.body());
+            controller.setContext(request.body());
 
             return "{\"status\" : \"OK\"}";
         });

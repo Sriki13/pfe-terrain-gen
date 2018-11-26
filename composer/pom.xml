@@ -20,87 +20,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.gridcreator.grid</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.gridcreator.random</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.gridcreator.relaxed</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.mesh.builder</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.moisture.perlin</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.height.fromwater</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.11</version>
-        </dependency>
-        <dependency>
             <groupId>org.choco-solver</groupId>
             <artifactId>choco-solver</artifactId>
             <version>4.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.initializer.basic</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.biome.basicsquare</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.borders.basic</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.water.radial</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.height.opensimplex</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.water.fromheight</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.biome.height</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 
     <build>
@@ -154,20 +78,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

@@ -1,5 +1,6 @@
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.generator.Generator;
@@ -8,6 +9,8 @@ import pfe.terrain.generatorService.exception.CannotUseGeneratorException;
 
 import java.io.File;
 
+
+@Ignore
 public class BashGeneratorTest {
 
     private Generator generator;
