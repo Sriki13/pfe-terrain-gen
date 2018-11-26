@@ -41,7 +41,7 @@ public class RadialWaterGeneration extends Contract {
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
         double islandSize = context.getPropertyOrDefault(islandSizeK, 1.0);
         double factor = context.getPropertyOrDefault(islandScatterK, 0.0);
-        Shape shape = new Shape(islandSize, factor + 1, new Random(map.getSeed()));
+        Shape shape = new Shape(islandSize, (factor * 4) + 1, new Random(map.getSeed()));
         int size = map.getSize();
         int i = 0;
         for (Face face : map.getFaces()) {
@@ -70,7 +70,7 @@ public class RadialWaterGeneration extends Contract {
 
         public Shape(double islandSize, double factor, Random random) {
             this.factor = factor;
-            this.islandSize = (1 - islandSize) * 10;
+            this.islandSize = (1 - islandSize);
             bumps = random.nextInt(5) + 1;
             startAngle = random.nextDouble() * 2 * Math.PI;
             dipAngle = random.nextDouble() * 2 * Math.PI;

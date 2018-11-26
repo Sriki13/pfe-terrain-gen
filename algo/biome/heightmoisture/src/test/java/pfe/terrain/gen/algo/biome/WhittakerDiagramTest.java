@@ -12,7 +12,7 @@ public class WhittakerDiagramTest {
 
     @Test
     public void verifyOkDiagram() {
-        whittakerDiagram = new WhittakerDiagram(WhittakerDiagram.WCLASSIC, 0.9);
+        whittakerDiagram = new WhittakerDiagram(BiomeStyle.CLASSIC.getWhit(), 0.9);
         Biome shouldBeTed = whittakerDiagram.getBiome(0.25, 0.7);
         assertThat(shouldBeTed, equalTo(Biome.TEMPERATE_DESERT));
         Biome shouldBeSnow = whittakerDiagram.getBiome(1.0, 1.0);

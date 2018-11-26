@@ -1,6 +1,7 @@
 package pfe.terrain.gen;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -26,9 +27,10 @@ import static pfe.terrain.gen.algo.constraints.Contract.verticesPrefix;
 
 public class RadialWaterGenerationTest {
 
-    protected Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    protected Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    protected Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    private Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    private Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    private Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    private Key<Double> islandSizeK = new Key<>("islandSize", Double.class);
     private IslandMap map;
     private FaceSet faces;
     private int mapSize;
@@ -48,7 +50,9 @@ public class RadialWaterGenerationTest {
         map.putProperty(new Key<>("FACES", FaceSet.class), faces);
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 347);
-        waterGen.execute(map, new Context());
+        Context context = new Context();
+        context.putProperty(islandSizeK, 0.9);
+        waterGen.execute(map, context);
     }
 
     @Test
@@ -65,6 +69,7 @@ public class RadialWaterGenerationTest {
     }
 
     @Test
+    @Ignore
     public void printIslandOutline() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         faces = map.getFaces();
         final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);

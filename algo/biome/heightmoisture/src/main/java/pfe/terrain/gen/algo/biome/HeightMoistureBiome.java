@@ -13,6 +13,8 @@ import pfe.terrain.gen.algo.types.DoubleType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
 
 public class HeightMoistureBiome extends Contract {
 
@@ -27,6 +29,13 @@ public class HeightMoistureBiome extends Contract {
 
     public static final Key<Biome> faceBiomeKey =
             new SerializableKey<>(facesPrefix + "BIOME", "biome", Biome.class);
+
+    private static final Key<String> biomStyleKey = new Key<>("biomeStyle", String.class);
+
+    @Override
+    public Set<Key> getRequestedParameters() {
+        return asSet(biomStyleKey);
+    }
 
     private final Key<DoubleType> faceMoisture = new Key<>(facesPrefix + "HAS_MOISTURE", DoubleType.class);
 
@@ -43,8 +52,16 @@ public class HeightMoistureBiome extends Contract {
     public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         Map<Face, Double> facesHeight = new HashMap<>();
-        WhittakerDiagram diagram = new WhittakerDiagram(WhittakerDiagram.WCLASSIC, 0.9);
-
+        String styleName = context.getPropertyOrDefault(biomStyleKey, "CLASSIC");
+        BiomeStyle style;
+        try {
+            style = BiomeStyle.valueOf(styleName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Logger.getLogger(this.getName()).warning("No Style marching argument " + styleName
+                    + ", defaulting to classic style");
+            style = BiomeStyle.CLASSIC;
+        }
+        WhittakerDiagram diagram = new WhittakerDiagram(style.getWhit(), 0.9);
         // Normalizing emerged faces between 0 and 1
         for (Face face : map.getFaces()) {
             if (!face.getProperty(faceWaterKey).value) {

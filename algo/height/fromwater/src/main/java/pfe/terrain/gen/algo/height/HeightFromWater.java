@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class HeightFromWater extends Contract {
 
-    private Key<Double> hardnessP = new Key<>("hardness", Double.class);
+    private Key<Double> hardnessKey = new Key<>("hardness", Double.class);
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
@@ -27,7 +27,7 @@ public class HeightFromWater extends Contract {
 
     @Override
     public Set<Key> getRequestedParameters() {
-        return asSet(hardnessP);
+        return asSet(hardnessKey);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class HeightFromWater extends Contract {
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-        double hardness = context.getPropertyOrDefault(hardnessP, 0.5);
+        double hardness = context.getPropertyOrDefault(hardnessKey, 0.5);
         Set<Coord> coordsToProcess = new HashSet<>();
         double height = 0.0;
         CoordSet vertices = map.getVertices();
