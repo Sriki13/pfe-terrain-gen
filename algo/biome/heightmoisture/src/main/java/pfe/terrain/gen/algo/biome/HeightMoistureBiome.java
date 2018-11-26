@@ -6,12 +6,13 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import static pfe.terrain.gen.algo.Biome.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HeightMoistureBiome extends Contract {
 
@@ -41,10 +42,23 @@ public class HeightMoistureBiome extends Contract {
     @Override
     public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+        Map<Face, Double> facesHeight = new HashMap<>();
+        WhittakerDiagram diagram = new WhittakerDiagram(WhittakerDiagram.WCLASSIC, 0.9);
+
+        // Normalizing emerged faces between 0 and 1
+        for (Face face : map.getFaces()) {
+            if (!face.getProperty(faceWaterKey).value) {
+                facesHeight.put(face, face.getCenter().getProperty(heightKey).value);
+            }
+        }
+        double maxV = Collections.max(facesHeight.values());
+        double minV = Collections.min(facesHeight.values());
+        facesHeight.replaceAll((key, val) -> ((val - minV) / (maxV - minV)));
+
         for (Face face : map.getFaces()) {
             Biome biome = getWaterBiomeIfPresent(face);
             if (biome == null) {
-                //biome = getBiomeFromWhitaker(face, context.getPropertyOrDefault(heightStepKey, 4.0));
+                biome = diagram.getBiome(face.getProperty(faceMoisture).value, facesHeight.get(face));
             }
             face.putProperty(faceBiomeKey, biome);
         }
@@ -59,21 +73,6 @@ public class HeightMoistureBiome extends Contract {
             }
         }
         return null;
-    }
-
-    private Biome getBiomeFromWhitaker(Face face, double heightStep)
-            throws NoSuchKeyException, KeyTypeMismatch {
-        double elevation = 0;
-        for (Coord vertex : face.getVertices()) {
-            elevation += vertex.getProperty(heightKey).value;
-        }
-        elevation = elevation / face.getVertices().size();
-        if (elevation < heightStep / 2) return BEACH;
-        if (elevation < 2 * heightStep) return GRASSLAND;
-        if (elevation < 5 * heightStep) return TEMPERATE_RAIN_FOREST;
-        if (elevation < 7 * heightStep) return SHRUBLAND;
-        if (elevation < 8.5 * heightStep) return ALPINE;
-        return SNOW;
     }
 
 }

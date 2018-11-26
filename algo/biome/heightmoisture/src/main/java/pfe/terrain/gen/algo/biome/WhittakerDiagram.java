@@ -28,19 +28,19 @@ public class WhittakerDiagram {
 
     static String WCARIBBEAN =
             "0   0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9\n" +
-                    "0.8 SHR SHR trS trS trS trS trS trS trF trF\n" +
-                    "0.65 SHR SHR SHR SHR trS trS trS trF trF trF\n" +
-                    "0.45 SHR SHR SHR trS trS trF trF trF trF trF\n" +
-                    "0.15 SHR SHR BEA BEA BEA BEA MAN MAN MAN MAN";
+                    "0.75 SHR SHR trS trS trS trS trS trS trF trF\n" +
+                    "0.45 SHR SHR SHR SHR trS trS trS trF trF trF\n" +
+                    "0.25 SHR SHR SHR trS trS trF trF trF trF trF\n" +
+                    "0    SHR SHR BEA BEA BEA BEA MAN MAN MAN MAN";
 
     static String WNORDIC =
-            "0   0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9\n" +
-                    "0.89  ALP ALP ALP ALP ALP SNO SNO SNO SNO SNO\n" +
-                    "0.76  ALP ALP TUN TUN TUN TUN TAI TAI TAI TAI\n" +
-                    "0.55  TUN TUN TUN TUN teF teF teF teF TAI TAI\n" +
-                    "0.30  GRA TUN TUN teF teF teF teF teF teF TAI\n" +
-                    "0.15  GRA GRA teF teF teF teF teF teF teF teF\n" +
-                    "0.05  GRA GRA BEA BEA BEA BEA BEA teF teF teF";
+            "              0   0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9\n" +
+                    "0.85  ALP ALP ALP ALP ALP SNO SNO SNO SNO SNO\n" +
+                    "0.70  ALP ALP TUN TUN TUN TUN TAI TAI TAI TAI\n" +
+                    "0.50  TUN TUN TUN TUN teF teF teF teF TAI TAI\n" +
+                    "0.25  GRA TUN TUN teF teF teF teF teF teF TAI\n" +
+                    "0.10  GRA GRA teF teF teF teF teF teF teF teF\n" +
+                    "0     GRA GRA BEA BEA BEA BEA BEA teF teF teF";
 
 
     private TreeMap<Double, TreeMap<Double, Biome>> whittaker;
