@@ -1,5 +1,3 @@
-package pfe.terrain.gen;
-
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
