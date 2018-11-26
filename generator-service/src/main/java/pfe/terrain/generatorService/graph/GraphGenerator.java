@@ -81,8 +81,8 @@ public class GraphGenerator {
         return Graphviz.fromGraph(graph).render(format).toString();
     }
 
-    public void exportAsPNG(String filename) throws IOException {
-        Graphviz.fromGraph(graph).width(900).render(Format.PNG).toFile(new File(filename));
+    public void exportAsSVG(String filename) throws IOException {
+        Graphviz.fromGraph(graph).width(1500).render(Format.SVG).toFile(new File(filename));
     }
 
 }
