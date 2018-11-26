@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.MapContext;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
@@ -29,7 +30,7 @@ public class ServiceController {
     private Generator generator;
     private Context context;
 
-    public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException {
+    public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
