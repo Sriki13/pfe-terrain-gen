@@ -77,6 +77,28 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "graph",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/graph",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graph"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
