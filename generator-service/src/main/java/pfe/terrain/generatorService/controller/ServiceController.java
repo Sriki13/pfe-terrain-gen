@@ -15,6 +15,7 @@ import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -77,6 +78,12 @@ public class ServiceController {
         GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
         graphGenerator.generateGraph();
         return graphGenerator.exportAsJSON();
+    }
+
+    public void generateGraphImage() throws IOException {
+        GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
+        graphGenerator.generateGraph();
+        graphGenerator.exportAsPNG("graph.png");
     }
 
 }

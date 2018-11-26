@@ -61,7 +61,7 @@ public abstract class Contract implements Parameters {
     public abstract void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch;
 
     public String getName() {
-        return getClass().getName();
+        return getClass().getSimpleName();
     }
 
 }

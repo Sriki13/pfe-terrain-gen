@@ -102,6 +102,13 @@
                             <goal>exec</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>graph</id>
+                        <configuration>
+                            <executable>java</executable>
+                            <mainClass>pfe.terrain.generatorService.GraphMain</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
                     <executable>java</executable>

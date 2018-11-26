@@ -93,7 +93,7 @@ public class BasicBordersTest {
 
     @Test
     public void nameTest() {
-        assertThat(basicBorders.getName(), is(basicBorders.getClass().getName()));
+        assertThat(basicBorders.getName(), is(basicBorders.getClass().getSimpleName()));
     }
 
 }
