@@ -19,11 +19,10 @@ public class WaterFromHeight extends Contract {
     public static final Key<DoubleType> heightKey =
             new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
 
-    public static final Key<BooleanType> vertexBorderKey =
-            new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
 
     public static final Key<BooleanType> faceBorderKey =
             new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+
     public static final Key<BooleanType> faceWaterKey =
             new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
 
@@ -35,12 +34,10 @@ public class WaterFromHeight extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, vertices, heightKey, faceBorderKey, vertexBorderKey),
+                asSet(faces, vertices, heightKey),
                 asSet(faceWaterKey, vertexWaterKey, waterKindKey)
         );
     }
-
-
 
     @Override
     public void execute(IslandMap map, Context context)
@@ -53,35 +50,29 @@ public class WaterFromHeight extends Contract {
     private void identifyWaterVertices(IslandMap map)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         for (Coord vertex : map.getVertices()) {
-            boolean isWater = false;
-            if (vertex.getProperty(vertexBorderKey).value
-                    || vertex.getProperty(heightKey).value > 0) {
-                isWater = true;
-            }
-            vertex.putProperty(vertexWaterKey, new BooleanType(isWater));
+            vertex.putProperty(vertexWaterKey, new BooleanType(vertex.getProperty(heightKey).value <= 0));
         }
     }
 
     private void identifyWaterFaces(IslandMap map)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         for (Face face : map.getFaces()) {
-            if (face.getProperty(faceBorderKey).value) {
-                face.putProperty(faceWaterKey, new BooleanType(true));
-                face.putProperty(waterKindKey, WaterKind.OCEAN);
-            } else {
-                boolean isWater = true;
-                for (Coord vertex : face.getVertices()) {
-                    if (vertex.getProperty(vertexWaterKey).value) {
-                        isWater = false;
-                        break;
-                    }
+            boolean isWater = true;
+            for (Coord vertex : face.getBorderVertices()) {
+                if (!vertex.getProperty(vertexWaterKey).value) {
+                    isWater = false;
+                    break;
                 }
-                face.putProperty(faceWaterKey, new BooleanType(isWater));
-                if (isWater) {
-                    face.putProperty(waterKindKey, WaterKind.LAKE);
+            }
+            face.putProperty(faceWaterKey, new BooleanType(isWater));
+            if (isWater) {
+                if (face.getProperty(faceBorderKey).value) {
+                    face.putProperty(waterKindKey, WaterKind.OCEAN);
                 } else {
-                    face.putProperty(waterKindKey, WaterKind.NONE);
+                    face.putProperty(waterKindKey, WaterKind.LAKE);
                 }
+            } else {
+                face.putProperty(waterKindKey, WaterKind.NONE);
             }
         }
     }
@@ -101,6 +92,7 @@ public class WaterFromHeight extends Contract {
         }
         for (Face face : oceanFaces) {
             face.putProperty(waterKindKey, WaterKind.OCEAN);
+            face.putProperty(faceWaterKey, new BooleanType(true));
         }
     }
 
@@ -111,7 +103,7 @@ public class WaterFromHeight extends Contract {
                 continue;
             }
             seen.add(neighbor);
-            if (face.getProperty(faceWaterKey).value) {
+            if (neighbor.getProperty(faceWaterKey).value) {
                 oceanFaces.add(neighbor);
                 analyzeNeighbors(seen, oceanFaces, neighbor);
             }

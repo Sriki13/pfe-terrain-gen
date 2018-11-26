@@ -70,12 +70,12 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.water.radial</artifactId>
+            <artifactId>algo.water.fromheight</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.height.fromwater</artifactId>
+            <artifactId>algo.height.opensimplex</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -90,7 +90,7 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.biome.heightmoisture</artifactId>
+            <artifactId>algo.biome.height</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

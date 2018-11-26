@@ -53,7 +53,7 @@ public class RadialWaterGeneration extends Contract {
                 face.putProperty(waterKindKey, WaterKind.NONE);
             }
             face.getCenter().putProperty(vertexWaterKey, isWater);
-            for (Coord coord : face.getVertices()) {
+            for (Coord coord : face.getBorderVertices()) {
                 coord.putProperty(vertexWaterKey, isWater);
                 i++;
             }
