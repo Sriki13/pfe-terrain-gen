@@ -29,8 +29,7 @@ public class ServiceController {
     public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
-        System.out.println(contracts);
-        System.out.println(contracts.size());
+        
         ChocoDependencySolver solver = new ChocoDependencySolver(contracts,contracts,new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
