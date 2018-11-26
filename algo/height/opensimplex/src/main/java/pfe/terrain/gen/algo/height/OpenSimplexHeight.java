@@ -50,7 +50,7 @@ public class OpenSimplexHeight extends Contract {
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         double intensity = context.getPropertyOrDefault(intensityKey, 3.0);
         double frequency = context.getPropertyOrDefault(frequencyKey, 0.002);
-        NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSeed());
+        NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSeed(), map.getSize());
 
         elevation.addSimplexNoise(intensity, frequency);
         elevation.addSimplexNoise(intensity / 2, frequency / 2);

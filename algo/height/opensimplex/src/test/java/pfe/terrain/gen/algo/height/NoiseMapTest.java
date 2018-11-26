@@ -33,7 +33,7 @@ public class NoiseMapTest {
                 vertices.add(vertex);
             }
         }
-        noiseMap = new NoiseMap(vertices, 0);
+        noiseMap = new NoiseMap(vertices, 0, 1600);
     }
 
     private boolean isBorder(Coord vertex) {

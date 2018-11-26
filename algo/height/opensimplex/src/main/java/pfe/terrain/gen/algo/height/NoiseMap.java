@@ -12,15 +12,29 @@ import java.util.Set;
 
 public class NoiseMap {
 
+    private Map<Coord, Coord> newToOriginal;
     private Map<Coord, Double> heightMap;
     private OpenSimplexNoise noise;
 
-    public NoiseMap(Set<Coord> vertices, long seed) {
+    public NoiseMap(Set<Coord> vertices, long seed, int islandSize)
+            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         this.heightMap = new HashMap<>();
+        this.newToOriginal = new HashMap<>();
         this.noise = new OpenSimplexNoise(seed);
         for (Coord vertex : vertices) {
-            heightMap.put(vertex, 0.0);
+            Coord normalized = normalize(vertex, islandSize);
+            normalized.putProperty(OpenSimplexHeight.vertexBorderKey,
+                    vertex.getProperty(OpenSimplexHeight.vertexBorderKey));
+            newToOriginal.put(normalized, vertex);
+            heightMap.put(normalized, 0.0);
         }
+    }
+
+    private Coord normalize(Coord vertex, int islandSize) {
+        return new Coord(
+                vertex.x * 1600 / islandSize,
+                vertex.y * 1600 / islandSize
+        );
     }
 
     public void addSimplexNoise(double intensity, double frequency) {
@@ -66,7 +80,8 @@ public class NoiseMap {
 
     public void putHeightProperty() throws DuplicateKeyException {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            entry.getKey().putProperty(OpenSimplexHeight.vertexHeightKey, new DoubleType(entry.getValue()));
+            newToOriginal.get(entry.getKey())
+                    .putProperty(OpenSimplexHeight.vertexHeightKey, new DoubleType(entry.getValue()));
         }
     }
 
