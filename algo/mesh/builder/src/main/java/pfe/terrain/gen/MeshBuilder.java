@@ -20,10 +20,11 @@ import java.util.*;
 
 public class MeshBuilder extends Contract {
 
-    private Map<Coord, Coord> allCoords;
+    private Map<Coord, Coord> allCoordsA;
+    private Map<Coord, Coord> allCoordsB;
     private Map<Edge, Edge> allEdgesMap;
+    private Map<Coordinate, Face> centerFaces;
     private CoordSet verticesSet;
-    private FaceSet facesSet;
 
     @Override
     public Constraints getContract() {
@@ -36,14 +37,16 @@ public class MeshBuilder extends Contract {
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> polygons = genPolygons(map);
-        this.allCoords = new HashMap<>();
+        this.allCoordsA = new HashMap<>();
+        this.allCoordsB = new HashMap<>();
         this.allEdgesMap = new HashMap<>();
         this.verticesSet = new CoordSet();
-        this.facesSet = new FaceSet();
-        genStuff(polygons);
+        this.centerFaces = new HashMap<>();
+        genStuff(polygons, map);
         genNeighbor();
-        map.putProperty(faces, facesSet);
-        verticesSet.addAll(new CoordSet(allCoords.keySet()));
+        map.putProperty(faces, new FaceSet(centerFaces.values()));
+        verticesSet.addAll(new CoordSet(allCoordsA.keySet()));
+        verticesSet.addAll(new CoordSet(allCoordsB.keySet()));
         map.putProperty(vertices, verticesSet);
         map.putProperty(edges, new EdgeSet(allEdgesMap.keySet()));
     }
@@ -84,7 +87,8 @@ public class MeshBuilder extends Contract {
         return res;
     }
 
-    private void genStuff(List<Polygon> polygons) {
+    private void genStuff(List<Polygon> polygons, IslandMap map) {
+        int midSize = map.getSize() / 2;
         for (Polygon polygon : polygons) {
             Coord center = new Coord(polygon.getCentroid().getCoordinate());
             verticesSet.add(center);
@@ -92,12 +96,22 @@ public class MeshBuilder extends Contract {
             Coord[] coords = new Coord[coordinates.length];
             for (int i = 0; i < coordinates.length; i++) {
                 coords[i] = new Coord(coordinates[i]);
-                Coord tmp = allCoords.get(coords[i]);
-                if (tmp == null) {
-                    allCoords.put(coords[i], coords[i]);
+                if (coords[i].x < midSize) {
+                    Coord tmp = allCoordsA.get(coords[i]);
+                    if (tmp == null) {
+                        allCoordsA.put(coords[i], coords[i]);
+                    } else {
+                        coords[i] = tmp;
+                    }
                 } else {
-                    coords[i] = tmp;
+                    Coord tmp = allCoordsB.get(coords[i]);
+                    if (tmp == null) {
+                        allCoordsB.put(coords[i], coords[i]);
+                    } else {
+                        coords[i] = tmp;
+                    }
                 }
+
             }
             List<Edge> borders = new ArrayList<>(coords.length);
             for (int i = 0; i < coords.length; i++) {
@@ -115,15 +129,15 @@ public class MeshBuilder extends Contract {
                     borders.set(i, tmp);
                 }
             }
-            facesSet.add(new Face(center, new EdgeSet(borders)));
+            centerFaces.put(polygon.getCentroid().getCoordinate(), new Face(center, new EdgeSet(borders)));
         }
     }
 
     private void genNeighbor() {
-        CoordSet centers = getFacesCenters(facesSet);
+        Set<Coordinate> centers = centerFaces.keySet();
 
         DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
-        builder.setSites(centers.convertToCoordinateSet());
+        builder.setSites(centers);
 
         Geometry geo = builder.getTriangles(new GeometryFactory());
 
@@ -132,32 +146,12 @@ public class MeshBuilder extends Contract {
         for (Polygon polygon : polygons) {
             Set<Face> faces = new HashSet<>();
             for (Coordinate coordinate : polygon.getCoordinates()) {
-                faces.add(getFaceFromCenter(facesSet, new Coord(coordinate)));
+                faces.add(centerFaces.get(coordinate));
             }
 
             for (Face face : faces) {
                 face.addNeighbor(faces);
             }
         }
-    }
-
-    private Face getFaceFromCenter(Set<Face> faces, Coord center) {
-        for (Face face : faces) {
-            if (face.getCenter().equals(center)) {
-                return face;
-            }
-        }
-        return null;
-
-    }
-
-    private CoordSet getFacesCenters(Set<Face> faces) {
-        CoordSet coords = new CoordSet();
-
-        for (Face face : faces) {
-            coords.add(face.getCenter());
-        }
-
-        return coords;
     }
 }
