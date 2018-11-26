@@ -1,3 +1,5 @@
+package graph;
+
 import guru.nidi.graphviz.model.Link;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
@@ -6,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.types.IntegerType;
-import pfe.terrain.generatorService.GraphGenerator;
+import pfe.terrain.generatorService.graph.GraphGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;

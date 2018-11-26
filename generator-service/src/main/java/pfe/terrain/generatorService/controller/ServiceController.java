@@ -13,9 +13,11 @@ import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.generatorService.graph.GraphGenerator;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class ServiceController {
 
@@ -28,12 +30,12 @@ public class ServiceController {
         List<Contract> contracts = this.getContracts();
         System.out.println(contracts);
         System.out.println(contracts.size());
-        ChocoDependencySolver solver = new ChocoDependencySolver(contracts,contracts,new FinalContract());
+        ChocoDependencySolver solver = new ChocoDependencySolver(contracts, contracts, new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
 
     public ServiceController(List<Contract> contracts) throws InvalidContractException, UnsolvableException, MissingRequiredException {
-        ChocoDependencySolver solver = new ChocoDependencySolver(contracts,contracts,new FinalContract());
+        ChocoDependencySolver solver = new ChocoDependencySolver(contracts, contracts, new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
 
@@ -41,18 +43,18 @@ public class ServiceController {
         return this.generator.generate();
     }
 
-    public void setContext(String contextString){
+    public void setContext(String contextString) {
         ContextParser parser = new ContextParser(contextString);
 
-        generator.setParams(new MapContext(parser.getMap(),this.generator.getContracts()));
+        generator.setParams(new MapContext(parser.getMap(), this.generator.getContracts()));
         this.context = context;
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this.context;
     }
 
-    private List<Contract> getContracts(){
+    private List<Contract> getContracts() {
         List<Contract> contracts = new ArrayList<>();
         try {
             Reflections reflections = new Reflections("pfe.terrain.gen", new SubTypesScanner(false));
@@ -69,6 +71,12 @@ public class ServiceController {
             e.printStackTrace();
         }
         return contracts;
+    }
+
+    public String getGraph() {
+        GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
+        graphGenerator.generateGraph();
+        return graphGenerator.exportAsJSON();
     }
 
 }

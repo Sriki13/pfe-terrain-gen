@@ -1,4 +1,4 @@
-package pfe.terrain.generatorService;
+package pfe.terrain.generatorService.graph;
 
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Shape;
