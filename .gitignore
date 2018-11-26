@@ -31,5 +31,7 @@ hs_err_pid*
 #client data
 param.json
 island.json
+map.json
 order.json
 graph.png
+graph.svg

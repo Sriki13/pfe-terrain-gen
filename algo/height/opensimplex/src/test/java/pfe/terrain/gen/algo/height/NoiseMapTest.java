@@ -26,9 +26,9 @@ public class NoiseMapTest {
             for (int j = 0; j < TEST_SIZE; j++) {
                 Coord vertex = new Coord(i, j);
                 if (isBorder(vertex)) {
-                    vertex.putProperty(OpenSimplexHeight.verticeBorderKey, new BooleanType(true));
+                    vertex.putProperty(OpenSimplexHeight.vertexBorderKey, new BooleanType(true));
                 } else {
-                    vertex.putProperty(OpenSimplexHeight.verticeBorderKey, new BooleanType(false));
+                    vertex.putProperty(OpenSimplexHeight.vertexBorderKey, new BooleanType(false));
                 }
                 vertices.add(vertex);
             }
@@ -46,7 +46,7 @@ public class NoiseMapTest {
         noiseMap.addSimplexNoise(0.35, 0.025);
         noiseMap.addSimplexNoise(0.175, 0.0125);
         // the values are random, all we can test is that they are generated
-        noiseMap.putValuesInRange(4);
+        noiseMap.putValuesInRange(4, 1600);
         noiseMap.ensureBordersAreLow();
         noiseMap.putHeightProperty();
         for (Coord vertex : vertices) {

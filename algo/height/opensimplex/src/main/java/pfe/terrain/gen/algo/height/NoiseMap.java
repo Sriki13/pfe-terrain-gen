@@ -38,18 +38,28 @@ public class NoiseMap {
         }
     }
 
-    public void putValuesInRange(double seaLevel) {
+    public void putValuesInRange(double seaLevel, double islandSize) {
+        double maxWidth = islandSize * 0.5 - 10.0;
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
+            if (entry.getValue() > 0.5) {
+                Coord vertex = entry.getKey();
+                double xDist = Math.abs(vertex.x - islandSize * 0.5);
+                double yDist = Math.abs(vertex.y - islandSize * 0.5);
+                double distance = Math.sqrt(xDist * xDist + yDist * yDist);
+
+                double delta = distance / maxWidth;
+                double gradient = delta * delta;
+
+                heightMap.put(entry.getKey(), entry.getValue() * Math.max(0.0, 1.0 - gradient));
+            }
             heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - seaLevel);
         }
     }
 
     public void ensureBordersAreLow() throws NoSuchKeyException, KeyTypeMismatch {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            Coord vertex = entry.getKey();
-            if (vertex.getProperty(OpenSimplexHeight.verticeBorderKey).value
-                    && heightMap.get(vertex) > 0) {
-                heightMap.put(vertex, 0.0);
+            if (entry.getKey().getProperty(OpenSimplexHeight.vertexBorderKey).value && entry.getValue() > 0) {
+                heightMap.put(entry.getKey(), 0.0);
             }
         }
     }
