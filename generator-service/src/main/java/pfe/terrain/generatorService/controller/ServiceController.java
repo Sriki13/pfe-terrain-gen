@@ -6,6 +6,7 @@ import pfe.terrain.gen.ChocoDependencySolver;
 import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.MapGenerator;
 import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.MapContext;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
@@ -13,6 +14,7 @@ import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.reflection.ContractReflection;
 
 import java.io.IOException;
@@ -46,6 +48,18 @@ public class ServiceController {
 
         this.context = new MapContext(parser.getMap(),this.generator.getContracts());
         generator.setParams(this.context);
+    }
+
+    public List<Parameter> getParameters(){
+        List<Parameter> keys = new ArrayList<>();
+
+        for(Contract contract : this.generator.getContracts()){
+            for(Key key : contract.getRequestedParameters()){
+                keys.add(new Parameter(key,contract.getName()));
+            }
+        }
+
+        return keys;
     }
 
     public Context getContext(){

@@ -20,6 +20,6 @@ public class ReflectionTest {
     @Test
     public void reflectTest(){
         assertTrue(reflection.getContracts().size() >= 1);
-        
+
     }
 }
