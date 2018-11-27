@@ -77,7 +77,9 @@ public class OpenSimplexHeight extends Contract {
         for (Face face : map.getFaces()) {
             if (face.getProperty(faceBorderKey).value) {
                 for (Coord coord : face.getBorderVertices()) {
-                    coord.putProperty(vertexHeightKey, new DoubleType(0.0));
+                    if (coord.getProperty(vertexHeightKey).value > 0) {
+                        coord.putProperty(vertexHeightKey, new DoubleType(0.0));
+                    }
                 }
             }
         }
