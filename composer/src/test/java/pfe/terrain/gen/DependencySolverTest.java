@@ -130,5 +130,49 @@ public class DependencySolverTest {
 
     }
 
+    @Test
+    public void modifyContractTest() throws Exception{
+        Contract A = new TestModifyContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
+                new ArrayList<>());
+        Contract B = new TestModifyContract("B", Collections.singletonList(new Key<>("EDGES", Void.class)),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract C = new TestModifyContract("C", Collections.singletonList(new Key<>("FACES", Void.class)),
+                new ArrayList<>());
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
+        dependencySolver = new DependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
+        List<Contract> got = dependencySolver.orderContracts();
+        assertEquals(3, got.size());
+        assertEquals(A, got.get(0));
+        assertTrue(got.get(1) == B || got.get(1) == C);
+        assertTrue(got.get(2) == B || got.get(2) == C);
+        assertTrue(got.contains(B));
+        assertTrue(got.contains(C));
+    }
+
+    @Test
+    public void simplePriorityWithModfied() throws Exception {
+        Contract A = new TestModifyContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
+                new ArrayList<>());
+        Contract B = new TestModifyContract("B", Collections.singletonList(new Key<>("EDGES", Void.class)),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract C = new TestModifyContract("C", Collections.singletonList(new Key<>("FACES", Void.class)),
+                new ArrayList<>());
+        Contract D = new TestModifyContract("D", Collections.singletonList(new Key<>("EDGES", Void.class)),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract E = new TestModifyContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
+                new ArrayList<>());
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
+        dependencySolver = new DependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
+        List<Contract> got = dependencySolver.orderContracts();
+        assertEquals(3, got.size());
+        assertEquals(A, got.get(0));
+        assertTrue(got.get(1) == B || got.get(1) == C);
+        assertTrue(got.get(2) == B || got.get(2) == C);
+        assertTrue(got.contains(B));
+        assertTrue(got.contains(C));
+    }
+
 
 }

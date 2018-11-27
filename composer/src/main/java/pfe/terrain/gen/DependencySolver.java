@@ -15,10 +15,7 @@ import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DependencySolver {
 
@@ -109,7 +106,11 @@ public class DependencySolver {
                 Constraints b = contracts.get(j).getContract();
                 model.arithm(vars[i], "!=",vars[j]).post(); // must be different
 
-                for(Key required : a.getRequired()){
+                Set<Key> requireAndModified = new HashSet<>();
+                requireAndModified.addAll(a.getRequired());
+                requireAndModified.addAll(a.getModified());
+
+                for(Key required : requireAndModified){
                     if(b.getCreated().contains(required)){
                         model.arithm(vars[i], ">",vars[j]).post();
                     }

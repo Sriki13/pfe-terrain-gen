@@ -28,6 +28,7 @@ public class ContractStore {
 
         for (Contract dependency : contracts) {
             required.addAll(dependency.getContract().getRequired());
+            required.addAll(dependency.getContract().getModified());
         }
 
         return required;
