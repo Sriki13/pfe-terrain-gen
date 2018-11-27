@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class GenMap {
+
     public static void main(String[] args)  throws Exception{
         ServiceController controller = new ServiceController();
         if (args.length == 2 && args[0].equals("-f")) {
@@ -15,4 +16,5 @@ public class GenMap {
         }
         System.out.println(controller.execute());
     }
+
 }
