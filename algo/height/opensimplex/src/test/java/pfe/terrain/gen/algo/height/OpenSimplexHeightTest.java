@@ -64,9 +64,8 @@ public class OpenSimplexHeightTest {
     public void generateHeightTest() throws Exception {
         Context context = new Context();
         // we guarantee that everything will be very tall
-        context.putParam(OpenSimplexHeight.intensityKey, 100.0);
-        context.putParam(OpenSimplexHeight.frequencyKey, 1.0);
-        context.putParam(OpenSimplexHeight.simplexPower, 2.0);
+        OpenSimplexHeight.setIntensity(100);
+        islandMap.putProperty(Contract.seed, 25);
         height.execute(islandMap, context);
         for (Coord vertex : islandMap.getVertices()) {
             assertThat(vertex.getProperty(OpenSimplexHeight.vertexHeightKey), notNullValue());

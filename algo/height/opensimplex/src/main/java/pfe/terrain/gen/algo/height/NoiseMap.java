@@ -46,14 +46,6 @@ public class NoiseMap {
         }
     }
 
-    // Low factor = everything pulled towards the summit
-    // High factor = everything pulled to the bottom
-    public void redistribute(double factor) {
-        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            heightMap.put(entry.getKey(), entry.getValue() + Math.pow(entry.getValue(), factor));
-        }
-    }
-
     public void putValuesInRange(double seaLevel) {
         double maxWidth = BASE_SIZE * 0.5 - 10.0;
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
@@ -77,6 +69,12 @@ public class NoiseMap {
             if (entry.getKey().getProperty(OpenSimplexHeight.vertexBorderKey).value && entry.getValue() > 0) {
                 heightMap.put(entry.getKey(), 0.0);
             }
+        }
+    }
+
+    public void multiplyHeights(int factor) {
+        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
+            heightMap.put(entry.getKey(), entry.getValue() * factor);
         }
     }
 
