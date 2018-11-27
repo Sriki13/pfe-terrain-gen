@@ -1,9 +1,12 @@
 package pfe.terrain.gen;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
+import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.explanations.*;
 import org.chocosolver.solver.Solution;
+import org.chocosolver.solver.objective.ParetoOptimizer;
 import org.chocosolver.solver.search.loop.learn.LearnCBJ;
 import org.chocosolver.solver.search.loop.learn.LearnDBT;
 import org.chocosolver.solver.variables.IntVar;
@@ -15,6 +18,7 @@ import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class DependencySolver {
@@ -88,48 +92,79 @@ public class DependencySolver {
      * @return the ordered list
      * @throws UnsolvableException if the element can't be ordered
      */
-    public List<Contract> order(List<Contract> contracts) throws UnsolvableException{
+    public List<Contract> order(List<Contract> contracts) throws UnsolvableException {
         Contract[] orderedContracts = new Contract[contracts.size()];
 
-        Model model = new Model( "constraints");
+        Model model = new Model("constraints");
 
         IntVar[] vars = new IntVar[contracts.size()];
-        for(int i = 0; i < vars.length ; i++){
-            vars[i] = model.intVar("contracts" + i,0,vars.length-1);
+        for (int i = 0; i < vars.length; i++) {
+            vars[i] = model.intVar("contracts" + i, 0, vars.length - 1);
         }
 
-        for(int i =0 ; i< vars.length;i++){
+        Set<IntVar> toMinimize = new HashSet<>();
+
+        Set<Constraint> modificationConstraint = new HashSet<>();
+
+        for (int i = 0; i < vars.length; i++) {
             Constraints a = contracts.get(i).getContract();
-            for(int j = 0; j< vars.length;j++){
-                if( i== j) continue;
+            for (int j = 0; j < vars.length; j++) {
+                if (i == j) continue;
 
                 Constraints b = contracts.get(j).getContract();
-                model.arithm(vars[i], "!=",vars[j]).post(); // must be different
+                model.arithm(vars[i], "!=", vars[j]).post(); // must be different
+
+                if (a.getModified().size() > 0) {
+                    toMinimize.add(vars[i]);
+                }
+
 
                 Set<Key> requireAndModified = new HashSet<>();
                 requireAndModified.addAll(a.getRequired());
                 requireAndModified.addAll(a.getModified());
 
-                for(Key required : requireAndModified){
-                    if(b.getCreated().contains(required)){
-                        model.arithm(vars[i], ">",vars[j]).post();
+                for (Key required : requireAndModified) {
+                    if (b.getCreated().contains(required)) {
+                        model.arithm(vars[i], ">", vars[j]).post();
                     }
                 }
 
-                for(Key create : a.getCreated()){
-                    if(b.getRequired().contains(create)){
-                        model.arithm(vars[j], ">",vars[i]).post();
+                for (Key create : a.getCreated()) {
+                    if (b.getRequired().contains(create)) {
+                        model.arithm(vars[j], ">", vars[i]).post();
+                    }
+                }
+
+                for (Key modified : a.getModified()) {
+                    if (b.getRequired().contains(modified)) {
+                        Constraint constraint = model.arithm(vars[j], ">", vars[i]);
+                        modificationConstraint.add(constraint);
+                        constraint.post();
                     }
                 }
             }
         }
 
-        Solution solution = model.getSolver().findSolution();
-        // if the solution is null, there is no solution
-        if(solution == null){
-            throw new UnsolvableException();
-        }
 
+
+        Solution solution = model.getSolver().findSolution();
+
+        try {
+            if (solution == null) {
+                throw new UnsolvableException();
+            }
+        } catch (UnsolvableException e){
+            Constraint[] constraints;
+
+            if(modificationConstraint.isEmpty()){
+                constraints = new Constraint[0];
+            } else {
+                constraints = (Constraint[]) modificationConstraint.toArray();
+            }
+
+            model.unpost(constraints);
+            solution = resolveWithMinimisation(model,toMinimize);
+        }
 
         //ordering the contracts
         for(int i = 0;i<vars.length;i++){
@@ -139,4 +174,26 @@ public class DependencySolver {
 
         return new ArrayList<>(Arrays.asList(orderedContracts));
     }
+
+    private Solution resolveWithMinimisation(Model model, Set<IntVar> toMinimize) throws UnsolvableException{
+
+
+        if (toMinimize.size() == 1) {
+            model.setObjective(Model.MINIMIZE,(IntVar)toMinimize.toArray()[0]);
+        } else if (toMinimize.size() > 1) {
+            ParetoOptimizer po = new ParetoOptimizer(Model.MINIMIZE,(IntVar[]) toMinimize.toArray());
+            model.getSolver().plugMonitor(po);
+        }
+
+        Solution solution = model.getSolver().findSolution();
+        // if the solution is null, there is no solution
+
+        if(solution == null){
+            throw new UnsolvableException();
+        }
+
+        return solution;
+    }
+
+
 }
