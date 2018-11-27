@@ -16,8 +16,7 @@
     </parent>
 
     <modules>
-        <module>ridged</module>
-        <module>perlinMoisture</module>
+        <module>perlin</module>
     </modules>
 
 </project>
