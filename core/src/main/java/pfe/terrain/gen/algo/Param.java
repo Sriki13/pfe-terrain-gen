@@ -7,7 +7,7 @@ public class Param<T> extends Key<T> {
 
     public Param(String identifier, Class<T> type, String range, String descr, T defaultValue) {
         super(identifier, type);
-        this.description = type.getSimpleName() + " in " + range + " : " + descr + "\ndefault value : " + defaultValue.toString();
+        this.description = type.getSimpleName() + " in " + range + " : " + descr + " -- Default value : " + defaultValue.toString();
         this.defaultValue = defaultValue;
     }
 
