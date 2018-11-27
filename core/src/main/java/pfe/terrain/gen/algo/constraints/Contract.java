@@ -38,7 +38,7 @@ public abstract class Contract implements Parameters {
     public void debugExecute(IslandMap map, Context context) throws NoSuchKeyException, InvalidAlgorithmParameters, KeyTypeMismatch, DuplicateKeyException {
         String algorithmName = this.getClass().getSimpleName();
         Logger logger = Logger.getLogger(algorithmName);
-        String titleCard = "/////////////";
+        String titleCard = "-------------------------";
         logger.info(titleCard + " Executing algorithm " + algorithmName + " " + titleCard);
         long startTime = System.nanoTime();
         execute(map, context);
