@@ -63,7 +63,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"size\" :  2000}"
+					"raw": "{}"
 				},
 				"url": {
 					"raw": "localhost:8080/context",
@@ -95,6 +95,28 @@
 					"port": "8080",
 					"path": [
 						"graph"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "algo list ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/algorithms",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"algorithms"
 					]
 				}
 			},

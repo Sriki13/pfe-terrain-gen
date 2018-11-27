@@ -20,7 +20,6 @@ import java.util.Set;
 
 public class MapGenerator implements Generator {
 
-    private List<OrderedContract> orderedContracts;
     private List<Contract> contracts;
     private IslandMap islandMap;
     private Context context;
@@ -59,21 +58,6 @@ public class MapGenerator implements Generator {
         for (Contract ctr : contracts) {
             ctr.debugExecute(this.islandMap,this.context);
         }
-    }
-
-    public void execute(OrderedContract contract) throws Exception {
-        this.executeByName(contract.getName());
-
-    }
-
-    private void executeByName(String name) throws MissingContractException, InvalidAlgorithmParameters, DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
-        for (Contract contract : contracts) {
-            if (contract.getName().equals(name)) {
-                contract.debugExecute(islandMap, this.context);
-                return;
-            }
-        }
-        throw new MissingContractException(name);
     }
 
 }

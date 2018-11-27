@@ -18,6 +18,7 @@ import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.exception.NoSuchGenerator;
+import pfe.terrain.generatorService.holder.Algorithm;
 
 import java.io.File;
 import java.util.*;
@@ -42,7 +43,11 @@ public class ControllerTest {
 
         @Override
         public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        }
 
+        @Override
+        public String getName() {
+            return "Test";
         }
     }
 
@@ -93,4 +98,15 @@ public class ControllerTest {
     public void execTest(){
         assertEquals("salut",controller.execute());
     }
+
+    @Test
+    public void listTest(){
+        List<Algorithm> algorithms = this.controller.getAlgoList();
+
+        assertEquals(1,algorithms.size());
+
+        assertEquals("Test",algorithms.get(0).getName());
+    }
+
+
 }

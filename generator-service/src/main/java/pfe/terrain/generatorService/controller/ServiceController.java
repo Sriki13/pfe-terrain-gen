@@ -14,6 +14,7 @@ import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
 import pfe.terrain.generatorService.graph.GraphGenerator;
+import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.reflection.ContractReflection;
 
@@ -84,5 +85,17 @@ public class ServiceController {
         graphGenerator.generateGraph();
         return graphGenerator.exportAsJSON();
     }
+
+    public List<Algorithm> getAlgoList(){
+        List<Algorithm> algos = new ArrayList<>();
+
+        for(int i = 0; i< this.generator.getContracts().size() ; i++){
+            algos.add(new Algorithm(this.generator.getContracts().get(i).getName(),i));
+        }
+
+        return algos;
+    }
+
+
 
 }
