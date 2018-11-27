@@ -67,9 +67,10 @@ public class ServiceController {
 
     public List<Parameter> getParameters() {
         List<Parameter> keys = new ArrayList<>();
-
+        Map<String,Object> contexts = this.contextToMap(this.dominant);
         for (Contract contract : this.generator.getContracts()) {
             for (Param key : contract.getRequestedParameters()) {
+                if(contexts.containsKey(key.getId())) continue;
                 keys.add(new Parameter(key, contract.getName(), key.getDescription()));
             }
         }
