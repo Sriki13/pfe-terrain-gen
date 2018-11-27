@@ -12,6 +12,8 @@ import java.util.Set;
 
 public class NoiseMap {
 
+    private static final int BASE_SIZE = 1600;
+
     private Map<Coord, Coord> newToOriginal;
     private Map<Coord, Double> heightMap;
     private OpenSimplexNoise noise;
@@ -32,8 +34,8 @@ public class NoiseMap {
 
     private Coord normalize(Coord vertex, int islandSize) {
         return new Coord(
-                vertex.x * 1600 / islandSize,
-                vertex.y * 1600 / islandSize
+                vertex.x * BASE_SIZE / islandSize,
+                vertex.y * BASE_SIZE / islandSize
         );
     }
 
@@ -52,13 +54,13 @@ public class NoiseMap {
         }
     }
 
-    public void putValuesInRange(double seaLevel, double islandSize) {
-        double maxWidth = islandSize * 0.5 - 10.0;
+    public void putValuesInRange(double seaLevel) {
+        double maxWidth = BASE_SIZE * 0.5 - 10.0;
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             if (entry.getValue() > 0.5) {
                 Coord vertex = entry.getKey();
-                double xDist = Math.abs(vertex.x - islandSize * 0.5);
-                double yDist = Math.abs(vertex.y - islandSize * 0.5);
+                double xDist = Math.abs(vertex.x - BASE_SIZE * 0.5);
+                double yDist = Math.abs(vertex.y - BASE_SIZE * 0.5);
                 double distance = Math.sqrt(xDist * xDist + yDist * yDist);
 
                 double delta = distance / maxWidth;

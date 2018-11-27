@@ -46,7 +46,7 @@ public class NoiseMapTest {
         noiseMap.addSimplexNoise(0.35, 0.025);
         noiseMap.addSimplexNoise(0.175, 0.0125);
         // the values are random, all we can test is that they are generated
-        noiseMap.putValuesInRange(4, 1600);
+        noiseMap.putValuesInRange(4);
         noiseMap.ensureBordersAreLow();
         noiseMap.putHeightProperty();
         for (Coord vertex : vertices) {

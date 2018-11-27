@@ -57,7 +57,7 @@ public class OpenSimplexHeight extends Contract {
         elevation.addSimplexNoise(intensity / 4, frequency / 4);
 
         elevation.redistribute(context.getPropertyOrDefault(simplexPower, 1.0));
-        elevation.putValuesInRange(context.getPropertyOrDefault(seaLevel, 32.0), map.getSize());
+        elevation.putValuesInRange(context.getPropertyOrDefault(seaLevel, 32.0));
         elevation.putHeightProperty();
 
         for (Face face : map.getFaces()) {
