@@ -3,6 +3,7 @@ package pfe.terrain.gen.algo.constraints;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
@@ -19,7 +20,11 @@ import java.util.stream.Stream;
 
 public abstract class Contract implements Parameters {
 
-    public static Set<Key> asSet(Key... params) {
+    public static Set<Key> asKeySet(Key... params) {
+        return Stream.of(params).collect(Collectors.toSet());
+    }
+
+    public static Set<Param> asParamSet(Param... params) {
         return Stream.of(params).collect(Collectors.toSet());
     }
 

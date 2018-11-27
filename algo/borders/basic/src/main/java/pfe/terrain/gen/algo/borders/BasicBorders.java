@@ -25,8 +25,8 @@ public class BasicBorders extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(vertices, edges, faces),
-                asSet(verticeBorderKey, faceBorderKey)
+                asKeySet(vertices, edges, faces),
+                asKeySet(verticeBorderKey, faceBorderKey)
         );
     }
 

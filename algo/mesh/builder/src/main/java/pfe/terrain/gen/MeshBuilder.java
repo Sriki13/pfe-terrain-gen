@@ -29,8 +29,8 @@ public class MeshBuilder extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(new Key<>("POINTS", CoordSet.class), size),
-                asSet(vertices, edges, faces)
+                asKeySet(new Key<>("POINTS", CoordSet.class), size),
+                asKeySet(vertices, edges, faces)
         );
     }
 

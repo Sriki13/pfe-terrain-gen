@@ -14,33 +14,35 @@ import java.util.Set;
 
 public class RadialWaterGeneration extends Contract {
 
-    private Key<Double> islandSizeK = new Key<>("islandSize", Double.class);
-    private Key<Double> islandScatterK = new Key<>("islandScatter", Double.class);
+    static final Param<Double> islandSizeParam = new Param<>("islandSize", Double.class,
+            "0-1", "Size of the island, 0.0 will yield a very small island, 1.0 will create a big island", 1.0);
+    static final Param<Double> islandScatterParam = new Param<>("islandScatter", Double.class,
+            "0-1", "Rate of scattering, 0.0 will yield a full island, 1.0 will create an archipelago with ridges", 0.0);
 
-    public static final Key<BooleanType> vertexBorderKey = new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
-    public static final Key<BooleanType> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    static final Key<BooleanType> vertexBorderKey = new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
+    static final Key<BooleanType> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
 
-    public static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    public static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    public static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, vertices, seed),
-                asSet(faceWaterKey, vertexWaterKey, waterKindKey)
+                asKeySet(faces, vertices, seed),
+                asKeySet(faceWaterKey, vertexWaterKey, waterKindKey)
         );
     }
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        return asSet(islandScatterK, islandSizeK);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(islandScatterParam, islandSizeParam);
     }
 
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
-        double islandSize = context.getPropertyOrDefault(islandSizeK, 1.0);
-        double factor = context.getPropertyOrDefault(islandScatterK, 0.0);
+        double islandSize = context.getParamOrDefault(islandSizeParam);
+        double factor = context.getParamOrDefault(islandScatterParam);
         Shape shape = new Shape(islandSize, (factor * 4) + 1, new Random(map.getSeed()));
         int size = map.getSize();
         int i = 0;

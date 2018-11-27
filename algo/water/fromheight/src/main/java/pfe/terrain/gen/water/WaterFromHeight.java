@@ -11,6 +11,7 @@ import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,8 +35,8 @@ public class WaterFromHeight extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, vertices, heightKey),
-                asSet(faceWaterKey, vertexWaterKey, waterKindKey)
+                asKeySet(faces, vertices, heightKey),
+                asKeySet(faceWaterKey, vertexWaterKey, waterKindKey)
         );
     }
 
@@ -87,26 +88,23 @@ public class WaterFromHeight extends Contract {
             }
         }
         Set<Face> seen = new HashSet<>(borders);
-        for (Face face : borders) {
-            analyzeNeighbors(seen, oceanFaces, face);
+        ArrayDeque<Face> queue = new ArrayDeque<>(borders);
+        while (!queue.isEmpty()) {
+            Face face = queue.pop();
+            for (Face neighbor : face.getNeighbors()) {
+                if (seen.contains(neighbor) || borders.contains(neighbor)) {
+                    continue;
+                }
+                seen.add(neighbor);
+                if (neighbor.getProperty(faceWaterKey).value) {
+                    oceanFaces.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
         }
         for (Face face : oceanFaces) {
             face.putProperty(waterKindKey, WaterKind.OCEAN);
             face.putProperty(faceWaterKey, new BooleanType(true));
-        }
-    }
-
-    private void analyzeNeighbors(Set<Face> seen, Set<Face> oceanFaces, Face face)
-            throws NoSuchKeyException, KeyTypeMismatch {
-        for (Face neighbor : face.getNeighbors()) {
-            if (seen.contains(neighbor)) {
-                continue;
-            }
-            seen.add(neighbor);
-            if (neighbor.getProperty(faceWaterKey).value) {
-                oceanFaces.add(neighbor);
-                analyzeNeighbors(seen, oceanFaces, neighbor);
-            }
         }
     }
 

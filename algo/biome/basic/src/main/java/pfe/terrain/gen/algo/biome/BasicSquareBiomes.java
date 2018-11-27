@@ -22,8 +22,8 @@ public class BasicSquareBiomes extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faceBorderKey, faces),
-                asSet(faceBiomeKey)
+                asKeySet(faceBorderKey, faces),
+                asKeySet(faceBiomeKey)
         );
     }
 

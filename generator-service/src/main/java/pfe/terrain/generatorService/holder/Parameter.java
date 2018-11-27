@@ -5,10 +5,12 @@ import pfe.terrain.gen.algo.Key;
 public class Parameter {
     private Key key;
     private String contractName;
+    private String description;
 
-    public Parameter(Key key, String contractName) {
+    public Parameter(Key key, String contractName, String description) {
         this.key = key;
         this.contractName = contractName;
+        this.description = description;
     }
 
     public Key getKey() {
@@ -17,5 +19,9 @@ public class Parameter {
 
     public String getContractName() {
         return contractName;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

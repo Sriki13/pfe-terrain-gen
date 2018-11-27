@@ -17,11 +17,12 @@ import static pfe.terrain.gen.algo.Biome.*;
 
 public class HeightBiomes extends Contract {
 
-    private static final Key<Double> heightStepKey = new Key<>("heightBiomeStep", Double.class);
+    private static final Param<Integer> heightStepKey = new Param<>("heightBiomeStep", Integer.class,
+            "1-25", "Average interval between two biomes on the Z-axis", 4);
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        return asSet(heightStepKey);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(heightStepKey);
     }
 
     public static final Key<BooleanType> faceWaterKey =
@@ -41,15 +42,15 @@ public class HeightBiomes extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, faceWaterKey, heightKey, waterKindKey),
-                asSet(faceBiomeKey)
+                asKeySet(faces, faceWaterKey, heightKey, waterKindKey),
+                asKeySet(faceBiomeKey)
         );
     }
 
     @Override
     public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
-        double step = context.getPropertyOrDefault(heightStepKey, 4.0);
+        double step = context.getParamOrDefault(heightStepKey);
         for (Face face : map.getFaces()) {
             Biome biome = getWaterBiomeIfPresent(face);
             if (biome == null) {

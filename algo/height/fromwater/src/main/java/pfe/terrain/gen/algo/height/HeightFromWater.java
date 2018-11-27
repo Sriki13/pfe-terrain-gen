@@ -1,9 +1,6 @@
 package pfe.terrain.gen.algo.height;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.SerializableKey;
+import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -18,7 +15,8 @@ import java.util.Set;
 
 public class HeightFromWater extends Contract {
 
-    private Key<Double> hardnessKey = new Key<>("hardness", Double.class);
+    private final Param<Double> hardnessParam = new Param<>("hardness", Double.class,
+            "0-1","Defines the elevation of the island, 0 = almost flat, 1 = cliffy",0.5);
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
@@ -26,22 +24,22 @@ public class HeightFromWater extends Contract {
     public static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        return asSet(hardnessKey);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(hardnessParam);
     }
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, edges, vertices, vertexWaterKey),
-                asSet(vertexHeightKey)
+                asKeySet(faces, edges, vertices, vertexWaterKey),
+                asKeySet(vertexHeightKey)
         );
     }
 
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-        double hardness = context.getPropertyOrDefault(hardnessKey, 0.5);
+        double hardness = context.getParamOrDefault(hardnessParam);
         Set<Coord> coordsToProcess = new HashSet<>();
         double height = 0.0;
         CoordSet vertices = map.getVertices();

@@ -8,6 +8,7 @@ import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -21,27 +22,26 @@ import java.util.stream.Collectors;
 
 public class RelaxedPoints extends Contract {
 
-    private int getDefaultNbPoint() {
-        return 100;
-    }
 
-    private Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);
-    private Key<Integer> nbIter = new Key<>("nbIterations", Integer.class);
+     static final Param<Integer> nbPoints = new Param<>("nbPoints", Integer.class,
+            "100-100000", "number of points in the map (=tiles)", 1024);
+     static final Param<Integer> nbIter = new Param<>("nbIterations", Integer.class,
+            "1-10", "number of iterations to smoothen grid repartition", 3);
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asSet(size, seed), asSet(new Key<>("POINTS", CoordSet.class)));
+        return new Constraints(asKeySet(size, seed), asKeySet(new Key<>("POINTS", CoordSet.class)));
     }
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        return asSet(nbIter, nbPoints);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(nbIter, nbPoints);
     }
 
     @Override
     public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException, KeyTypeMismatch {
-        int numberOfPoints = context.getPropertyOrDefault(nbPoints, getDefaultNbPoint());
-        int relaxationIterations = context.getPropertyOrDefault(nbIter, 3);
+        int numberOfPoints = context.getParamOrDefault(nbPoints);
+        int relaxationIterations = context.getParamOrDefault(nbIter);
         Set<Coordinate> points = new HashSet<>();
         Random random = new Random(islandMap.getSeed());
         for (int i = 0; i < numberOfPoints; i++) {

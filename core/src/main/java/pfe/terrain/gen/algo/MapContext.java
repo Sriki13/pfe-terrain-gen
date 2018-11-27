@@ -1,7 +1,5 @@
 package pfe.terrain.gen.algo;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.WrongTypeException;
 
@@ -14,7 +12,7 @@ public class MapContext extends Context {
 
     public MapContext(Map<String,Object> map, List<Contract> contracts){
 
-        Set<Key> contractParams = new HashSet<>();
+        Set<Param> contractParams = new HashSet<>();
 
         for (Contract contract : contracts) {
             contractParams.addAll(contract.getRequestedParameters());
@@ -22,10 +20,10 @@ public class MapContext extends Context {
 
         for(String name : map.keySet()){
 
-            for(Key key : contractParams){
+            for(Param key : contractParams){
                 if(key.getId().equals(name)){
                     try {
-                        this.putProperty(key, tryConverte(map.get(name), key.getType()));
+                        this.putParam(key, tryConvert(map.get(name), key.getType()));
                         break;
                     } catch (WrongTypeException e){
                         System.err.println("property " + key.getId() + " is wrong, cannot be loaded");
@@ -35,7 +33,7 @@ public class MapContext extends Context {
         }
     }
 
-    public Object tryConverte(Object val, Class type) throws WrongTypeException{
+    public Object tryConvert(Object val, Class type) throws WrongTypeException{
         try {
             if (type == Integer.class) {
                 return ((Double) val).intValue();

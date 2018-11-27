@@ -22,6 +22,7 @@ import static pfe.terrain.gen.algo.constraints.Contract.size;
 public class RelaxedTest {
     @Test
     public void relaxedTest() throws Exception {
+
         IslandMap map = new IslandMap();
 
         int sizeV = 64;
@@ -33,8 +34,8 @@ public class RelaxedTest {
         RelaxedPoints builder = new RelaxedPoints();
 
         Context c = new Context();
-        c.putProperty(new Key<>("nbPoints", Integer.class), nbPointsV);
-        c.putProperty(new Key<>("nbIterations", Integer.class), 1);
+        c.putParam(RelaxedPoints.nbPoints, nbPointsV);
+        c.putParam(RelaxedPoints.nbIter, 1);
 
         builder.execute(map, c);
 
