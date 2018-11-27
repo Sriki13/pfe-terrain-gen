@@ -32,46 +32,49 @@ public class OpenSimplexHeight extends Contract {
     }
 
     public static final Param<Double> nbIsland = new Param<>("nbIsland", Double.class, "0-1",
-            "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0);
+            "The amount of mountains that will be generated. Higher values mean more mountains.", 0.0);
 
     public static final Param<Double> seaLevel = new Param<>("seaLevel", Double.class, "0-1",
-            "The height of the sea level. Higher values mean less land will emerge.", 0.55);
+            "The height of the sea level. Higher values mean less land will emerge.", 0.42857);
 
-    public static final Param<Integer> heightMultiplier = new Param<>("heightMultiplier", Integer.class, "0-100",
-            "A coefficient that will be applied to all of the generated height values. Higher values will increase the" +
-                    " height variation of the island.", 1);
+    public static final Param<Integer> nbSimplexPasses = new Param<>("roughness", Integer.class, "0-10",
+            "The number of passes of noise to generate. Less passes mean less variation in terrain height.", 5);
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(nbIsland, seaLevel, heightMultiplier);
+        return asParamSet(nbIsland, seaLevel, nbSimplexPasses);
     }
 
-    private static final double MIN_FREQ = 0.002;
+    // default = 0.005
+    private static final double MIN_FREQ = 0.0035;
     private static final double MAX_FREQ = 0.01;
 
-    private static double intensity = 3.0;
-
-    public static void setIntensity(double intensity) {
-        OpenSimplexHeight.intensity = intensity;
-    }
-
-    private static final double MIN_SEA = 16;
-    private static final double MAX_SEA = 45;
-
+    // default = 120
+    private static final double MIN_SEA = 60;
+    private static final double MAX_SEA = 200;
 
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-        double frequency = (MAX_FREQ - MIN_FREQ) * (context.getParamOrDefault(nbIsland)) + MIN_FREQ;
-        NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSeed(), map.getSize());
+        //double frequency = (MAX_FREQ - MIN_FREQ) * (context.getParamOrDefault(nbIsland)) + MIN_FREQ;
+        double frequency = 0.004;
+        NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSize());
 
-        elevation.addSimplexNoise(intensity, frequency);
-        elevation.addSimplexNoise(intensity / 2, frequency / 2);
-        elevation.addSimplexNoise(intensity / 4, frequency / 4);
+        int passes = context.getParamOrDefault(nbSimplexPasses);
+        double total = 0;
+        for (int i = 0; i < passes; i++) {
+            elevation.addSimplexNoise(588 + i, 1 / Math.pow(2, i), frequency / Math.pow(2, i));
+            total += 1 / Math.pow(2, i);
+        }
+
+        elevation.multiplyHeights(1 / total);
 
         double sea = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(seaLevel)) + MIN_SEA;
-        elevation.putValuesInRange(sea);
-        elevation.multiplyHeights(context.getParamOrDefault(heightMultiplier));
+
+        elevation.redistribute(1.17);
+        elevation.putValuesInRange();
+        elevation.multiplyHeights(2.5);
+        elevation.lower(sea);
         elevation.putHeightProperty();
 
         for (Face face : map.getFaces()) {

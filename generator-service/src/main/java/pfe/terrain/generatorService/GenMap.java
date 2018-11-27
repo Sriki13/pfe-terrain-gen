@@ -14,7 +14,7 @@ public class GenMap {
     public static void main(String[] args) throws Exception {
         ServiceController controller = new ServiceController();
         String filename = null;
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i += 2) {
             switch (args[i]) {
                 case "-f":
                     String context = new String(Files.readAllBytes(Paths.get(args[i + 1])), StandardCharsets.UTF_8);

@@ -16,13 +16,11 @@ public class NoiseMap {
 
     private Map<Coord, Coord> newToOriginal;
     private Map<Coord, Double> heightMap;
-    private OpenSimplexNoise noise;
 
-    public NoiseMap(Set<Coord> vertices, long seed, int islandSize)
+    public NoiseMap(Set<Coord> vertices, int islandSize)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         this.heightMap = new HashMap<>();
         this.newToOriginal = new HashMap<>();
-        this.noise = new OpenSimplexNoise(seed);
         for (Coord vertex : vertices) {
             Coord normalized = normalize(vertex, islandSize);
             normalized.putProperty(OpenSimplexHeight.vertexBorderKey,
@@ -39,14 +37,16 @@ public class NoiseMap {
         );
     }
 
-    public void addSimplexNoise(double intensity, double frequency) {
+    public void addSimplexNoise(long seed, double intensity, double frequency) {
+        OpenSimplexNoise noise = new OpenSimplexNoise(seed);
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             Coord vertex = entry.getKey();
-            heightMap.put(vertex, entry.getValue() + intensity * noise.eval(frequency * vertex.x, frequency * vertex.y));
+            double value = intensity * noise.eval(frequency * vertex.x, frequency * vertex.y);
+            heightMap.put(vertex, entry.getValue() + ((value + 1) / 2));
         }
     }
 
-    public void putValuesInRange(double seaLevel) {
+    public void putValuesInRange() {
         double maxWidth = BASE_SIZE * 0.5 - 10.0;
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             if (entry.getValue() > 0.5) {
@@ -60,7 +60,14 @@ public class NoiseMap {
 
                 heightMap.put(entry.getKey(), entry.getValue() * Math.max(0.0, 1.0 - gradient));
             }
-            heightMap.put(entry.getKey(), ((entry.getValue() + 1) * 20) - seaLevel);
+            double normalized = 40 * entry.getValue() - 20;
+            heightMap.put(entry.getKey(), normalized);
+        }
+    }
+
+    public void lower(double amount) {
+        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
+            heightMap.put(entry.getKey(), entry.getValue() - amount);
         }
     }
 
@@ -72,9 +79,15 @@ public class NoiseMap {
         }
     }
 
-    public void multiplyHeights(int factor) {
+    public void multiplyHeights(double factor) {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             heightMap.put(entry.getKey(), entry.getValue() * factor);
+        }
+    }
+
+    public void redistribute(double factor) {
+        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
+            heightMap.put(entry.getKey(), Math.pow(entry.getValue(), factor));
         }
     }
 
