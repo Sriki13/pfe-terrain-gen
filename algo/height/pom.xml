@@ -18,6 +18,7 @@
     <modules>
         <module>opensimplex</module>
         <module>fromwater</module>
+        <module>multiplication</module>
     </modules>
 
 </project>
