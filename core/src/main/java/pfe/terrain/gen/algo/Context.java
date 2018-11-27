@@ -34,4 +34,20 @@ public class Context {
     public Map<Param<?>, Object> getProperties() {
         return properties;
     }
+
+    public Context merge(Context toMerge){
+        Context context = new Context();
+
+        for (Param param : this.properties.keySet()){
+            context.putParam(param,this.properties.get(param));
+        }
+
+        for (Param param : toMerge.properties.keySet()){
+            if(this.properties.containsKey(param)) continue;
+
+            context.putParam(param,toMerge.properties.get(param));
+        }
+
+        return context;
+    }
 }

@@ -30,7 +30,6 @@ public class ControllerTest {
 
     private class TestContract extends Contract {
 
-
         @Override
         public Set<Param> getRequestedParameters() {
             return asParamSet(salut);
@@ -79,6 +78,18 @@ public class ControllerTest {
         Context context = controller.getContext();
 
         assertEquals(new Integer(12), context.getParamOrDefault(salut));
+    }
+
+    @Test
+    public void setContextWithUnknownKeyTest() throws Exception{
+        controller.setContext("{\"eeeee\" : 12}");
+
+        Context context = controller.getContext();
+
+        int val = context.getParamOrDefault(new Param<>("eeeee", Integer.class, "", "", 1));
+
+        assertEquals(1,val);
+
     }
 
     @Test

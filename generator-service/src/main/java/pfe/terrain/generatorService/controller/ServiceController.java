@@ -16,6 +16,7 @@ import pfe.terrain.gen.exception.UnsolvableException;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
+import pfe.terrain.generatorService.initializer.ContextInitializer;
 import pfe.terrain.generatorService.reflection.ContractReflection;
 
 import java.util.ArrayList;
@@ -27,11 +28,17 @@ public class ServiceController {
 
 
     private Generator generator;
-    private Context context;
+    private Context recessive;
+    private Context dominant;
 
     public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
+
+        this.recessive = new Context();
+
+        ContextInitializer initializer = new ContextInitializer();
+        this.dominant = initializer.getContext(contracts);
 
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
@@ -46,22 +53,16 @@ public class ServiceController {
     }
 
     public Map<String, Object> setContext(String contextString) {
+
         ContextParser parser = new ContextParser(contextString);
 
-        this.context = new MapContext(parser.getMap(), this.generator.getContracts());
-        generator.setParams(this.context);
+        this.recessive = new MapContext(parser.getMap(), this.generator.getContracts());
 
-        Map<String, Object> map = new HashMap<>();
+        Context merge = this.dominant.merge(this.recessive);
 
-        for (Param key : this.context.getProperties().keySet()) {
-            try {
-                map.put(key.getId(), this.context.getParamOrDefault(key));
-            } catch (Exception e) {
-                System.err.println("can't put key " + key.getId() + "into map");
-            }
-        }
+        generator.setParams(merge);
 
-        return map;
+        return contextToMap(merge);
     }
 
     public List<Parameter> getParameters() {
@@ -76,8 +77,13 @@ public class ServiceController {
         return keys;
     }
 
+    public Map<String,Object> getContextMap() {
+        return contextToMap(this.dominant.merge(this.recessive));
+    }
+
+
     public Context getContext() {
-        return this.context;
+        return this.dominant.merge(this.recessive);
     }
 
     public String getGraph() {
@@ -94,6 +100,22 @@ public class ServiceController {
         }
 
         return algos;
+    }
+
+
+
+    private Map<String,Object> contextToMap(Context context){
+        Map<String, Object> map = new HashMap<>();
+
+        for (Param key : context.getProperties().keySet()) {
+            try {
+                map.put(key.getId(), context.getParamOrDefault(key));
+            } catch (Exception e) {
+                System.err.println("can't put key " + key.getId() + "into map");
+            }
+        }
+
+        return map;
     }
 
 

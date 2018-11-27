@@ -3,6 +3,7 @@ package pfe.terrain.generatorService;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.parser.JsonParser;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +17,9 @@ public class Main {
 
         Logger logger = Logger.getLogger("WebService");
 
+        Map<String, Object> baseContext = controller.getContextMap();
+
+        logger.log(Level.INFO,"Base Context : " + parser.parseMap(baseContext));
 
         port(8080);
 
