@@ -7,6 +7,7 @@ public class Key<T> {
     private final String identifier;
     private final Class<T> type;
 
+
     public Key(String identifier, Class<T> type) {
         this.identifier = identifier;
         this.type = type;
