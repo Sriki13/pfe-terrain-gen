@@ -31,5 +31,10 @@ public class Main {
             response.type("application/json");
             return parser.parseKeys(controller.getParameters());
         });
+
+        get("/algorithms", (request, response) -> {
+            response.type("application/json");
+            return parser.parseAlgo(controller.getAlgoList());
+        });
     }
 }

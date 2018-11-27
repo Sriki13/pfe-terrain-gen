@@ -1,5 +1,6 @@
 package pfe.terrain.gen;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
@@ -14,6 +15,7 @@ import pfe.terrain.gen.algo.parsing.OrderedContract;
 import pfe.terrain.gen.exception.MissingContractException;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class MapGeneratorTest {
 
@@ -31,11 +33,73 @@ public class MapGeneratorTest {
             public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
 
             }
+
+            @Override
+            public String getName() {
+                return "A";
+            }
         }));
     }
 
-    @Test(expected = MissingContractException.class)
-    public void contractListTest() throws Exception{
-        this.map.execute(new OrderedContract("zezez",12));
+    @Test
+    public void algoOrderTest(){
+        this.map = new MapGenerator(Arrays.asList(
+                new Contract() {
+                    @Override
+                    public Constraints getContract() {
+                        return null;
+                    }
+
+                    @Override
+                    public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "A";
+                    }
+                },
+                new Contract() {
+                    @Override
+                    public Constraints getContract() {
+                        return null;
+                    }
+
+                    @Override
+                    public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "B";
+                    }
+                },
+                new Contract() {
+                    @Override
+                    public Constraints getContract() {
+                        return null;
+                    }
+
+                    @Override
+                    public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+
+                    }
+
+                    @Override
+                    public String getName() {
+                        return "C";
+                    }
+                }
+
+        ));
+
+        List<Contract> contracts = this.map.getContracts();
+
+        Assert.assertEquals(3,contracts.size());
+        Assert.assertEquals("A",contracts.get(0).getName());
+        Assert.assertEquals("B",contracts.get(1).getName());
+        Assert.assertEquals("C",contracts.get(2).getName());
     }
 }

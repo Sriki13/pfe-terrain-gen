@@ -2,6 +2,7 @@ package pfe.terrain.generatorService.parser;
 
 import com.google.gson.Gson;
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
 
 import java.util.ArrayList;
@@ -29,5 +30,9 @@ public class JsonParser {
 
     public String parseMap(Map<String,Object> map){
         return new Gson().toJson(map);
+    }
+
+    public String parseAlgo(List<Algorithm> algorithms){
+        return new Gson().toJson(algorithms);
     }
 }
