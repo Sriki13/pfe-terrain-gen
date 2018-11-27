@@ -31,29 +31,47 @@ public class OpenSimplexHeight extends Contract {
         );
     }
 
-    public static final Param<Double> intensityKey = new Param<>("simplexIntensity", Double.class, "", "", 3.0);
-    public static final Param<Double> frequencyKey = new Param<>("simplexFrequency", Double.class, "", "", 0.002);
-    public static final Param<Double> seaLevel = new Param<>("simplexSeaLevel", Double.class, "", "", 1.0);
-    public static final Param<Double> simplexPower = new Param<>("simplexPower", Double.class, "", "", 1.0);
+    public static final Param<Double> nbIsland = new Param<>("nbIsland", Double.class, "0-1",
+            "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0);
+
+    public static final Param<Double> seaLevel = new Param<>("seaLevel", Double.class, "0-1",
+            "The height of the sea level. Higher values mean less land will emerge.", 0.55);
+
+    public static final Param<Integer> heightMultiplier = new Param<>("heightMultiplier", Integer.class, "0-100",
+            "A coefficient that will be applied to all of the generated height values. Higher values will increase the" +
+                    " height variation of the island.", 1);
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(intensityKey, frequencyKey, seaLevel, simplexPower);
+        return asParamSet(nbIsland, seaLevel, heightMultiplier);
     }
+
+    private static final double MIN_FREQ = 0.002;
+    private static final double MAX_FREQ = 0.01;
+
+    private static double intensity = 3.0;
+
+    public static void setIntensity(double intensity) {
+        OpenSimplexHeight.intensity = intensity;
+    }
+
+    private static final double MIN_SEA = 16;
+    private static final double MAX_SEA = 45;
+
 
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-        double intensity = context.getParamOrDefault(intensityKey);
-        double frequency = context.getParamOrDefault(frequencyKey);
+        double frequency = (MAX_FREQ - MIN_FREQ) * (context.getParamOrDefault(nbIsland)) + MIN_FREQ;
         NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSeed(), map.getSize());
 
         elevation.addSimplexNoise(intensity, frequency);
         elevation.addSimplexNoise(intensity / 2, frequency / 2);
         elevation.addSimplexNoise(intensity / 4, frequency / 4);
 
-        elevation.redistribute(context.getParamOrDefault(simplexPower));
-        elevation.putValuesInRange(context.getParamOrDefault(seaLevel));
+        double sea = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(seaLevel)) + MIN_SEA;
+        elevation.putValuesInRange(sea);
+        elevation.multiplyHeights(context.getParamOrDefault(heightMultiplier));
         elevation.putHeightProperty();
 
         for (Face face : map.getFaces()) {
