@@ -1,10 +1,7 @@
 package pfe.terrain.gen;
 
 import com.flowpowered.noise.module.source.Perlin;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.SerializableKey;
+import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -30,24 +27,27 @@ public class PerlinMoisture extends Contract {
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asSet(faces, seed, faceWaterKey), asSet(faceMoisture));
+        return new Constraints(asKeySet(faces, seed, faceWaterKey), asKeySet(faceMoisture));
     }
 
-    private final Key<Double> minMoisture = new Key<>("minMoisture", Double.class);
-    private final Key<Double> maxMoisture = new Key<>("maxMoisture", Double.class);
-    private final Key<Double> biomeQuantity = new Key<>("biomeQuantity", Double.class);
+    private final Param<Double> minMoisture = new Param<>("minMoisture", Double.class,
+            "0-1", "Minimal Moisture (0.5 means a humid island, 1.0 means all map will have max moisture", 0.0);
+    private final Param<Double> maxMoisture = new Param<>("maxMoisture", Double.class,
+            "0-1", "Maximal Moisture (0.5 means a arid island, 0.0 means all map will have min moisture", 1.0);
+    private final Param<Double> biomeQuantity = new Param<>("biomeQuantity", Double.class,
+            "0-1", "", 0.25);
 
-    public Set<Key> getRequestedParameters() {
-        return asSet(minMoisture, maxMoisture, biomeQuantity);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(minMoisture, maxMoisture, biomeQuantity);
     }
 
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
         FaceSet faces = map.getFaces();
         int mapSize = map.getSize();
-        double frequency = context.getPropertyOrDefault(biomeQuantity, 0.25);
-        double min = context.getPropertyOrDefault(minMoisture, 0.0);
-        double max = context.getPropertyOrDefault(maxMoisture, 1.0);
+        double frequency = context.getParamOrDefault(biomeQuantity);
+        double min = context.getParamOrDefault(minMoisture);
+        double max = context.getParamOrDefault(maxMoisture);
         if (max < min) {
             Logger.getLogger(this.getName()).warning("Max moisture is bigger than min moisture, going with default values");
             min = 0.0;

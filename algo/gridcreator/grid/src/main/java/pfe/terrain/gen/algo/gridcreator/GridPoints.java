@@ -3,6 +3,7 @@ package pfe.terrain.gen.algo.gridcreator;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
@@ -15,25 +16,23 @@ import java.util.Set;
 
 public class GridPoints extends Contract {
 
-    private int getDefaultNbPoint() {
-        return 100;
-    }
 
-    private Key<Integer> nbPoints = new Key<>("nbPoints", Integer.class);
+    private Param<Integer> nbPoints = new Param<>("nbPoints", Integer.class,
+            "256-65536 (power of 2)", "number of points in the map (=tiles)", 1024);
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        return asSet(nbPoints);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(nbPoints);
     }
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asSet(size, seed), asSet(new Key<>("POINTS", CoordSet.class)));
+        return new Constraints(asKeySet(size, seed), asKeySet(new Key<>("POINTS", CoordSet.class)));
     }
 
     @Override
     public void execute(IslandMap islandMap, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, KeyTypeMismatch {
-        int numberOfPoints = context.getPropertyOrDefault(nbPoints, getDefaultNbPoint());
+        int numberOfPoints = context.getParamOrDefault(nbPoints);
         double pointsByLineDouble = Math.sqrt(numberOfPoints);
         if (!(pointsByLineDouble - Math.floor(pointsByLineDouble) == 0)) {
             throw new InvalidAlgorithmParameters("numberOfPoints must be a square root");

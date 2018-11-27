@@ -18,7 +18,7 @@ public class FinalContract extends Contract {
 
     @Override
     public Constraints getContract() {
-        Set<Key> required = asSet(
+        Set<Key> required = asKeySet(
                 new Key<>("VERTICES", CoordSet.class),
                 new Key<>("EDGES", EdgeSet.class),
                 new Key<>("FACES", FaceSet.class));

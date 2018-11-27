@@ -3,6 +3,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.Param;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.parser.JsonParser;
 
@@ -21,7 +22,7 @@ public class JsonParserTest {
 
     @Test
     public void keyParsingTest(){
-        String json = parser.parseKeys(Arrays.asList(new Parameter(new Key<>("test",Integer.class),"salu")));
+        String json = parser.parseKeys(Arrays.asList(new Parameter(new Param<Integer>("test",Integer.class,"","",1),"salu","salu")));
 
         Object[] maps = new Gson().fromJson(json,Object[].class);
 

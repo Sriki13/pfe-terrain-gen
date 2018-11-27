@@ -3,14 +3,16 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import pfe.terrain.gen.algo.*;
+import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.WaterKind;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
-import pfe.terrain.gen.algo.types.BooleanType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,15 +24,10 @@ import java.util.HashSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AnyOf.anyOf;
-import static pfe.terrain.gen.algo.constraints.Contract.facesPrefix;
-import static pfe.terrain.gen.algo.constraints.Contract.verticesPrefix;
+import static pfe.terrain.gen.RadialWaterGeneration.waterKindKey;
 
 public class RadialWaterGenerationTest {
 
-    private Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    private Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    private Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
-    private Key<Double> islandSizeK = new Key<>("islandSize", Double.class);
     private IslandMap map;
     private FaceSet faces;
     private int mapSize;
@@ -51,7 +48,7 @@ public class RadialWaterGenerationTest {
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 347);
         Context context = new Context();
-        context.putProperty(islandSizeK, 0.9);
+        context.putParam(RadialWaterGeneration.islandSizeParam, 1.0);
         waterGen.execute(map, context);
     }
 
@@ -59,8 +56,8 @@ public class RadialWaterGenerationTest {
     public void testPropertyIsthere() throws NoSuchKeyException, KeyTypeMismatch {
         faces = map.getFaces();
         for (Face face : faces) {
-            assertThat(face.getProperty(faceWaterKey).value, anyOf(is(true), is(false)));
-            if (face.getProperty(faceWaterKey).value) {
+            assertThat(face.getProperty(RadialWaterGeneration.faceWaterKey).value, anyOf(is(true), is(false)));
+            if (face.getProperty(RadialWaterGeneration.faceWaterKey).value) {
                 assertThat(face.getProperty(waterKindKey), is(WaterKind.OCEAN));
             } else {
                 assertThat(face.getProperty(waterKindKey), is(WaterKind.NONE));
@@ -75,7 +72,7 @@ public class RadialWaterGenerationTest {
         final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);
         short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
         for (Face face : faces) {
-            if (face.getProperty(faceWaterKey).value) {
+            if (face.getProperty(RadialWaterGeneration.faceWaterKey).value) {
                 data[Math.toIntExact(Math.round(face.getCenter().y)) * mapSize + Math.toIntExact(Math.round(face.getCenter().x))] = (short) 32473;
             } else {
                 data[Math.toIntExact(Math.round(face.getCenter().y)) * mapSize + Math.toIntExact(Math.round(face.getCenter().x))] = (short) 65535;

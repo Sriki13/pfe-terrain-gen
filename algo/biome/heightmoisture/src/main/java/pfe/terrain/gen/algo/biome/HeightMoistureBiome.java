@@ -10,10 +10,7 @@ import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class HeightMoistureBiome extends Contract {
@@ -30,11 +27,12 @@ public class HeightMoistureBiome extends Contract {
     public static final Key<Biome> faceBiomeKey =
             new SerializableKey<>(facesPrefix + "BIOME", "biome", Biome.class);
 
-    private static final Key<String> biomStyleKey = new Key<>("biomeStyle", String.class);
+    private final Param<String> biomeStyleParam = new Param<>("biomeStyle", String.class,
+            Arrays.toString(BiomeStyle.values()), "Style of biome repartition","classic");
 
     @Override
-    public Set<Key> getRequestedParameters() {
-        return asSet(biomStyleKey);
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(biomeStyleParam);
     }
 
     private final Key<DoubleType> faceMoisture = new Key<>(facesPrefix + "HAS_MOISTURE", DoubleType.class);
@@ -43,8 +41,8 @@ public class HeightMoistureBiome extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, faceWaterKey, faceMoisture, heightKey, waterKindKey),
-                asSet(faceBiomeKey)
+                asKeySet(faces, faceWaterKey, faceMoisture, heightKey, waterKindKey),
+                asKeySet(faceBiomeKey)
         );
     }
 
@@ -52,7 +50,7 @@ public class HeightMoistureBiome extends Contract {
     public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         Map<Face, Double> facesHeight = new HashMap<>();
-        String styleName = context.getPropertyOrDefault(biomStyleKey, "CLASSIC");
+        String styleName = context.getParamOrDefault(biomeStyleParam);
         BiomeStyle style;
         try {
             style = BiomeStyle.valueOf(styleName.toUpperCase());

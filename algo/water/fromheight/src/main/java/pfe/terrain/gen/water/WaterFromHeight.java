@@ -34,8 +34,8 @@ public class WaterFromHeight extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asSet(faces, vertices, heightKey),
-                asSet(faceWaterKey, vertexWaterKey, waterKindKey)
+                asKeySet(faces, vertices, heightKey),
+                asKeySet(faceWaterKey, vertexWaterKey, waterKindKey)
         );
     }
 

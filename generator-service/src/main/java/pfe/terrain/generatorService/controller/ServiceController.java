@@ -4,8 +4,8 @@ import pfe.terrain.gen.DependencySolver;
 import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.MapGenerator;
 import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.MapContext;
+import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.ContextParser;
@@ -33,7 +33,7 @@ public class ServiceController {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
-        DependencySolver solver = new DependencySolver(contracts,contracts,new FinalContract());
+        DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
 
@@ -45,18 +45,18 @@ public class ServiceController {
         return this.generator.generate();
     }
 
-    public Map<String,Object> setContext(String contextString) {
+    public Map<String, Object> setContext(String contextString) {
         ContextParser parser = new ContextParser(contextString);
 
         this.context = new MapContext(parser.getMap(), this.generator.getContracts());
         generator.setParams(this.context);
 
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
-        for(Key key : this.context.getProperties().keySet()){
+        for (Param key : this.context.getProperties().keySet()) {
             try {
-                map.put(key.getId(), this.context.getProperty(key));
-            } catch (Exception e){
+                map.put(key.getId(), this.context.getParamOrDefault(key));
+            } catch (Exception e) {
                 System.err.println("can't put key " + key.getId() + "into map");
             }
         }
@@ -64,12 +64,12 @@ public class ServiceController {
         return map;
     }
 
-    public List<Parameter> getParameters(){
+    public List<Parameter> getParameters() {
         List<Parameter> keys = new ArrayList<>();
 
-        for(Contract contract : this.generator.getContracts()){
-            for(Key key : contract.getRequestedParameters()){
-                keys.add(new Parameter(key,contract.getName()));
+        for (Contract contract : this.generator.getContracts()) {
+            for (Param key : contract.getRequestedParameters()) {
+                keys.add(new Parameter(key, contract.getName(), key.getDescription()));
             }
         }
 
@@ -86,16 +86,15 @@ public class ServiceController {
         return graphGenerator.exportAsJSON();
     }
 
-    public List<Algorithm> getAlgoList(){
+    public List<Algorithm> getAlgoList() {
         List<Algorithm> algos = new ArrayList<>();
 
-        for(int i = 0; i< this.generator.getContracts().size() ; i++){
-            algos.add(new Algorithm(this.generator.getContracts().get(i).getName(),i));
+        for (int i = 0; i < this.generator.getContracts().size(); i++) {
+            algos.add(new Algorithm(this.generator.getContracts().get(i).getName(), i));
         }
 
         return algos;
     }
-
 
 
 }
