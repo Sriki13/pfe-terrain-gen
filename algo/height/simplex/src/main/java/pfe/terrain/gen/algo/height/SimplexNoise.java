@@ -47,7 +47,7 @@ public class SimplexNoise {  // Simplex noise in 2D
 
 
     // 2D simplex noise
-    public double noise(double xin, double yin) {
+    public double eval(double xin, double yin) {
         double n0, n1, n2; // Noise contributions from the three corners
         // Skew the input space to determine which simplex cell we're in
         double s = (xin + yin) * F2; // Hairy factor for 2D
