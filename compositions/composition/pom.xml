@@ -38,12 +38,7 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.height.opensimplex</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.water.fromheight</artifactId>
+            <artifactId>algo.height.redistribution</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
