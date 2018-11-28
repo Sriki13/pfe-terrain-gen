@@ -66,8 +66,9 @@ public class ServiceController {
         this.generator = generator;
     }
 
-    public String execute() {
+    public String execute() throws Exception{
         return this.generator.generate();
+
     }
 
     public Map<String, Object> setContext(String contextString) {

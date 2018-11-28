@@ -53,7 +53,7 @@ public class ControllerTest {
 
     private class TestGenerator implements Generator{
         @Override
-        public String generate() {
+        public String generate() throws Exception {
             return "salut";
         }
 
@@ -109,7 +109,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void execTest() {
+    public void execTest() throws Exception {
         assertEquals("salut", controller.execute());
     }
 

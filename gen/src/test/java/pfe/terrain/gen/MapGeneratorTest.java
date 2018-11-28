@@ -102,4 +102,21 @@ public class MapGeneratorTest {
         Assert.assertEquals("B",contracts.get(1).getName());
         Assert.assertEquals("C",contracts.get(2).getName());
     }
+
+    @Test(expected = InvalidAlgorithmParameters.class)
+    public void failTest() throws Exception{
+        this.map = new MapGenerator(Arrays.asList(new Contract() {
+            @Override
+            public Constraints getContract() {
+                return null;
+            }
+
+            @Override
+            public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+                throw new InvalidAlgorithmParameters("salut");
+            }
+        }));
+
+        this.map.generate();
+    }
 }
