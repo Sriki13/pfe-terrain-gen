@@ -21,6 +21,7 @@
         <module>fromwater</module>
         <module>multiplication</module>
         <module>redistribution</module>
+        <module>smoothing</module>
     </modules>
 
 </project>
