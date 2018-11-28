@@ -8,7 +8,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.types.DoubleType;
-import pfe.terrain.gen.algo.types.IntegerType;
+import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class RiverMoistureTest {
 
     private Face generateFace(int seed, boolean hasRiver, Set<Edge> allEdges) throws DuplicateKeyException {
         Edge edge = new Edge(new Coord(seed, 0), new Coord(seed, 1));
-        edge.putProperty(RiverMoisture.riverFlowKey, new IntegerType(hasRiver ? 1 : 0));
+        edge.putProperty(RiverMoisture.riverFlowKey, new OptionalIntegerType(hasRiver ? 1 : 0));
         allEdges.add(edge);
         Face result = new Face(new Coord(seed, 2), Collections.singleton(edge));
         result.putProperty(RiverMoisture.faceMoisture, new DoubleType(0.0));

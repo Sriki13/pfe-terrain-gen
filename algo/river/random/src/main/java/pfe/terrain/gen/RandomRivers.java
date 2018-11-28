@@ -10,6 +10,7 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.IntegerType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.*;
@@ -29,8 +30,8 @@ public class RandomRivers extends Contract {
     public static final Key<DoubleType> heightKey =
             new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
 
-    public static final Key<OptionalIntegerType> riverFlowKey =
-            new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", OptionalIntegerType.class);
+    public static final Key<IntegerType> riverFlowKey =
+            new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", IntegerType.class);
     public static final Key<Boolean> isSourceKey =
             new Key<>(verticesPrefix + "SOURCE", Boolean.class);
     public static final Key<Boolean> isRiverEndKey =
