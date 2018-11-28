@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class NoiseWaterGeneration extends Contract {
 
-    static final Param<String> roundIslandsParam = new Param<>("NoiseType", String.class,
+    static final Param<String> noiseParam = new Param<>("NoiseType", String.class,
             Arrays.toString(Noise.values()),
             "Choose the noise algorithm to use : Perlin : classic island, Billow : small and round islands, Ridged : aggressive geology with big island in the middle and a lot of reef",
             Noise.PERLIN.getNoiseName());
@@ -43,7 +43,7 @@ public class NoiseWaterGeneration extends Contract {
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(archipelagoTendencyParam, coastRoughnessParam, roundIslandsParam);
+        return asParamSet(archipelagoTendencyParam, coastRoughnessParam, noiseParam);
     }
 
     @Override
@@ -52,9 +52,9 @@ public class NoiseWaterGeneration extends Contract {
         double coastRoughness = context.getParamOrDefault(coastRoughnessParam);
         Noise algorithm;
         try {
-            algorithm = Noise.valueOf(context.getParamOrDefault(roundIslandsParam).toUpperCase());
+            algorithm = Noise.valueOf(context.getParamOrDefault(noiseParam).toUpperCase());
         } catch (IllegalArgumentException e) {
-            Logger.getLogger(this.getName()).warning("No Style marching argument " + context.getParamOrDefault(roundIslandsParam)
+            Logger.getLogger(this.getName()).warning("No Style marching argument " + context.getParamOrDefault(noiseParam)
                     + ", defaulting to classic style");
             algorithm = Noise.PERLIN;
         }
