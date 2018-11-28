@@ -3,3 +3,16 @@ jdk: oraclejdk8
 
 notifications:
   slack: si5-2018-2019-pns:Qay3sY9mRk9ItOQ4tuD8Rarr
+
+before_install:
+  - chmod +x *.sh
+
+jobs:
+  include:
+    - stage: "Build"
+      name : "build"
+      script: ./build.sh
+    - stage : "Deploy"
+      name : "deploy"
+      if: branch = master
+      script: ./deploy.sh
