@@ -13,4 +13,8 @@ public class DoubleType implements SerializableType {
         return Double.toString(value);
     }
 
+    @Override
+    public String toString() {
+        return serialize();
+    }
 }
