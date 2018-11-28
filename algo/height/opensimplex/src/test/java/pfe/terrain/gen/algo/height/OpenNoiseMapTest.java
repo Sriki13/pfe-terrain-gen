@@ -12,12 +12,12 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class NoiseMapTest {
+public class OpenNoiseMapTest {
 
     public static final int TEST_SIZE = 50;
 
     private Set<Coord> vertices;
-    private NoiseMap noiseMap;
+    private OpenNoiseMap openNoiseMap;
 
     @Before
     public void setUp() throws Exception {
@@ -33,7 +33,7 @@ public class NoiseMapTest {
                 vertices.add(vertex);
             }
         }
-        noiseMap = new NoiseMap(vertices, 1600, 0);
+        openNoiseMap = new OpenNoiseMap(vertices, 0, 1600);
     }
 
     private boolean isBorder(Coord vertex) {
@@ -42,12 +42,13 @@ public class NoiseMapTest {
 
     @Test
     public void addSimplexTest() throws Exception {
-        noiseMap.addSimplexNoise(0.7, 0.05, 0);
-        noiseMap.addSimplexNoise(0.35, 0.025, 0);
-        noiseMap.addSimplexNoise(0.175, 0.0125, 0);
+        openNoiseMap.addSimplexNoise(0.7, 0.05);
+        openNoiseMap.addSimplexNoise(0.35, 0.025);
+        openNoiseMap.addSimplexNoise(0.175, 0.0125);
         // the values are random, all we can test is that they are generated
-        noiseMap.ensureBordersAreLow();
-        noiseMap.putHeightProperty();
+        openNoiseMap.putValuesInRange(4);
+        openNoiseMap.ensureBordersAreLow();
+        openNoiseMap.putHeightProperty();
         for (Coord vertex : vertices) {
             double value = vertex.getProperty(OpenSimplexHeight.vertexHeightKey).value;
             assertThat(value, notNullValue());

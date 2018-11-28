@@ -72,4 +72,37 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <repositories>
+        <repository>
+            <id>snapshots</id>
+            <url>http://146.148.16.106/artifactory/pfe</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>snapshots</id>
+            <url>http://146.148.16.106/artifactory/pfe</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>cc8829f5f5de-releases</name>
+            <url>http://146.148.16.106/artifactory/pfe</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>cc8829f5f5de-snapshots</name>
+            <url>http://146.148.16.106/artifactory/pfe</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
