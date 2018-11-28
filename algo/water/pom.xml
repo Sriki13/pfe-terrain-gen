@@ -19,7 +19,7 @@
         <module>radial</module>
         <module>fromheight</module>
         <module>custom</module>
-        <module>perlin</module>
+        <module>noise</module>
     </modules>
 
 </project>

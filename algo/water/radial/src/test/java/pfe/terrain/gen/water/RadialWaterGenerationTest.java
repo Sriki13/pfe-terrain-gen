@@ -1,4 +1,4 @@
-package pfe.terrain.gen;
+package pfe.terrain.gen.water;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -13,6 +13,7 @@ import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.water.RadialWaterGeneration;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -24,7 +25,7 @@ import java.util.HashSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AnyOf.anyOf;
-import static pfe.terrain.gen.RadialWaterGeneration.waterKindKey;
+import static pfe.terrain.gen.water.RadialWaterGeneration.waterKindKey;
 
 public class RadialWaterGenerationTest {
 

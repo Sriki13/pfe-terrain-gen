@@ -1,4 +1,4 @@
-package pfe.terrain.gen;
+package pfe.terrain.gen.water;
 
 import java.util.Random;
 
