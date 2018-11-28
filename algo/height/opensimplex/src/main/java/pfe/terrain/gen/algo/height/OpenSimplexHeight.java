@@ -22,6 +22,8 @@ public class OpenSimplexHeight extends Contract {
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
+    public static final Key<Void> oceanFloorKey =
+            new Key<>("OCEAN_HEIGHT", Void.class);
 
     @Override
     public Constraints getContract() {
@@ -80,7 +82,7 @@ public class OpenSimplexHeight extends Contract {
         for (Face face : map.getFaces()) {
             face.getCenter().putProperty(vertexHeightKey, new DoubleType(getAverageHeight(face)));
         }
-
+        map.putProperty(oceanFloorKey, null);
     }
 
     private double getAverageHeight(Face face) throws NoSuchKeyException, KeyTypeMismatch {

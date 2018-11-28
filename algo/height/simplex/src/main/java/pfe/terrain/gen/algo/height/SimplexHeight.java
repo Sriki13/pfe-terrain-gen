@@ -47,9 +47,12 @@ public class SimplexHeight extends Contract {
             Arrays.toString(SimplexIslandShape.values()),
             "The general shape of the coasts of the island.", "SQUARE");
 
+    public static final Param<Double> simplexNbIsland = new Param<>("simplexNbIsland", Double.class, "0-1",
+            "The number of islands that will be generated. Higher values mean more islands.", 0.0);
+
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(simplexIslandSize, seaLevelParam, nbSimplexPasses);
+        return asParamSet(simplexIslandSize, seaLevelParam, nbSimplexPasses, islandShape, simplexNbIsland);
     }
 
     // default = 0.05
@@ -64,6 +67,10 @@ public class SimplexHeight extends Contract {
     private static final double MIN_SEA = 0.5;
     private static final double MAX_SEA = 0.95;
 
+    // default = 1
+    private static final double MIN_NB = 1;
+    private static final double MAX_NB = 10;
+
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
@@ -72,17 +79,19 @@ public class SimplexHeight extends Contract {
         double passes = (MAX_PASSES - MIN_PASSES) * (context.getParamOrDefault(nbSimplexPasses)) + MIN_PASSES;
         double islandSize = (MAX_SIZE - MIN_SIZE) * (context.getParamOrDefault(simplexIslandSize)) + MIN_SIZE;
         double seaLevel = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(seaLevelParam)) + MIN_SEA;
+        double factor = (MAX_NB - MIN_NB) * (context.getParamOrDefault(simplexNbIsland)) + MIN_NB;
 
         double total = 0;
         SimplexIslandShape shape = SimplexIslandShape.getFromString(context.getParamOrDefault(islandShape));
+
         for (int i = 0; i < passes; i++) {
-            elevation.addSimplexNoise(1 / Math.pow(2, i), Math.pow(2, i), islandSize, shape);
+            elevation.addSimplexNoise(1 / Math.pow(2, i), factor * Math.pow(2, i), islandSize, shape);
             total += 1 / Math.pow(2, i);
         }
 
         elevation.multiplyHeights(1 / total);
         elevation.redistribute(3);
-        elevation.multiplyHeights(40);
+        elevation.multiplyHeights(40 / factor);
 
         elevation.setWaterLevel(seaLevel);
         elevation.ensureBordersAreLow();
