@@ -51,24 +51,26 @@ public class ControllerTest {
 
     }
 
+    private class TestGenerator implements Generator{
+        @Override
+        public String generate() {
+            return "salut";
+        }
+
+        @Override
+        public void setParams(Context map) {
+
+        }
+
+        @Override
+        public List<Contract> getContracts() {
+            return Arrays.asList(new TestContract());
+        }
+    }
+
     @Before
     public void init() throws Exception {
-        controller = new ServiceController(new Generator() {
-            @Override
-            public String generate() {
-                return "salut";
-            }
-
-            @Override
-            public void setParams(Context map) {
-
-            }
-
-            @Override
-            public List<Contract> getContracts() {
-                return Arrays.asList(new TestContract());
-            }
-        });
+        controller = new ServiceController(new TestGenerator());
     }
 
     @Test
@@ -112,7 +114,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void listTest() {
+    public void listAlgoTest() {
         List<Algorithm> algorithms = this.controller.getAlgoList();
 
         assertEquals(1, algorithms.size());

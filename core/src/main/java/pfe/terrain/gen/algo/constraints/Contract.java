@@ -69,4 +69,8 @@ public abstract class Contract implements Parameters {
         return getClass().getSimpleName();
     }
 
+    public void setContext(Context context){
+
+    }
+
 }

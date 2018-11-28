@@ -40,9 +40,27 @@ public class ServiceController {
         ContextInitializer initializer = new ContextInitializer();
         this.dominant = initializer.getContext(contracts);
 
+        for(Contract contract : contracts){
+            contract.setContext(this.dominant);
+        }
+
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
         this.generator = new MapGenerator(solver.orderContracts());
     }
+
+    public ServiceController(String contextPath) throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
+        ContractReflection reflection = new ContractReflection();
+        List<Contract> contracts = reflection.getContracts();
+
+        this.recessive = new Context();
+
+        ContextInitializer initializer = new ContextInitializer(contextPath);
+        this.dominant = initializer.getContext(contracts);
+
+        DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
+        this.generator = new MapGenerator(solver.orderContracts());
+    }
+
 
     public ServiceController(Generator generator) {
         this.generator = generator;
