@@ -6,9 +6,7 @@ import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NoiseMap {
 
@@ -16,11 +14,13 @@ public class NoiseMap {
 
     private Map<Coord, Coord> newToOriginal;
     private Map<Coord, Double> heightMap;
+    private SimplexNoise noise;
 
-    public NoiseMap(Set<Coord> vertices, int islandSize)
+    public NoiseMap(Set<Coord> vertices, int islandSize, int seed)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         this.heightMap = new HashMap<>();
         this.newToOriginal = new HashMap<>();
+        this.noise = new SimplexNoise(seed);
         for (Coord vertex : vertices) {
             Coord normalized = normalize(vertex, islandSize);
             normalized.putProperty(OpenSimplexHeight.vertexBorderKey,
@@ -37,37 +37,29 @@ public class NoiseMap {
         );
     }
 
-    public void addSimplexNoise(long seed, double intensity, double frequency) {
-        OpenSimplexNoise noise = new OpenSimplexNoise(seed);
+    public void addSimplexNoise(double intensity, double frequency, double islandCoeff) {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             Coord vertex = entry.getKey();
-            double value = intensity * noise.eval(frequency * vertex.x, frequency * vertex.y);
-            heightMap.put(vertex, entry.getValue() + ((value + 1) / 2));
+            double nx = (vertex.x / BASE_SIZE - 0.5);
+            double ny = (vertex.y / BASE_SIZE - 0.5);
+            double value = intensity * noise.noise(frequency * nx, frequency * ny);
+            double distance = 2 * Math.max(Math.abs(nx), Math.abs(ny));
+            value = (value + islandCoeff) * (1 - 1.4 * Math.pow(distance, 1.2));
+            heightMap.put(vertex, entry.getValue() + (value / 2 + 0.5));
         }
     }
 
-    public void putValuesInRange() {
-        double maxWidth = BASE_SIZE * 0.5 - 10.0;
-        for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            if (entry.getValue() > 0.5) {
-                Coord vertex = entry.getKey();
-                double xDist = Math.abs(vertex.x - BASE_SIZE * 0.5);
-                double yDist = Math.abs(vertex.y - BASE_SIZE * 0.5);
-                double distance = Math.sqrt(xDist * xDist + yDist * yDist);
-
-                double delta = distance / maxWidth;
-                double gradient = delta * delta;
-
-                heightMap.put(entry.getKey(), entry.getValue() * Math.max(0.0, 1.0 - gradient));
+    public void setWaterLevel(double level) throws NoSuchKeyException, KeyTypeMismatch {
+        List<Double> heightList = new ArrayList<>();
+        for (Map.Entry<Coord, Coord> entry : newToOriginal.entrySet()) {
+            if (!entry.getValue().getProperty(OpenSimplexHeight.vertexBorderKey).value) {
+                heightList.add(heightMap.get(entry.getKey()));
             }
-            double normalized = 40 * entry.getValue() - 20;
-            heightMap.put(entry.getKey(), normalized);
         }
-    }
-
-    public void lower(double amount) {
+        Collections.sort(heightList);
+        double waterLevel = heightList.get((int) (level * heightList.size()));
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            heightMap.put(entry.getKey(), entry.getValue() - amount);
+            heightMap.put(entry.getKey(), entry.getValue() - waterLevel);
         }
     }
 

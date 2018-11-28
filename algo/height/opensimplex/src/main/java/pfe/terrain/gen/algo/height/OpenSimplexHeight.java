@@ -22,6 +22,8 @@ public class OpenSimplexHeight extends Contract {
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
+    public static final Key<Void> oceanFloorKey =
+            new Key<>("OCEAN_HEIGHT", Void.class);
 
     @Override
     public Constraints getContract() {
@@ -31,66 +33,59 @@ public class OpenSimplexHeight extends Contract {
         );
     }
 
-    public static final Param<Double> nbIsland = new Param<>("nbIsland", Double.class, "0-1",
-            "The amount of mountains that will be generated. Higher values mean more mountains.", 0.0);
+    public static final Param<Double> simplexIslandSize = new Param<>("simplexIslandSize", Double.class, "0-1",
+            "The size of ths islands that will be generated. Higher values mean bigger islands.", 0.333333);
 
-    public static final Param<Double> seaLevel = new Param<>("seaLevel", Double.class, "0-1",
-            "The height of the sea level. Higher values mean less land will emerge.", 0.42857);
+    public static final Param<Double> seaLevelParam = new Param<>("seaLevel", Double.class, "0-1",
+            "The height of the sea level. Higher values mean less land will emerge.", 0.444444);
 
-    public static final Param<Integer> nbSimplexPasses = new Param<>("roughness", Integer.class, "0-10",
-            "The number of passes of noise to generate. Less passes mean less variation in terrain height.", 5);
+    public static final Param<Double> nbSimplexPasses = new Param<>("smoothness", Double.class, "0-1",
+            "How smooth the terrain should be. Lower values mean smoother terrain.", 0.333333);
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(nbIsland, seaLevel, nbSimplexPasses);
+        return asParamSet(simplexIslandSize, seaLevelParam, nbSimplexPasses);
     }
 
-    // default = 0.005
-    private static final double MIN_FREQ = 0.0035;
-    private static final double MAX_FREQ = 0.01;
+    // default = 0.05
+    private static final double MAX_SIZE = 0.15;
+    private static final double MIN_SIZE = 0;
 
-    // default = 120
-    private static final double MIN_SEA = 60;
-    private static final double MAX_SEA = 200;
+    // default = 10
+    private static final int MAX_PASSES = 20;
+    private static final int MIN_PASSES = 5;
+
+    // default = 0.7
+    private static final double MIN_SEA = 0.5;
+    private static final double MAX_SEA = 0.95;
 
     @Override
     public void execute(IslandMap map, Context context)
             throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
-        //double frequency = (MAX_FREQ - MIN_FREQ) * (context.getParamOrDefault(nbIsland)) + MIN_FREQ;
-        double frequency = 0.004;
-        NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSize());
 
-        int passes = context.getParamOrDefault(nbSimplexPasses);
+        NoiseMap elevation = new NoiseMap(map.getVertices(), map.getSize(), map.getSeed());
+        double passes = (MAX_PASSES - MIN_PASSES) * (context.getParamOrDefault(nbSimplexPasses)) + MIN_PASSES;
+        double islandSize = (MAX_SIZE - MIN_SIZE) * (context.getParamOrDefault(simplexIslandSize)) + MIN_SIZE;
+        double seaLevel = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(seaLevelParam)) + MIN_SEA;
+
         double total = 0;
         for (int i = 0; i < passes; i++) {
-            elevation.addSimplexNoise(588 + i, 1 / Math.pow(2, i), frequency / Math.pow(2, i));
+            elevation.addSimplexNoise(1 / Math.pow(2, i), Math.pow(2, i), islandSize);
             total += 1 / Math.pow(2, i);
         }
 
         elevation.multiplyHeights(1 / total);
+        elevation.redistribute(3);
+        elevation.multiplyHeights(40);
 
-        double sea = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(seaLevel)) + MIN_SEA;
-
-        elevation.redistribute(1.17);
-        elevation.putValuesInRange();
-        elevation.multiplyHeights(2.5);
-        elevation.lower(sea);
+        elevation.setWaterLevel(seaLevel);
+        elevation.ensureBordersAreLow();
         elevation.putHeightProperty();
-
-        for (Face face : map.getFaces()) {
-            if (face.getProperty(faceBorderKey).value) {
-                for (Coord coord : face.getBorderVertices()) {
-                    if (coord.getProperty(vertexHeightKey).value > 0) {
-                        coord.putProperty(vertexHeightKey, new DoubleType(0.0));
-                    }
-                }
-            }
-        }
 
         for (Face face : map.getFaces()) {
             face.getCenter().putProperty(vertexHeightKey, new DoubleType(getAverageHeight(face)));
         }
-
+        map.putProperty(oceanFloorKey, null);
     }
 
     private double getAverageHeight(Face face) throws NoSuchKeyException, KeyTypeMismatch {

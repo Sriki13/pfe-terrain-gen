@@ -33,7 +33,7 @@ public class NoiseMapTest {
                 vertices.add(vertex);
             }
         }
-        noiseMap = new NoiseMap(vertices, 1600);
+        noiseMap = new NoiseMap(vertices, 1600, 0);
     }
 
     private boolean isBorder(Coord vertex) {
@@ -42,11 +42,10 @@ public class NoiseMapTest {
 
     @Test
     public void addSimplexTest() throws Exception {
-        noiseMap.addSimplexNoise(0, 0.7, 0.05);
-        noiseMap.addSimplexNoise(1, 0.35, 0.025);
-        noiseMap.addSimplexNoise(2, 0.175, 0.0125);
+        noiseMap.addSimplexNoise(0.7, 0.05, 0);
+        noiseMap.addSimplexNoise(0.35, 0.025, 0);
+        noiseMap.addSimplexNoise(0.175, 0.0125, 0);
         // the values are random, all we can test is that they are generated
-        noiseMap.putValuesInRange();
         noiseMap.ensureBordersAreLow();
         noiseMap.putHeightProperty();
         for (Coord vertex : vertices) {

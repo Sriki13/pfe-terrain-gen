@@ -66,6 +66,13 @@ public class HeightMoistureBiome extends Contract {
                 facesHeight.put(face, face.getCenter().getProperty(heightKey).value);
             }
         }
+        if (facesHeight.isEmpty()) {
+            // Nice ocean you got there dude
+            for (Face face : map.getFaces()) {
+                face.putProperty(faceBiomeKey, Biome.OCEAN);
+            }
+            return;
+        }
         double maxV = Collections.max(facesHeight.values());
         double minV = Collections.min(facesHeight.values());
         facesHeight.replaceAll((key, val) -> ((val - minV) / (maxV - minV)));
