@@ -1,8 +1,7 @@
 package pfe.terrain.gen;
 
 import com.flowpowered.noise.module.Module;
-import com.flowpowered.noise.module.source.Billow;
-import com.flowpowered.noise.module.source.RidgedMulti;
+import com.flowpowered.noise.module.source.Perlin;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -29,7 +28,7 @@ public class PerlinWaterGeneration extends Contract {
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
         int size = map.getSize();
-        Billow perlin= new Billow();
+        Perlin perlin = new Perlin();
         perlin.setSeed(map.getSeed());
         for (Face face : map.getFaces()) {
             BooleanType isWater = new BooleanType(getPerlin(perlin, 2 * (face.getCenter().x / size - 0.5), 2 * (face.getCenter().y / size - 0.5), 0.1));
