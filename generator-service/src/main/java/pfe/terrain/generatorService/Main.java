@@ -24,6 +24,7 @@ public class Main {
         port(8080);
 
         get("/execute", (request, response) -> {
+            response.header("Access-Control-Allow-Origin","*");
             logger.log(Level.INFO,"Beginning map generation");
             long start = System.currentTimeMillis();
 
@@ -37,6 +38,8 @@ public class Main {
         });
 
         get("/graph", ((request, response) -> {
+            response.header("Access-Control-Allow-Origin","*");
+
             logger.log(Level.INFO,"Serving graph");
 
             response.type("application/json");
@@ -44,6 +47,8 @@ public class Main {
         }));
 
         post("/context", (request, response) -> {
+            response.header("Access-Control-Allow-Origin","*");
+
             logger.log(Level.INFO,"Setting new context");
 
             response.type("application/json");
@@ -51,6 +56,8 @@ public class Main {
         });
 
         get("/parameters", (request, response) -> {
+            response.header("Access-Control-Allow-Origin","*");
+
             logger.log(Level.INFO,"Serving parameters");
 
             response.type("application/json");
@@ -58,10 +65,22 @@ public class Main {
         });
 
         get("/algorithms", (request, response) -> {
+            response.header("Access-Control-Allow-Origin","*");
+
             logger.log(Level.INFO,"Serving algorithms list");
 
             response.type("application/json");
             return parser.parseAlgo(controller.getAlgoList());
+        });
+
+
+        options("/context" ,(request,response) -> {
+            response.header("Access-Control-Allow-Origin","*");
+            response.header("Access-Control-Allow-Headers","*");
+
+            logger.log(Level.INFO,"serving option context, not implemented");
+
+            return "OK";
         });
     }
 }
