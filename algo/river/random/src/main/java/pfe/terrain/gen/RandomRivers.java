@@ -40,7 +40,7 @@ public class RandomRivers extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(vertices, seed, edges, vertexWaterKey, heightKey),
+                asKeySet(vertices, seed, edges, faces, vertexWaterKey, heightKey),
                 asKeySet(riverFlowKey, isSourceKey, isRiverEndKey)
         );
     }
@@ -48,15 +48,19 @@ public class RandomRivers extends Contract {
     @Override
     public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
         List<Coord> land = new ArrayList<>();
-        List<Coord> allVertices = new ArrayList<>(map.getVertices());
-        allVertices.sort((o1, o2) -> (int) (o1.x + o1.y - o2.x - o2.y));
-        for (Coord vertex : allVertices) {
+        for (Coord vertex : map.getVertices()) {
             vertex.putProperty(isSourceKey, false);
             vertex.putProperty(isRiverEndKey, false);
+        }
+        for (Coord vertex : map.getEdgeVertices()) {
             if (!vertex.getProperty(vertexWaterKey).value) {
                 land.add(vertex);
             }
         }
+
+        // necessary for deterministic purposes
+        land.sort((o1, o2) -> (int) (o1.x + o1.y - o2.x - o2.y));
+
         for (Edge edge : map.getEdges()) {
             edge.putProperty(riverFlowKey, new OptionalIntegerType(0));
         }
@@ -68,16 +72,17 @@ public class RandomRivers extends Contract {
                 start = land.get(random.nextInt(land.size()));
             }
             start.putProperty(isSourceKey, true);
-            if (generateRiverFrom(map.getEdges(), start) > 1) {
+            if (!generateRiverFrom(map.getEdges(), start)) {
+                start.putProperty(isSourceKey, false);
                 nbRivers++;
             }
         }
     }
 
-    private int generateRiverFrom(Set<Edge> edges, Coord start)
+    private boolean generateRiverFrom(Set<Edge> edges, Coord start)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         Set<Coord> seen = new HashSet<>();
-        int length = 0;
+        boolean success = false;
         while (!start.getProperty(vertexWaterKey).value) {
             Coord flowTowards = getLowestNeighbour(edges, start, seen);
             if (flowTowards == start) {
@@ -87,13 +92,14 @@ public class RandomRivers extends Contract {
             Edge edge = findEdge(edges, start, flowTowards);
             edge.putProperty(riverFlowKey, new OptionalIntegerType(1));
             start = flowTowards;
-            length++;
+            success = true;
         }
         start.putProperty(isRiverEndKey, true);
-        return length;
+        return success;
     }
 
-    private Coord getLowestNeighbour(Set<Edge> edges, Coord coord, Set<Coord> seen) throws NoSuchKeyException, KeyTypeMismatch {
+    private Coord getLowestNeighbour(Set<Edge> edges, Coord coord, Set<Coord> seen)
+            throws NoSuchKeyException, KeyTypeMismatch {
         Set<Coord> neighbours = new HashSet<>();
         for (Edge edge : edges) {
             if (edge.getStart() == coord) {
