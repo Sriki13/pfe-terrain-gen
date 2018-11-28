@@ -18,8 +18,8 @@
     <modules>
         <module>radial</module>
         <module>fromheight</module>
-        <module>custom</module>
         <module>noise</module>
+        <module>custom</module>
     </modules>
 
 </project>

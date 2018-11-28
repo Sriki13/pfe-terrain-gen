@@ -5,7 +5,7 @@ public class ShapeMatrix {
     private boolean[][] matrix;
     private final int size;
 
-    public ShapeMatrix(String param) throws Exception {
+    public ShapeMatrix(String param) {
         String lines[] = param.split("\\r?\\n");
         size = lines.length;
         matrix = new boolean[size][size];
