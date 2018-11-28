@@ -56,20 +56,23 @@ public class GraphGeneratorTest {
                                 new Key<>("EDGES", IntegerType.class),
                                 new Key<>("FACES", IntegerType.class)
                         )
-                )));
+                ),
+                new TestContract("modified", new ArrayList<>(), new ArrayList<>(),
+                        Collections.singletonList(new Key<>("BORDER", IntegerType.class)))
+        ));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     public void graphTest() throws Exception {
         graphGenerator.generateGraph();
-        //graphGenerator.exportAsPNG("test.png");
+        //graphGenerator.exportAsSVG("test.svg");
         MutableGraph graph = Parser.read(graphGenerator.exportAsXDot());
-        assertThat(graph.nodes().size(), is(11));
+        assertThat(graph.nodes().size(), is(12));
         List<MutableNode> allNodes = new ArrayList<>(graph.nodes());
-        Arrays.asList("init", "points", "mesh", "border").forEach(str ->
+        Arrays.asList("init", "points", "mesh", "border", "modified").forEach(str ->
                 assertTrue(isInNodes(allNodes, str)));
-        Arrays.asList("SIZE", "SEED", "POINTS", "VERTICES", "EDGES", "FACES").forEach(str ->
+        Arrays.asList("SIZE", "SEED", "POINTS", "VERTICES", "EDGES", "FACES", "BORDER").forEach(str ->
                 assertTrue(isInNodes(allNodes, str)));
         MutableNode init = findNode(allNodes, "init");
         assertThat(init.links().size(), is(2));
@@ -79,6 +82,11 @@ public class GraphGeneratorTest {
         assertThat(seed.links().size(), is(2));
         assertTrue(nodeIsLinked(seed, "points"));
         assertTrue(nodeIsLinked(seed, "mesh"));
+        MutableNode mod = findNode(allNodes, "modified");
+        assertThat(mod.links().size(), is(1));
+        assertTrue(nodeIsLinked(mod, "BORDER"));
+        MutableNode border = findNode(allNodes, "BORDER");
+        assertTrue(nodeIsLinked(border, "modified"));
     }
 
     private boolean isInNodes(List<MutableNode> nodes, String labelStart) {

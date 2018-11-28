@@ -38,6 +38,7 @@ public class GraphGenerator {
         for (Contract contract : contracts) {
             processProperties(contract.getContract().getRequired());
             processProperties(contract.getContract().getCreated());
+            processProperties(contract.getContract().getModified());
         }
         properties.values().forEach(node -> graph.add(node));
         contracts.forEach(this::addAndLinkContract);
@@ -67,6 +68,10 @@ public class GraphGenerator {
                 contractNode.addLink(properties.get(key.getId())).add(Style.BOLD));
         contract.getContract().getRequired().forEach(key ->
                 properties.get(key.getId()).addLink(contractNode));
+        contract.getContract().getModified().forEach(key -> {
+            contractNode.addLink(properties.get(key.getId())).add(Style.BOLD);
+            properties.get(key.getId()).addLink(contractNode);
+        });
     }
 
     public String exportAsJSON() {
