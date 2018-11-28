@@ -13,4 +13,8 @@ public class IntegerType implements SerializableType {
         return Integer.toString(value);
     }
 
+    @Override
+    public String toString() {
+        return serialize();
+    }
 }
