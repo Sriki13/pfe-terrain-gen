@@ -31,6 +31,7 @@
         <module>initializer</module>
         <module>height</module>
         <module>water</module>
+        <module>river</module>
     </modules>
 
 </project>
