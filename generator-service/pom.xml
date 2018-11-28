@@ -95,7 +95,7 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.height.multiplication</artifactId>
+            <artifactId>algo.river.random</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -10,13 +10,14 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.*;
 
 public class RandomRivers extends Contract {
 
     public static final Param<Integer> nbRiversParam = new Param<>("nbRivers", Integer.class,
-            "1-100", "Number of rivers in the island", 10);
+            "1-100", "Number of rivers in the island.", 10);
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -28,14 +29,18 @@ public class RandomRivers extends Contract {
     public static final Key<DoubleType> heightKey =
             new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
 
-    public static final Key<DoubleType> riverFlowKey =
-            new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", DoubleType.class);
+    public static final Key<OptionalIntegerType> riverFlowKey =
+            new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", OptionalIntegerType.class);
+    public static final Key<Boolean> isSourceKey =
+            new Key<>(verticesPrefix + "SOURCE", Boolean.class);
+    public static final Key<Boolean> isRiverEndKey =
+            new Key<>(verticesPrefix + "RIVER_END", Boolean.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(vertices, seed, edges, vertexWaterKey, heightKey),
-                asKeySet(riverFlowKey)
+                asKeySet(riverFlowKey, isSourceKey, isRiverEndKey)
         );
     }
 
@@ -45,28 +50,49 @@ public class RandomRivers extends Contract {
         List<Coord> allVertices = new ArrayList<>(map.getVertices());
         allVertices.sort((o1, o2) -> (int) (o1.x + o1.y - o2.x - o2.y));
         for (Coord vertex : allVertices) {
-            if (vertex.getProperty(vertexWaterKey).value) {
+            vertex.putProperty(isSourceKey, false);
+            vertex.putProperty(isRiverEndKey, false);
+            if (!vertex.getProperty(vertexWaterKey).value) {
                 land.add(vertex);
             }
+        }
+        for (Edge edge : map.getEdges()) {
+            edge.putProperty(riverFlowKey, new OptionalIntegerType(0));
         }
         Random random = new Random(map.getSeed());
         int nbRivers = context.getParamOrDefault(nbRiversParam);
         for (int i = 0; i < nbRivers; i++) {
-            generateRiverFrom(map.getEdges(), land.get(random.nextInt(land.size())));
+            Coord start = land.get(random.nextInt(land.size()));
+            while (start.getProperty(isSourceKey)) {
+                start = land.get(random.nextInt(land.size()));
+            }
+            start.putProperty(isSourceKey, true);
+            if (generateRiverFrom(map.getEdges(), start) > 1) {
+                nbRivers++;
+            }
         }
     }
 
-    private void generateRiverFrom(Set<Edge> edges, Coord start)
+    private int generateRiverFrom(Set<Edge> edges, Coord start)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+        Set<Coord> seen = new HashSet<>();
+        int length = 0;
         while (!start.getProperty(vertexWaterKey).value) {
-            Coord flowTowards = getLowestNeighbour(edges, start);
+            Coord flowTowards = getLowestNeighbour(edges, start, seen);
+            if (flowTowards == start) {
+                break;
+            }
+            seen.add(flowTowards);
             Edge edge = findEdge(edges, start, flowTowards);
-            edge.putProperty(riverFlowKey, new DoubleType(1));
+            edge.putProperty(riverFlowKey, new OptionalIntegerType(1));
             start = flowTowards;
+            length++;
         }
+        start.putProperty(isRiverEndKey, true);
+        return length;
     }
 
-    private Coord getLowestNeighbour(Set<Edge> edges, Coord coord) throws NoSuchKeyException, KeyTypeMismatch {
+    private Coord getLowestNeighbour(Set<Edge> edges, Coord coord, Set<Coord> seen) throws NoSuchKeyException, KeyTypeMismatch {
         Set<Coord> neighbours = new HashSet<>();
         for (Edge edge : edges) {
             if (edge.getStart() == coord) {
@@ -75,11 +101,10 @@ public class RandomRivers extends Contract {
                 neighbours.add(edge.getStart());
             }
         }
-        List<Coord> neighboursList = new ArrayList<>(neighbours);
-        Coord min = neighboursList.get(0);
-        for (int i = 1; i < neighboursList.size(); i++) {
-            Coord current = neighboursList.get(i);
-            if (current.getProperty(heightKey).value < min.getProperty(heightKey).value) {
+        Coord min = coord;
+        for (Coord current : neighbours) {
+            if (!seen.contains(current) &&
+                    current.getProperty(heightKey).value <= min.getProperty(heightKey).value) {
                 min = current;
             }
         }

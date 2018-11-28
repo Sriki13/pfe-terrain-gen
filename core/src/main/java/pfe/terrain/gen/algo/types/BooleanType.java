@@ -13,4 +13,8 @@ public class BooleanType implements SerializableType {
         return Boolean.toString(value);
     }
 
+    @Override
+    public String toString() {
+        return serialize();
+    }
 }
