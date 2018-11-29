@@ -66,6 +66,11 @@
             <artifactId>algo.biome.heightmoisture</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.height.smoothing</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

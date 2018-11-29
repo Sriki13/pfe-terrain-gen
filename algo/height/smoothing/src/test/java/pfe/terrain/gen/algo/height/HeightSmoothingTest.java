@@ -18,11 +18,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferUShort;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collector;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static pfe.terrain.gen.algo.height.HeightSmoothing.vertexHeightKey;
 import static pfe.terrain.gen.algo.height.HeightSmoothing.vertexWaterKey;
 
@@ -30,7 +30,6 @@ public class HeightSmoothingTest {
 
     private IslandMap map;
     private CoordSet coords;
-    private EdgeSet edges;
     private int mapSize;
 
     @Before
@@ -40,13 +39,13 @@ public class HeightSmoothingTest {
         map.putProperty(new Key<>("SEED", Integer.class), 3);
         Random random = new Random(map.getSeed());
         coords = new CoordSet();
-        edges = new EdgeSet();
+        EdgeSet edges = new EdgeSet();
         mapSize = 128;
         List<Coord> coordsMatrix = new ArrayList<>(Collections.nCopies(mapSize * mapSize, new Coord(0, 0)));
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
                 Coord coord = new Coord(i, j);
-                if (i <= 0 || i >= mapSize-1 || j <= 0 || j >= mapSize-1) {
+                if (i <= 0 || i >= mapSize - 1 || j <= 0 || j >= mapSize - 1) {
                     coord.putProperty(vertexWaterKey, new BooleanType(true));
                     coord.putProperty(vertexHeightKey, new DoubleType(0.0));
                 } else {
@@ -67,6 +66,25 @@ public class HeightSmoothingTest {
         map.putProperty(new Key<>("VERTICES", CoordSet.class), coords);
         map.putProperty(new Key<>("EDGES", EdgeSet.class), edges);
         map.putProperty(new Key<>("FACES", FaceSet.class), faces);
+    }
+
+    @Test
+    public void testSmoothening() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        double stdDevBefore = getStandardDeviationFromCoordSet();
+        new HeightSmoothing().execute(map, new Context());
+        double stdDevAfter = getStandardDeviationFromCoordSet();
+        assertThat(stdDevBefore, greaterThan(stdDevAfter));
+    }
+
+    private double getStandardDeviationFromCoordSet() {
+        return map.getVertices().stream().map(c -> {
+            try {
+                return c.getProperty(vertexHeightKey).value;
+            } catch (NoSuchKeyException | KeyTypeMismatch e) {
+                e.printStackTrace();
+            }
+            return 0.0;
+        }).collect(DoubleStatistics.collector()).getStandardDeviation();
     }
 
     @Ignore
@@ -93,6 +111,56 @@ public class HeightSmoothingTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    static class DoubleStatistics extends DoubleSummaryStatistics {
+
+        private double sumOfSquare = 0.0d;
+        private double sumOfSquareCompensation;
+        private double simpleSumOfSquare;
+
+        @Override
+        public void accept(double value) {
+            super.accept(value);
+            double squareValue = value * value;
+            simpleSumOfSquare += squareValue;
+            sumOfSquareWithCompensation(squareValue);
+        }
+
+        DoubleStatistics combine(DoubleStatistics other) {
+            super.combine(other);
+            simpleSumOfSquare += other.simpleSumOfSquare;
+            sumOfSquareWithCompensation(other.sumOfSquare);
+            sumOfSquareWithCompensation(other.sumOfSquareCompensation);
+            return this;
+        }
+
+        private void sumOfSquareWithCompensation(double value) {
+            double tmp = value - sumOfSquareCompensation;
+            double velvel = sumOfSquare + tmp; // Little wolf of rounding error
+            sumOfSquareCompensation = (velvel - sumOfSquare) - tmp;
+            sumOfSquare = velvel;
+        }
+
+        double getSumOfSquare() {
+            double tmp = sumOfSquare + sumOfSquareCompensation;
+            if (Double.isNaN(tmp) && Double.isInfinite(simpleSumOfSquare)) {
+                return simpleSumOfSquare;
+            }
+            return tmp;
+        }
+
+        final double getStandardDeviation() {
+            long count = getCount();
+            double sumOfSquare = getSumOfSquare();
+            double average = getAverage();
+            return count > 0 ? Math.sqrt((sumOfSquare - count * Math.pow(average, 2)) / (count - 1)) : 0.0d;
+        }
+
+        static Collector<Double, ?, DoubleStatistics> collector() {
+            return Collector.of(DoubleStatistics::new, DoubleStatistics::accept, DoubleStatistics::combine);
+        }
+
     }
 }
 

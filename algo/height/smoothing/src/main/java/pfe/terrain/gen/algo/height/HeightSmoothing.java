@@ -13,10 +13,7 @@ import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HeightSmoothing extends Contract {
 
@@ -38,6 +35,11 @@ public class HeightSmoothing extends Contract {
                 asKeySet(),
                 asKeySet(vertexHeightKey)
         );
+    }
+
+    @Override
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(smoothingFactor);
     }
 
     @Override
