@@ -41,6 +41,8 @@ public class HeightRedistribution extends Contract {
     public void execute(IslandMap map, Context context)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
 
+        // This code is a mess but it works
+
         double scaleFactor = context.getParamOrDefault(redistributionFactorKey);
         scaleFactor = 1 / (0.8 + (scaleFactor * 3.2));
         Map<Coord, Double> verticesHeight = new HashMap<>();
