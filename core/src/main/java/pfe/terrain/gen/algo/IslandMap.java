@@ -6,6 +6,8 @@ import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
+import java.util.HashSet;
+
 public class IslandMap extends Mappable {
 
     private Integer size;
@@ -63,6 +65,12 @@ public class IslandMap extends Mappable {
 
     public CoordSet getVertices() {
         return vertices;
+    }
+
+    public CoordSet getEdgeVertices() {
+        CoordSet result = new CoordSet(new HashSet<>(vertices));
+        faces.forEach(face -> result.remove(face.getCenter()));
+        return result;
     }
 
     public EdgeSet getEdges() {

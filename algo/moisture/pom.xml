@@ -17,6 +17,7 @@
 
     <modules>
         <module>perlin</module>
+        <module>riverAdapter</module>
     </modules>
 
 </project>

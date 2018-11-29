@@ -5,10 +5,7 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
+import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -58,6 +55,7 @@ public class RandomRiversTest {
         }
         islandMap.putProperty(Contract.vertices, coords);
         islandMap.putProperty(Contract.edges, edges);
+        islandMap.putProperty(Contract.faces, new FaceSet(new HashSet<>()));
     }
 
     @Test
