@@ -159,7 +159,7 @@ public class DependencySolver {
             if(modificationConstraint.isEmpty()){
                 constraints = new Constraint[0];
             } else {
-                constraints = (Constraint[]) modificationConstraint.toArray();
+                constraints = modificationConstraint.toArray(new Constraint[0]);
             }
 
             model.unpost(constraints);
@@ -181,7 +181,7 @@ public class DependencySolver {
         if (toMinimize.size() == 1) {
             model.setObjective(Model.MINIMIZE,(IntVar)toMinimize.toArray()[0]);
         } else if (toMinimize.size() > 1) {
-            ParetoOptimizer po = new ParetoOptimizer(Model.MINIMIZE,(IntVar[]) toMinimize.toArray());
+            ParetoOptimizer po = new ParetoOptimizer(Model.MINIMIZE,toMinimize.toArray(new IntVar[0]));
             model.getSolver().plugMonitor(po);
         }
 
