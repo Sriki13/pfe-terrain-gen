@@ -41,8 +41,7 @@ public class WaterFromHeight extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         identifyWaterVertices(map);
         identifyWaterFaces(map);
         identifyOcean(map);

@@ -38,7 +38,7 @@ public class RiverMoisture extends Contract {
     private static final double MIN_ADD = 0.1;
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
+    public void execute(IslandMap map, Context context) {
         double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(riverMoistureParam)) + MIN_ADD;
         Set<Face> nextToRiver = new HashSet<>();
         for (Face face : map.getFaces()) {

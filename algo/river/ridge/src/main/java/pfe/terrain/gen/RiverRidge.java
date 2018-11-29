@@ -6,7 +6,6 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.SerializableKey;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
@@ -46,7 +45,7 @@ public class RiverRidge extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws KeyTypeMismatch, NoSuchKeyException, DuplicateKeyException {
+    public void execute(IslandMap map, Context context) {
         List<Coord> sources = new ArrayList<>();
         for (Coord vertex : map.getVertices()) {
             if (vertex.getProperty(isSourceKey)) {

@@ -1,8 +1,6 @@
 package pfe.terrain.gen.algo.height;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
@@ -11,20 +9,14 @@ import pfe.terrain.gen.algo.SerializableKey;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.geometry.Coord;
+import pfe.terrain.gen.algo.geometry.CoordSet;
+import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferUShort;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static pfe.terrain.gen.algo.constraints.Contract.verticesPrefix;
 

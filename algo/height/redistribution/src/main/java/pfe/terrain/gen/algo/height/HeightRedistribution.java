@@ -3,9 +3,6 @@ package pfe.terrain.gen.algo.height;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.Face;
@@ -38,8 +35,7 @@ public class HeightRedistribution extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+    public void execute(IslandMap map, Context context) {
 
         // This code is a mess but it works
 

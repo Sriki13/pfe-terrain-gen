@@ -13,7 +13,6 @@ import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
-import pfe.terrain.gen.water.RadialWaterGeneration;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

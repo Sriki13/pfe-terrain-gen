@@ -42,7 +42,7 @@ public class PerlinMoisture extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
+    public void execute(IslandMap map, Context context) {
         FaceSet faces = map.getFaces();
         int mapSize = map.getSize();
         double frequency = context.getParamOrDefault(biomeQuantity);

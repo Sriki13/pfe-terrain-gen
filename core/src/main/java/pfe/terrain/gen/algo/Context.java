@@ -18,7 +18,7 @@ public class Context {
         properties.put(key, value);
     }
 
-    public <T> T getParamOrDefault(Param<T> key) throws KeyTypeMismatch {
+    public <T> T getParamOrDefault(Param<T> key) {
         if (properties.keySet().stream().noneMatch(cKey -> cKey.getId().equals(key.getId()))) {
             Logger.getLogger(this.getClass().getName()).info("Key : " + key + " was not found in parameters pool, defaulting to " + key.getDefaultValue());
             return key.getDefaultValue();

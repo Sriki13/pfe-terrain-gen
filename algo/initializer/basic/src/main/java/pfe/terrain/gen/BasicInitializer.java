@@ -5,8 +5,6 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 
 import java.util.Collections;
 import java.util.Set;
@@ -28,7 +26,7 @@ public class BasicInitializer extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         map.putProperty(size, context.getParamOrDefault(sizeParam));
         map.putProperty(seed, context.getParamOrDefault(seedParam));
     }

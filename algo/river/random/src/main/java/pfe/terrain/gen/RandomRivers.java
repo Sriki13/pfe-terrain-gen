@@ -64,8 +64,7 @@ public class RandomRivers extends Contract {
     private IslandMap islandMap;
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
+    public void execute(IslandMap map, Context context) {
         this.islandMap = map;
         Random random = new Random(map.getSeed());
         List<Coord> land = new ArrayList<>();

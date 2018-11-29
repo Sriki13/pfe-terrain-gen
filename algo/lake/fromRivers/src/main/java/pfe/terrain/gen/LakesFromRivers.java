@@ -68,8 +68,7 @@ public class LakesFromRivers extends Contract {
     private double maxLakeSize;
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
+    public void execute(IslandMap map, Context context) {
         this.islandMap = map;
         this.random = new Random(map.getSeed());
         this.randomRivers = new RandomRivers(islandMap);

@@ -3,9 +3,6 @@ package pfe.terrain.gen.algo.height;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -38,8 +35,7 @@ public class HeightFromWater extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         double hardness = context.getParamOrDefault(hardnessParam);
         Set<Coord> coordsToProcess = new HashSet<>();
         double height = 0.0;

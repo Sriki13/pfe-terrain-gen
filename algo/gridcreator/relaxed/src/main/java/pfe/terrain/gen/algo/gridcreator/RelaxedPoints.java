@@ -11,8 +11,6 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 
 import java.util.HashSet;
@@ -39,7 +37,7 @@ public class RelaxedPoints extends Contract {
     }
 
     @Override
-    public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+    public void execute(IslandMap islandMap, Context context) {
         int numberOfPoints = context.getParamOrDefault(nbPoints);
         int relaxationIterations = context.getParamOrDefault(nbIter);
         Set<Coordinate> points = new HashSet<>();

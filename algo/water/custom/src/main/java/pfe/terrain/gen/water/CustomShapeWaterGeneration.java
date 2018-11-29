@@ -3,8 +3,6 @@ package pfe.terrain.gen.water;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -39,7 +37,7 @@ public class CustomShapeWaterGeneration extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         String islandShape = context.getParamOrDefault(customShape);
         ShapeMatrix matrix = null;
         if (islandShape.equals("")) {
