@@ -7,6 +7,7 @@ import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public class IslandMap extends Mappable {
 
@@ -67,9 +68,21 @@ public class IslandMap extends Mappable {
         return vertices;
     }
 
-    public CoordSet getEdgeVertices() {
-        CoordSet result = new CoordSet(new HashSet<>(vertices));
+    public Set<Coord> getEdgeVertices() {
+        Set<Coord> result = new HashSet<>(vertices);
         faces.forEach(face -> result.remove(face.getCenter()));
+        return result;
+    }
+
+    public Set<Coord> getConnectedVertices(Coord start) {
+        Set<Coord> result = new HashSet<>();
+        for (Edge edge : edges) {
+            if (edge.getStart() == start) {
+                result.add(edge.getEnd());
+            } else if (edge.getEnd() == start) {
+                result.add(edge.getStart());
+            }
+        }
         return result;
     }
 
