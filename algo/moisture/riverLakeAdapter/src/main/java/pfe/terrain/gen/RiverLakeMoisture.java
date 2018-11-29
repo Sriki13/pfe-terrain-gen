@@ -10,7 +10,7 @@ import pfe.terrain.gen.algo.geometry.Face;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RiverMoisture extends Contract {
+public class RiverLakeMoisture extends Contract {
 
     @Override
     public Constraints getContract() {
@@ -20,11 +20,12 @@ public class RiverMoisture extends Contract {
                 asKeySet(AdapterUtils.faceMoisture));
     }
 
-    private final Param<Double> riverMoistureParam = new Param<>("riverMoisture", Double.class, "0-1",
-            "The amount of moisture added around the rivers.", 0.5);
+    public static final Param<Double> moistureParam = new Param<>("riverMoisture", Double.class, "0-1",
+            "The amount of moisture added around the rivers and lakes.", 0.5);
+
 
     public Set<Param> getRequestedParameters() {
-        return asParamSet(riverMoistureParam);
+        return asParamSet(moistureParam);
     }
 
     private static final double MAX_ADD = 0.5;
@@ -34,12 +35,19 @@ public class RiverMoisture extends Contract {
 
     @Override
     public void execute(IslandMap map, Context context) {
-        double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(riverMoistureParam)) + MIN_ADD;
+        double bonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(moistureParam)) + MIN_ADD;
         Set<Face> nextToRiver = utils.getTilesNextToRivers(map.getFaces());
         Set<Face> seen = new HashSet<>(nextToRiver);
         for (Face face : nextToRiver) {
-            utils.addMoisture(face, moistureBonus);
-            utils.spreadToNeighbours(face, seen, moistureBonus / 2);
+            utils.addMoisture(face, bonus);
+            utils.spreadToNeighbours(face, seen, bonus / 2);
+        }
+        Set<Face> nextToLake = utils.getTilesNextToLakes(map.getFaces());
+        for (Face face : nextToLake) {
+            if (!seen.contains(face)) {
+                utils.addMoisture(face, bonus);
+                utils.spreadToNeighbours(face, seen, bonus / 2);
+            }
         }
     }
 

@@ -20,7 +20,6 @@ public class WaterFromHeight extends Contract {
     public static final Key<DoubleType> heightKey =
             new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
 
-
     public static final Key<BooleanType> faceBorderKey =
             new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
 
@@ -29,6 +28,7 @@ public class WaterFromHeight extends Contract {
 
     public static final Key<BooleanType> vertexWaterKey =
             new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+
     public static final Key<WaterKind> waterKindKey =
             new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
 
