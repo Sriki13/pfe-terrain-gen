@@ -82,6 +82,10 @@ public class GraphGenerator {
         return export(Format.XDOT);
     }
 
+    public String exportAsSVG() {
+        return export(Format.SVG);
+    }
+
     private String export(Format format) {
         return Graphviz.fromGraph(graph).render(format).toString();
     }

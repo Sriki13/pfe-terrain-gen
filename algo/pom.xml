@@ -32,6 +32,7 @@
         <module>height</module>
         <module>water</module>
         <module>river</module>
+        <module>lake</module>
     </modules>
 
 </project>
