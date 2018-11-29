@@ -43,7 +43,7 @@ public class CustomShapeWaterGeneration extends Contract {
         String islandShape = context.getParamOrDefault(customShape);
         ShapeMatrix matrix = null;
         if (islandShape.equals("")) {
-            matrix = new ShapeMatrix(DefaultShape.valueOf(context.getParamOrDefault(premadeShape)).getMatrix());
+            matrix = new ShapeMatrix(DefaultShape.valueOf(context.getParamOrDefault(premadeShape).toUpperCase()).getMatrix());
         } else {
             try {
                 matrix = new ShapeMatrix(islandShape);
