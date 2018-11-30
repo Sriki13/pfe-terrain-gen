@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "a266998d-ee0d-40d5-9444-4d7ae457c23f",
+		"name": "pfe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "generator",
+			"item": [
+				{
+					"name": "generator parameters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/parameters",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "execute",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/execute",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"execute"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "context",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "localhost:8080/context",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"context"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "graph",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/graph",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"graph"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "algo list ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/algorithms",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"algorithms"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "composition",
+			"item": [
+				{
+					"name": "algoList",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "0.0.0.0:9090/algorithms",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "9090",
+							"path": [
+								"algorithms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new generator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "0.0.0.0:9090/generator",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "9090",
+							"path": [
+								"generator"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
