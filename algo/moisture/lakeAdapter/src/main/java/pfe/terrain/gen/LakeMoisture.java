@@ -24,7 +24,7 @@ public class LakeMoisture extends Contract {
     }
 
     private final Param<Double> lakeMoistureParam = new Param<>("lakeMoisture", Double.class, "0-1",
-            "The amount of moisture added around the lakes.", 0.5);
+            "The amount of moisture added around the lakes.", 0.5, "Lake extra moisture");
 
     public Set<Param> getRequestedParameters() {
         return asParamSet(lakeMoistureParam);
@@ -40,6 +40,7 @@ public class LakeMoisture extends Contract {
         double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(lakeMoistureParam)) + MIN_ADD;
         Set<Face> nextToLake = utils.getTilesNextToLakes(map.getFaces());
         Set<Face> seen = new HashSet<>(nextToLake);
+        utils.setModifiedKey(map.getFaces());
         for (Face face : nextToLake) {
             utils.addMoisture(face, moistureBonus);
             utils.spreadToNeighbours(face, seen, moistureBonus / 2);

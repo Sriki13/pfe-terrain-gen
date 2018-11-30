@@ -18,7 +18,9 @@ public class HeightRedistribution extends Contract {
     static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
 
     private Param<Double> redistributionFactorKey = new Param<>("Height factor", Double.class,
-            "0-1", "How the height is distributed, for very low value there will be more high altitude points than low level one and for medium to high value there will be a tendency to have more low level altitude points than high one", 0.5);
+            "0-1", "How the height is distributed, for very low value there will be more high altitude points than low level one " +
+            "and for medium to high value there will be a tendency to have more low level altitude points than high one", 0.5,
+            "Redistribution factor");
 
     @Override
     public Constraints getContract() {

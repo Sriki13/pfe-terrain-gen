@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class ControllerTest {
     private ServiceController controller;
 
-    private static final Param<Integer> salut = new Param<>("salut", Integer.class, "", "", 1);
+    private static final Param<Integer> salut = new Param<>("salut", Integer.class, "", "", 1, "");
 
     private class TestContract extends Contract {
 
@@ -84,7 +84,7 @@ public class ControllerTest {
 
         Context context = controller.getContext();
 
-        int val = context.getParamOrDefault(new Param<>("eeeee", Integer.class, "", "", 1));
+        int val = context.getParamOrDefault(new Param<>("eeeee", Integer.class, "", "", 1, ""));
 
         assertEquals(1,val);
 

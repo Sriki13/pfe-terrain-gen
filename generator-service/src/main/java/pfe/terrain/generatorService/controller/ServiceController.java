@@ -33,7 +33,8 @@ public class ServiceController {
     private Context dominant;
     private List<AdditionalConstraint> constraints;
 
-    public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
+    public ServiceController() throws InvalidContractException, UnsolvableException,
+            MissingRequiredException, DuplicatedProductionException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
@@ -50,19 +51,6 @@ public class ServiceController {
         this.constraints = initializer.getConstraints(contracts);
 
         this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));
-    }
-
-    public ServiceController(String contextPath) throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
-        ContractReflection reflection = new ContractReflection();
-        List<Contract> contracts = reflection.getContracts();
-
-        this.recessive = new Context();
-
-        ContextInitializer initializer = new ContextInitializer(contextPath);
-        this.dominant = initializer.getContext(contracts);
-
-        DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
-        this.generator = new MapGenerator(solver.orderContracts());
     }
 
 
@@ -89,16 +77,16 @@ public class ServiceController {
     }
 
     public List<Parameter> getParameters() {
-        List<Parameter> keys = new ArrayList<>();
+        List<Parameter> allParams = new ArrayList<>();
         Map<String,Object> contexts = this.contextToMap(this.dominant);
         for (Contract contract : this.generator.getContracts()) {
-            for (Param key : contract.getRequestedParameters()) {
-                if(contexts.containsKey(key.getId())) continue;
-                keys.add(new Parameter(key, contract.getName(), key.getDescription()));
+            for (Param param : contract.getRequestedParameters()) {
+                if (contexts.containsKey(param.getId())) continue;
+                allParams.add(new Parameter(param, contract.getName(), param.getDescription(), param.getLabel()));
             }
         }
 
-        return keys;
+        return allParams;
     }
 
     public Map<String,Object> getContextMap() {

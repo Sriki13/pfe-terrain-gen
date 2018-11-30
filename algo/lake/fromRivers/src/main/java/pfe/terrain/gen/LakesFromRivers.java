@@ -17,7 +17,7 @@ import java.util.*;
 public class LakesFromRivers extends Contract {
 
     public static final Param<Integer> lakeSizeParam =
-            new Param<>("lakesSize", Integer.class, "1-10", "The maximum size the lakes will grow to.", 4);
+            new Param<>("lakesSize", Integer.class, "1-10", "The maximum size the lakes will grow to.", 4, "Maximum lake size");
 
     @Override
     public Set<Param> getRequestedParameters() {

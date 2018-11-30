@@ -11,7 +11,8 @@ import java.util.Set;
 
 public class HeightMultiplication extends Contract {
 
-    private Param<Integer> factorKey = new Param<>("Val Multiplication", Integer.class, "0-10", "Multiplies heights to increase height differences", 1);
+    private Param<Integer> factorKey = new Param<>("Val Multiplication", Integer.class, "0-10",
+            "Multiplies heights to increase height differences", 1, "Height multiplication factor");
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);

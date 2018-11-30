@@ -27,7 +27,7 @@ public class HeightMoistureBiome extends Contract {
             new SerializableKey<>(facesPrefix + "BIOME", "biome", Biome.class);
 
     private final Param<String> biomeStyleParam = new Param<>("biomeStyle", String.class,
-            Arrays.toString(BiomeStyle.values()), "Style of biome repartition","classic");
+            Arrays.toString(BiomeStyle.values()), "Style of biome repartition", "classic", "Biome repartition");
 
     @Override
     public Set<Param> getRequestedParameters() {

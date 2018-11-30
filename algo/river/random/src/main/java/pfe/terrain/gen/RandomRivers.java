@@ -18,7 +18,7 @@ import java.util.*;
 public class RandomRivers extends Contract {
 
     public static final Param<Integer> nbRiversParam = new Param<>("nbRivers", Integer.class,
-            "1-100", "Number of rivers in the island.", 10);
+            "1-100", "Number of rivers in the island.", 10, "Amount of rivers");
 
     @Override
     public Set<Param> getRequestedParameters() {

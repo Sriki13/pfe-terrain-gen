@@ -37,6 +37,7 @@ public class ContextInitializerTest {
             return name;
         }
 
+
         @Override
         public Constraints getContract() {
             return null;
@@ -49,28 +50,27 @@ public class ContextInitializerTest {
 
         @Override
         public Set<Param> getRequestedParameters() {
-            return asParamSet(new Param("nbPoints",Integer.class,"","",0));
+            return asParamSet(new Param("nbPoints", Integer.class, "", "", 0, ""));
         }
     }
 
     @Test
-    public void readTest() throws Exception{
+    public void readTest() throws Exception {
         String path = this.getClass().getClassLoader().getResource("context.json").getPath();
 
         ContextInitializer initializer = new ContextInitializer(path);
-
         assertEquals("{ \"context\" : {\"nbPoints\" : 4000}}",initializer.getContextString());
     }
 
     @Test
-    public void contextTest() throws Exception{
+    public void contextTest() throws Exception {
         String path = this.getClass().getClassLoader().getResource("context.json").getPath();
 
         ContextInitializer initializer = new ContextInitializer(path);
 
         Context context = initializer.getContext(Arrays.asList(new NbPointsContract()));
 
-        assertEquals(4000,context.getParamOrDefault(new Param("nbPoints",Integer.class,"","",0)));
+        assertEquals(4000, context.getParamOrDefault(new Param("nbPoints", Integer.class, "", "", 0, "")));
     }
 
     @Test
@@ -96,7 +96,6 @@ public class ContextInitializerTest {
 
         assertEquals(0,constraints.size());
     }
-
 
 
 }

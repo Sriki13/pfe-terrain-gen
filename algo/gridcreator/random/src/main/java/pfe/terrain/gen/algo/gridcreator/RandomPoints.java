@@ -15,7 +15,7 @@ import java.util.Set;
 public class RandomPoints extends Contract {
 
     private Param<Integer> nbPoints = new Param<>("nbPoints", Integer.class,
-            "100-100000", "number of points in the map (=tiles)", 1024);
+            "100-100000", "number of points in the map (=tiles)", 1024, "Number of points");
 
     @Override
     public Set<Param> getRequestedParameters() {

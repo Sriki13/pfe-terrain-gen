@@ -31,11 +31,11 @@ public class PerlinMoisture extends Contract {
     }
 
     private final Param<Double> minMoisture = new Param<>("minMoisture", Double.class,
-            "0-1", "Minimal Moisture (0.5 means a humid island, 1.0 means all map will have max moisture", 0.0);
+            "0-1", "Minimal Moisture (0.5 means a humid island, 1.0 means all map will have max moisture", 0.0, "Minimum moisture");
     private final Param<Double> maxMoisture = new Param<>("maxMoisture", Double.class,
-            "0-1", "Maximal Moisture (0.5 means a arid island, 0.0 means all map will have min moisture", 1.0);
+            "0-1", "Maximal Moisture (0.5 means a arid island, 0.0 means all map will have min moisture", 1.0, "Maximum moisture");
     private final Param<Double> biomeQuantity = new Param<>("biomeQuantity", Double.class,
-            "0-1", "", 0.25);
+            "0-1", "Size of moisture pockets", 0.25, "Size of moisture pockets");
 
     public Set<Param> getRequestedParameters() {
         return asParamSet(minMoisture, maxMoisture, biomeQuantity);

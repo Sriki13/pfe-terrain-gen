@@ -34,20 +34,20 @@ public class SimplexHeight extends Contract {
     }
 
     public static final Param<Double> simplexIslandSize = new Param<>("simplexIslandSize", Double.class, "0-1",
-            "The size of ths islands that will be generated. Higher values mean bigger islands.", 0.333333);
+            "The size of ths islands that will be generated. Higher values mean bigger islands.", 0.333333, "Island size");
 
     public static final Param<Double> seaLevelParam = new Param<>("seaLevel", Double.class, "0-1",
-            "The height of the sea level. Higher values mean less land will emerge.", 0.444444);
+            "The height of the sea level. Higher values mean less land will emerge.", 0.444444, "Sea level");
 
     public static final Param<Double> nbSimplexPasses = new Param<>("smoothness", Double.class, "0-1",
-            "How smooth the terrain should be. Lower values mean smoother terrain.", 0.333333);
+            "How smooth the terrain should be. Lower values mean smoother terrain.", 0.333333, "Height smoothness");
 
     public static final Param<String> islandShape = new Param<>("simplexShape", String.class,
             Arrays.toString(SimplexIslandShape.values()),
-            "The general shape of the coasts of the island.", "SQUARE");
+            "The general shape of the coasts of the island.", "SQUARE", "Coast general shape");
 
     public static final Param<Double> simplexNbIsland = new Param<>("simplexNbIsland", Double.class, "0-1",
-            "The number of islands that will be generated. Higher values mean more islands.", 0.0);
+            "The number of islands that will be generated. Higher values mean more islands.", 0.0, "Number of islands");
 
     @Override
     public Set<Param> getRequestedParameters() {
