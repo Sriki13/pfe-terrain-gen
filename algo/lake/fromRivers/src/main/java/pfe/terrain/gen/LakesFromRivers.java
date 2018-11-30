@@ -26,7 +26,7 @@ public class LakesFromRivers extends Contract {
 
     // Produced
 
-    public static final Key<Void> hasLakesKey = new Key<>("LAKES", Void.class);
+    public static final Key<Boolean> hasLakesKey = new Key<>("LAKES", Boolean.class);
 
     // Modified
 
@@ -73,7 +73,7 @@ public class LakesFromRivers extends Contract {
         this.random = new Random(map.getSeed());
         this.randomRivers = new RandomRivers(islandMap);
         this.maxLakeSize = context.getParamOrDefault(lakeSizeParam);
-        islandMap.putProperty(hasLakesKey, null);
+        islandMap.putProperty(hasLakesKey, true);
         Coord lakeStart = getRiverEndInHole();
         while (lakeStart != null) {
             generateLake(lakeStart);
