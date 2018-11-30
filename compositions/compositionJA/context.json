@@ -1,0 +1,8 @@
+{
+  "size": 400,
+  "minMoisture": 0.0,
+  "maxMoisture": 0.5,
+  "nbPoints": 5000,
+  "biomeQuantity": 0.5,
+  "biomeStyle": "classic"
+}

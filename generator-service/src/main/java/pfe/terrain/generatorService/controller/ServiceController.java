@@ -112,7 +112,7 @@ public class ServiceController {
     public String getGraph() {
         GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
         graphGenerator.generateGraph();
-        return graphGenerator.exportAsJSON();
+        return graphGenerator.exportAsSVG();
     }
 
     public List<Algorithm> getAlgoList() {

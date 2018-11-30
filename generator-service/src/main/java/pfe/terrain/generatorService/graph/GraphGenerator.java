@@ -14,10 +14,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static guru.nidi.graphviz.model.Factory.mutNode;
 
@@ -27,10 +24,14 @@ public class GraphGenerator {
 
     private MutableGraph graph;
     private Map<String, MutableNode> properties;
+    private Map<String, String> keyToName;
+    private List<String> serialized;
 
     public GraphGenerator(List<Contract> contracts) {
         this.contracts = contracts;
         this.properties = new HashMap<>();
+        this.keyToName = new HashMap<>();
+        this.serialized = new ArrayList<>();
     }
 
     public void generateGraph() {
@@ -40,20 +41,31 @@ public class GraphGenerator {
             processProperties(contract.getContract().getCreated());
             processProperties(contract.getContract().getModified());
         }
+        for (Map.Entry<String, String> entry : keyToName.entrySet()) {
+            boolean isSerialized = serialized.contains(entry.getKey());
+            MutableNode node = mutNode(entry.getValue())
+                    .add(isSerialized ? Color.GREEN : Color.BLACK)
+                    .add(Shape.RECTANGLE);
+            if (isSerialized) {
+                node.add(Style.BOLD);
+            }
+            properties.put(entry.getKey(), node);
+        }
         properties.values().forEach(node -> graph.add(node));
         contracts.forEach(this::addAndLinkContract);
     }
 
     private void processProperties(Set<Key> keys) {
         for (Key key : keys) {
-            if (properties.containsKey(key.getId())) {
-                continue;
+            if (!keyToName.containsKey(key.getId()) ||
+                    (key.isSerialized() && !keyToName.get(key.getId()).contains("serialized"))) {
+                String name = key.getId() + "\n" + key.getType().getSimpleName();
+                if (key.isSerialized()) {
+                    name += "\n(serialized as " + key.getSerializedName() + ")";
+                    serialized.add(key.getId());
+                }
+                keyToName.put(key.getId(), name);
             }
-            String name = key.getId() + "\n" + key.getType().getSimpleName();
-            if (key.isSerialized()) {
-                name += "\n(serialized as " + key.getSerializedName() + ")";
-            }
-            properties.put(key.getId(), mutNode(name).add(Color.BLACK).add(Shape.RECTANGLE));
         }
     }
 
@@ -74,12 +86,12 @@ public class GraphGenerator {
         });
     }
 
-    public String exportAsJSON() {
-        return export(Format.JSON);
-    }
-
     public String exportAsXDot() {
         return export(Format.XDOT);
+    }
+
+    public String exportAsSVG() {
+        return export(Format.SVG);
     }
 
     private String export(Format format) {

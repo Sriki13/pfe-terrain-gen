@@ -7,8 +7,6 @@ import com.flowpowered.noise.module.source.RidgedMulti;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -47,7 +45,7 @@ public class NoiseWaterGeneration extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         double archipelagoTendency = context.getParamOrDefault(archipelagoTendencyParam);
         double coastRoughness = context.getParamOrDefault(coastRoughnessParam);
         Noise algorithm;

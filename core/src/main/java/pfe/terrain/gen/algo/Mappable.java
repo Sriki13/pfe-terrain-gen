@@ -25,8 +25,7 @@ public abstract class Mappable {
         properties.put(key, value);
     }
 
-    public <T> T getProperty(Key<T> key)
-            throws NoSuchKeyException, KeyTypeMismatch {
+    public <T> T getProperty(Key<T> key) {
         if (properties.keySet().stream().noneMatch(cKey -> cKey.getId().equals(key.getId()))) {
             throw new NoSuchKeyException(key.getId());
         }

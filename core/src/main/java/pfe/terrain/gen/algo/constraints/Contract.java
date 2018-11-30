@@ -4,9 +4,6 @@ import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.Param;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
@@ -40,7 +37,7 @@ public abstract class Contract implements Parameters {
 
     public abstract Constraints getContract();
 
-    public void debugExecute(IslandMap map, Context context) throws NoSuchKeyException, InvalidAlgorithmParameters, KeyTypeMismatch, DuplicateKeyException {
+    public void debugExecute(IslandMap map, Context context) {
         String algorithmName = this.getClass().getSimpleName();
         Logger logger = Logger.getLogger(algorithmName);
         String titleCard = "-------------------------";
@@ -63,7 +60,7 @@ public abstract class Contract implements Parameters {
     }
 
 
-    public abstract void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch;
+    public abstract void execute(IslandMap map, Context context);
 
     public String getName() {
         return getClass().getSimpleName();

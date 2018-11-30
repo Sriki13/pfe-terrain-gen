@@ -7,10 +7,6 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
@@ -41,7 +37,7 @@ public class ControllerTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        public void execute(IslandMap map, Context context) {
         }
 
         @Override

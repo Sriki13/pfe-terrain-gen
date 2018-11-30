@@ -42,7 +42,7 @@ public class PerlinMoisture extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch, NoSuchKeyException {
+    public void execute(IslandMap map, Context context) {
         FaceSet faces = map.getFaces();
         int mapSize = map.getSize();
         double frequency = context.getParamOrDefault(biomeQuantity);
@@ -55,7 +55,11 @@ public class PerlinMoisture extends Contract {
         }
         Map<Face, Double> noiseValues = computeNoise(map.getSeed(), faces, mapSize, frequency, min, max);
         for (Face face : faces) {
-            face.putProperty(faceMoisture, new DoubleType(noiseValues.get(face)));
+            if (!face.getProperty(faceWaterKey).value) {
+                face.putProperty(faceMoisture, new DoubleType(noiseValues.get(face)));
+            } else {
+                face.putProperty(faceMoisture, new DoubleType(1.0));
+            }
         }
     }
 
@@ -65,11 +69,10 @@ public class PerlinMoisture extends Contract {
         perlin.setFrequency(frequency * 9 + 1);
         Map<Face, Double> noiseValue = new HashMap<>();
         for (Face face : faces) {
-            if (face.getProperty(faceWaterKey).value) {
-                face.putProperty(faceMoisture, new DoubleType(1.0));
+            if (!face.getProperty(faceWaterKey).value) {
+                Coord c = face.getCenter();
+                noiseValue.put(face, perlin.getValue(c.x / mapSize, c.y / mapSize, 0));
             }
-            Coord c = face.getCenter();
-            noiseValue.put(face, perlin.getValue(c.x / mapSize, c.y / mapSize, 0));
         }
         double maxV = Collections.max(noiseValue.values());
         double minV = Collections.min(noiseValue.values());

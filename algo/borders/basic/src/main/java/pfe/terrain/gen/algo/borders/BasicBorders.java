@@ -6,7 +6,6 @@ import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.SerializableKey;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -32,7 +31,7 @@ public class BasicBorders extends Contract {
 
 
     @Override
-    public void execute(IslandMap islandMap, Context context) throws DuplicateKeyException {
+    public void execute(IslandMap islandMap, Context context) {
         double offset = islandMap.getSize() * 0.1;
         Set<Coord> borderVertices = islandMap.getVertices().stream()
                 .filter(c -> isBorder(c, islandMap.getSize(), offset))

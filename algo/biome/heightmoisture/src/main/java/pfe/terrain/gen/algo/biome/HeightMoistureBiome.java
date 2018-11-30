@@ -3,7 +3,6 @@ package pfe.terrain.gen.algo.biome;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Face;
@@ -47,8 +46,7 @@ public class HeightMoistureBiome extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+    public void execute(IslandMap map, Context context) {
         Map<Face, Double> facesHeight = new HashMap<>();
         String styleName = context.getParamOrDefault(biomeStyleParam);
         BiomeStyle style;

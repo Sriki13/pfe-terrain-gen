@@ -138,11 +138,7 @@ public class DependencySolver {
         }
 
 
-
-
-
         Solution solution = resolveWithMinimisation(model,toMinimize);
-
 
         //ordering the contracts
         for(int i = 0;i<vars.length;i++){
@@ -159,7 +155,7 @@ public class DependencySolver {
         if (toMinimize.size() == 1) {
             model.setObjective(Model.MINIMIZE,(IntVar)toMinimize.toArray()[0]);
         } else if (toMinimize.size() > 1) {
-            ParetoOptimizer po = new ParetoOptimizer(Model.MINIMIZE,(IntVar[]) toMinimize.toArray());
+            ParetoOptimizer po = new ParetoOptimizer(Model.MINIMIZE,toMinimize.toArray(new IntVar[0]));
             model.getSolver().plugMonitor(po);
         }
 

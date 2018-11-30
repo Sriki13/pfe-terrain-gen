@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>composition</artifactId>
+    <artifactId>compositionJA</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -36,9 +36,24 @@
             <artifactId>algo.borders.basic</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>pfe.terrain.gen</groupId>-->
+            <!--<artifactId>algo.height.redistribution</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
             <artifactId>algo.initializer.basic</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.water.noise</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.height.fromwater</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -51,6 +66,16 @@
             <artifactId>algo.biome.heightmoisture</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>pfe.terrain.gen</groupId>-->
+            <!--<artifactId>algo.height.smoothing</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>pfe.terrain.gen</groupId>-->
+            <!--<artifactId>algo.moisture.riverAdapter</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
             <artifactId>algo.river.random</artifactId>
@@ -58,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.moisture.riverAdapter</artifactId>
+            <artifactId>algo.river.ridge</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
