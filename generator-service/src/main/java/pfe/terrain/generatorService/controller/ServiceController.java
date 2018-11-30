@@ -31,6 +31,7 @@ public class ServiceController {
     private Generator generator;
     private Context recessive;
     private Context dominant;
+    private List<AdditionalConstraint> constraints;
 
     public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
         ContractReflection reflection = new ContractReflection();
@@ -46,9 +47,9 @@ public class ServiceController {
         }
 
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
+        this.constraints = initializer.getConstraints(contracts);
 
-
-        this.generator = new MapGenerator(solver.orderContracts(this.listToArray(initializer.getConstraints(contracts))));
+        this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));
     }
 
     public ServiceController(String contextPath) throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
@@ -151,5 +152,13 @@ public class ServiceController {
         return array;
     }
 
+    public List<String> getConstraintList(){
+        List<String> consts = new ArrayList<>();
+        for(AdditionalConstraint constraint : this.constraints){
+            consts.add(constraint.getName());
+        }
+
+        return consts;
+    }
 
 }

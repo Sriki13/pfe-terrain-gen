@@ -20,6 +20,7 @@ public class Main {
         Map<String, Object> baseContext = controller.getContextMap();
 
         logger.log(Level.INFO,"Base Context : " + parser.parseMap(baseContext));
+        logger.log(Level.INFO,"Constraints: " + controller.getConstraintList());
 
         port(8080);
 
