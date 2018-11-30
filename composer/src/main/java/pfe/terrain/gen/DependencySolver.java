@@ -2,13 +2,13 @@ package pfe.terrain.gen;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
+import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.objective.ParetoOptimizer;
 import org.chocosolver.solver.variables.IntVar;
 import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.constraints.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
@@ -37,7 +37,7 @@ public class DependencySolver {
      * @throws UnsolvableException thrown if the problem is not solvable by the system
      * @throws MissingRequiredException thrown if required element cannot be found
      */
-    public List<Contract> orderContracts(ContractOrder... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException {
+    public List<Contract> orderContracts(AdditionalConstraint... constraints) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException {
 
         Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element
@@ -57,7 +57,7 @@ public class DependencySolver {
 
         checkDuplicate(toUse.getContracts());
 
-        return order(toUse.getContracts(),dependencies);
+        return order(toUse.getContracts(),constraints);
     }
 
     private void checkDuplicate(List<Contract> contracts) throws DuplicatedProductionException{
@@ -87,7 +87,7 @@ public class DependencySolver {
      * @return the ordered list
      * @throws UnsolvableException if the element can't be ordered
      */
-    public List<Contract> order(List<Contract> contracts, AdditionalConstraint... dependencies) throws UnsolvableException {
+    public List<Contract> order(List<Contract> contracts, AdditionalConstraint... constraints) throws UnsolvableException {
         Contract[] orderedContracts = new Contract[contracts.size()];
 
         Model model = new Model("constraints");
@@ -97,12 +97,11 @@ public class DependencySolver {
             vars[i] = model.intVar("contracts" + i, 0, vars.length - 1);
         }
 
-        Set<IntVar> toMinimize = new HashSet<>();
-
-
-        for(AdditionalConstraint order : dependencies){
-            order.apply(model,contracts,vars);
+        for(AdditionalConstraint constraint: constraints){
+            constraint.apply(model,contracts,vars);
         }
+
+        Set<IntVar> toMinimize = new HashSet<>();
 
 
         for (int i = 0; i < vars.length; i++) {
@@ -135,7 +134,10 @@ public class DependencySolver {
                 }
             }
         }
-        
+
+
+
+
         Solution solution = resolveWithMinimisation(model,toMinimize);
 
 

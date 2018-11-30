@@ -1,18 +1,29 @@
 package pfe.terrain.generatorService.initializer;
 
+import com.google.gson.Gson;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.MapContext;
+import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.constraints.AdditionalConstraint;
+import pfe.terrain.generatorService.parser.ConstraintParser;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ContextInitializer {
     private String contextPath;
+
+    private String contextString;
+
+    private String contextKey = "context";
+    private String constraintKey = "constraint";
 
     public ContextInitializer(String path){
         this.contextPath = path;
@@ -42,10 +53,35 @@ public class ContextInitializer {
     }
 
     public Context getContext(List<Contract> contracts){
-        ContextParser parser = new ContextParser(this.getContextString());
+        this.readContext();
 
-        Context context = new MapContext(parser.getMap(),contracts);
+        Map<String,Object> init = new Gson().fromJson(this.contextString, Map.class);
+        if(init.containsKey(this.contextKey)) {
+            Context context = new MapContext((Map)init.get(this.contextKey), contracts);
 
-        return context;
+            return context;
+        }
+
+        return new MapContext();
+    }
+
+    public List<AdditionalConstraint> getConstraints(List<Contract> contracts){
+        this.readContext();
+
+        String stringContext = this.getContextString();
+        Map<String,Object> init = new Gson().fromJson(stringContext, Map.class);
+        if(init.containsKey(this.constraintKey)) {
+            List<Map> constraints = (List<Map>)init.get(this.constraintKey);
+
+            ConstraintParser parser = new ConstraintParser();
+            return parser.listToConstraints(constraints,contracts);
+        }
+        return new ArrayList<>();
+    }
+
+    private void readContext(){
+        if(this.contextString == null){
+            this.contextString = this.getContextString();
+        }
     }
 }

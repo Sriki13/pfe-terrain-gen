@@ -9,4 +9,6 @@ import java.util.List;
 public interface AdditionalConstraint {
 
     void apply(Model model, List<Contract> contracts, IntVar[] vars);
+
+    String getName();
 }

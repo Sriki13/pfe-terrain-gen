@@ -6,7 +6,8 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
-import pfe.terrain.gen.constraints.ContractOrder;
+
+import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
@@ -175,6 +176,7 @@ public class DependencySolverTest {
         assertTrue(got.contains(C));
     }
 
+
     @Test
     public void simpleDependencyTest() throws Exception{
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
@@ -192,7 +194,7 @@ public class DependencySolverTest {
         dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
 
         List<Contract> contracts = dependencySolver.orderContracts(new ContractOrder(B,C),
-                new ContractOrder(C,D));
+                new ContractOrder("C","D",Arrays.asList(A,B,C,D)));
 
         assertEquals(4,contracts.size());
         assertEquals(A,contracts.get(0));
@@ -221,6 +223,5 @@ public class DependencySolverTest {
                 new ContractOrder(C,D),
                 new ContractOrder(D,A));
     }
-
 
 }

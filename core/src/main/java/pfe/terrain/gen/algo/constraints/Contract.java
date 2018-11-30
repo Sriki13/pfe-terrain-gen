@@ -73,16 +73,4 @@ public abstract class Contract implements Parameters {
 
     }
 
-    @Override
-    public int hashCode() {
-        return this.getName().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(!(obj instanceof Contract)) return false;
-
-        return this.getName().equals(((Contract) obj).getName());
-    }
 }
