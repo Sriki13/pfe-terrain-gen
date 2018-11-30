@@ -1,5 +1,6 @@
 package pfe.terrain.factory;
 
+import com.google.gson.Gson;
 import pfe.terrain.factory.controller.ServiceController;
 import pfe.terrain.factory.holder.Algorithm;
 import pfe.terrain.factory.parser.JsonParser;
@@ -10,6 +11,7 @@ import java.util.logging.Level;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
+import static spark.Spark.post;
 
 
 public class Main {
@@ -20,6 +22,8 @@ public class Main {
         port(9090);
 
         get("/algorithms", (request, response) -> {
+            response.type("application/json");
+
             List<Algorithm> algos;
             try{
                 algos = controller.getAlgoList();
@@ -28,6 +32,14 @@ public class Main {
             }
 
             return parser.algoListToJson(algos);
+        });
+
+        post("/generator", (request,response) -> {
+            Gson gson = new Gson();
+
+            List<String> names = gson.fromJson(request.body(),List.class);
+
+            return controller.getGenerator(names).toString();
         });
     }
 }

@@ -1,5 +1,7 @@
 package pfe.terrain.factory.holder;
 
+import pfe.terrain.factory.pom.Dependency;
+
 public class Algorithm {
 
     private String name;
@@ -10,6 +12,10 @@ public class Algorithm {
 
     public String getName() {
         return name;
+    }
+
+    public Dependency toDependency(){
+        return new Dependency(this.getName());
     }
 
     @Override
@@ -26,4 +32,6 @@ public class Algorithm {
         }
         return false;
     }
+
+
 }
