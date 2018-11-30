@@ -1,7 +1,6 @@
 package pfe.terrain.gen;
 
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.objective.ParetoOptimizer;
 import org.chocosolver.solver.variables.IntVar;
@@ -99,12 +98,12 @@ public class DependencySolver {
         }
 
         Set<IntVar> toMinimize = new HashSet<>();
-        Set<Constraint> modificationConstraint = new HashSet<>();
+
 
         for(AdditionalConstraint order : dependencies){
             order.apply(model,contracts,vars);
-
         }
+
 
         for (int i = 0; i < vars.length; i++) {
             Constraints a = contracts.get(i).getContract();
@@ -134,37 +133,11 @@ public class DependencySolver {
                         model.arithm(vars[j], ">", vars[i]).post();
                     }
                 }
-
-                for (Key modified : a.getModified()) {
-                    if (b.getRequired().contains(modified)) {
-                        Constraint constraint = model.arithm(vars[j], ">", vars[i]);
-                        modificationConstraint.add(constraint);
-                        constraint.post();
-                    }
-                }
             }
         }
+        
+        Solution solution = resolveWithMinimisation(model,toMinimize);
 
-
-
-        Solution solution = model.getSolver().findSolution();
-
-        try {
-            if (solution == null) {
-                throw new UnsolvableException();
-            }
-        } catch (UnsolvableException e){
-            Constraint[] constraints;
-
-            if(modificationConstraint.isEmpty()){
-                constraints = new Constraint[0];
-            } else {
-                constraints = (Constraint[]) modificationConstraint.toArray();
-            }
-
-            model.unpost(constraints);
-            solution = resolveWithMinimisation(model,toMinimize);
-        }
 
         //ordering the contracts
         for(int i = 0;i<vars.length;i++){
