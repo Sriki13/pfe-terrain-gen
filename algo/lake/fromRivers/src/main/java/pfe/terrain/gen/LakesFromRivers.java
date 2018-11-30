@@ -3,9 +3,6 @@ package pfe.terrain.gen;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -17,7 +14,8 @@ import java.util.*;
 public class LakesFromRivers extends Contract {
 
     public static final Param<Integer> lakeSizeParam =
-            new Param<>("lakesSize", Integer.class, "1-10", "The maximum size the lakes will grow to.", 4, "Maximum lake size");
+            new Param<>("lakesSize", Integer.class, "1-10", "The maximum size the lakes will grow to.", 4,
+                    "Maximum lake size");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -64,6 +62,7 @@ public class LakesFromRivers extends Contract {
     private IslandMap islandMap;
     private Random random;
     private RandomRivers randomRivers;
+    private Set<Coord> newRiverStarts;
 
     private double maxLakeSize;
 
@@ -73,19 +72,27 @@ public class LakesFromRivers extends Contract {
         this.random = new Random(map.getSeed());
         this.randomRivers = new RandomRivers(islandMap);
         this.maxLakeSize = context.getParamOrDefault(lakeSizeParam);
-        islandMap.putProperty(hasLakesKey, true);
+        this.newRiverStarts = new HashSet<>();
+
         Coord lakeStart = getRiverEndInHole();
         while (lakeStart != null) {
             generateLake(lakeStart);
             lakeStart = getRiverEndInHole();
         }
+        boolean hasLakes = false;
+        for (Face face : map.getFaces()) {
+            if (face.getProperty(waterKindKey) == WaterKind.LAKE) {
+                hasLakes = true;
+                break;
+            }
+        }
+        islandMap.putProperty(hasLakesKey, hasLakes);
+        newRiverStarts.forEach(start -> start.putProperty(vertexWaterKey, new BooleanType(true)));
     }
 
-    private void generateLake(Coord start)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+    private void generateLake(Coord start) {
         Face baseLake = findLowestFace(start);
-        Coord lowestNeighbour = randomRivers.getLowestNeighbour(start, new HashSet<>(), false);
-        double lakeHeight = lowestNeighbour.getProperty(heightKey).value;
+        double lakeHeight = baseLake.getCenter().getProperty(heightKey).value;
         Set<Face> lakeTiles = new HashSet<>();
         lakeTiles.add(baseLake);
         if (!turnIntoLake(baseLake, lakeHeight)) {
@@ -101,7 +108,8 @@ public class LakesFromRivers extends Contract {
                 }
                 return;
             }
-            levelFaces(lakeTiles, getMaxHeight(lakeTiles));
+            lakeHeight = getMaxHeight(lakeTiles);
+            levelFaces(lakeTiles, lakeHeight);
             if (!turnIntoLake(newLakeFace, lakeHeight)) {
                 turnLakeIntoOcean(lakeTiles);
                 return;
@@ -109,11 +117,16 @@ public class LakesFromRivers extends Contract {
             candidates = getRiverStartCandidates(lakeTiles);
         }
         if (!candidates.isEmpty()) {
-            randomRivers.generateRiverFrom(candidates.get(random.nextInt(candidates.size())));
+            Set<Coord> seen = new HashSet<>();
+            lakeTiles.forEach(tile -> seen.addAll(tile.getBorderVertices()));
+            Coord riverStart = candidates.get(random.nextInt(candidates.size()));
+            newRiverStarts.add(riverStart);
+            riverStart.putProperty(vertexWaterKey, new BooleanType(false));
+            randomRivers.generateRiverFrom(riverStart, seen);
         }
     }
 
-    private Coord getRiverEndInHole() throws NoSuchKeyException, KeyTypeMismatch {
+    private Coord getRiverEndInHole() {
         for (Coord vertex : islandMap.getEdgeVertices()) {
             if (vertex.getProperty(isRiverEndKey) && !vertex.getProperty(vertexWaterKey).value) {
                 return vertex;
@@ -122,8 +135,7 @@ public class LakesFromRivers extends Contract {
         return null;
     }
 
-    private boolean turnIntoLake(Face face, double lakeHeight)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    private boolean turnIntoLake(Face face, double lakeHeight) {
         WaterKind kind = WaterKind.LAKE;
         for (Face connected : face.getNeighbors()) {
             if (connected.getProperty(waterKindKey) == WaterKind.OCEAN) {
@@ -144,8 +156,7 @@ public class LakesFromRivers extends Contract {
         return kind == WaterKind.LAKE;
     }
 
-    private void turnLakeIntoOcean(Set<Face> lake)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    private void turnLakeIntoOcean(Set<Face> lake) {
         for (Face face : lake) {
             for (Coord vertex : face.getBorderVertices()) {
                 turnIntoWaterPoint(vertex, 0);
@@ -156,12 +167,12 @@ public class LakesFromRivers extends Contract {
         }
     }
 
-    private void turnIntoWaterPoint(Coord vertex, double height) throws DuplicateKeyException {
+    private void turnIntoWaterPoint(Coord vertex, double height) {
         vertex.putProperty(vertexWaterKey, new BooleanType(true));
         vertex.putProperty(heightKey, new DoubleType(height));
     }
 
-    private List<Coord> getRiverStartCandidates(Set<Face> lake) throws NoSuchKeyException, KeyTypeMismatch {
+    private List<Coord> getRiverStartCandidates(Set<Face> lake) {
         Set<Coord> result = new HashSet<>();
         for (Face face : lake) {
             for (Coord vertex : face.getBorderVertices()) {
@@ -179,7 +190,7 @@ public class LakesFromRivers extends Contract {
         return list;
     }
 
-    private void levelFaces(Set<Face> faces, double level) throws DuplicateKeyException {
+    private void levelFaces(Set<Face> faces, double level) {
         for (Face face : faces) {
             for (Coord vertex : face.getBorderVertices()) {
                 vertex.putProperty(heightKey, new DoubleType(level));
@@ -188,7 +199,7 @@ public class LakesFromRivers extends Contract {
         }
     }
 
-    private Face findLowestFace(Coord start) throws NoSuchKeyException, KeyTypeMismatch {
+    private Face findLowestFace(Coord start) {
         List<Face> candidates = new ArrayList<>();
         for (Face face : islandMap.getFaces()) {
             Set<Coord> borders = face.getBorderVertices();
@@ -206,7 +217,7 @@ public class LakesFromRivers extends Contract {
         return min;
     }
 
-    private Face findLowestNeighbour(Set<Face> faces) throws NoSuchKeyException, KeyTypeMismatch {
+    private Face findLowestNeighbour(Set<Face> faces) {
         Face min = null;
         for (Face face : faces) {
             for (Face current : face.getNeighbors()) {
@@ -222,7 +233,7 @@ public class LakesFromRivers extends Contract {
         return min;
     }
 
-    private double getMaxHeight(Set<Face> faces) throws NoSuchKeyException, KeyTypeMismatch {
+    private double getMaxHeight(Set<Face> faces) {
         Face max = null;
         for (Face face : faces) {
             if (max == null || face.getCenter().getProperty(heightKey).value >
@@ -236,8 +247,7 @@ public class LakesFromRivers extends Contract {
         return max.getCenter().getProperty(heightKey).value;
     }
 
-    private void recalculateCenterHeight(Set<Face> faces)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+    private void recalculateCenterHeight(Set<Face> faces) {
         for (Face face : faces) {
             double average = 0;
             for (Coord vertex : face.getBorderVertices()) {

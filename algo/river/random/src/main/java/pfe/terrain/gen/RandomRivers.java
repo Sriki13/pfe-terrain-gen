@@ -90,13 +90,12 @@ public class RandomRivers extends Contract {
             while (start.getProperty(isSourceKey)) {
                 start = land.get(random.nextInt(land.size()));
             }
-            generateRiverFrom(start);
+            generateRiverFrom(start, new HashSet<>());
         }
     }
 
-    public Coord generateRiverFrom(Coord start)
+    public Coord generateRiverFrom(Coord start, Set<Coord> seen)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
-        Set<Coord> seen = new HashSet<>();
         start.putProperty(isSourceKey, true);
         while (!start.getProperty(vertexWaterKey).value) {
             Coord flowTowards = getLowestNeighbour(start, seen, true);
