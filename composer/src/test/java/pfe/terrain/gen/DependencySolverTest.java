@@ -6,7 +6,6 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
-
 import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.MissingRequiredException;
@@ -176,7 +175,6 @@ public class DependencySolverTest {
         assertTrue(got.contains(C));
     }
 
-
     @Test
     public void simpleDependencyTest() throws Exception{
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
@@ -223,5 +221,6 @@ public class DependencySolverTest {
                 new ContractOrder(C,D),
                 new ContractOrder(D,A));
     }
+
 
 }
