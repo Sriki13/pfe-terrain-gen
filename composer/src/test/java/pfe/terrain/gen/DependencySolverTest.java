@@ -6,6 +6,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.MissingRequiredException;
 import pfe.terrain.gen.exception.UnsolvableException;
@@ -172,6 +173,53 @@ public class DependencySolverTest {
         assertTrue(got.get(2) == B || got.get(2) == C);
         assertTrue(got.contains(B));
         assertTrue(got.contains(C));
+    }
+
+    @Test
+    public void simpleDependencyTest() throws Exception{
+        Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
+                new ArrayList<>());
+        Contract B = new TestContract("B", new ArrayList<>(),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract C = new TestContract("C", new ArrayList<>(),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract D = new TestContract("D", new ArrayList<>(),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                new ArrayList<>());
+
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+
+        List<Contract> contracts = dependencySolver.orderContracts(new ContractOrder(B,C),
+                new ContractOrder("C","D",Arrays.asList(A,B,C,D)));
+
+        assertEquals(4,contracts.size());
+        assertEquals(A,contracts.get(0));
+        assertEquals(B,contracts.get(1));
+        assertEquals(C,contracts.get(2));
+        assertEquals(D,contracts.get(3));
+    }
+
+    @Test (expected = UnsolvableException.class)
+    public void dependancyFailureTest() throws Exception{
+        Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
+                new ArrayList<>());
+        Contract B = new TestContract("B", new ArrayList<>(),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract C = new TestContract("C", new ArrayList<>(),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+        Contract D = new TestContract("D", new ArrayList<>(),
+                Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
+
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                new ArrayList<>());
+
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+
+        List<Contract> contracts = dependencySolver.orderContracts(new ContractOrder(B,C),
+                new ContractOrder(C,D),
+                new ContractOrder(D,A));
     }
 
 

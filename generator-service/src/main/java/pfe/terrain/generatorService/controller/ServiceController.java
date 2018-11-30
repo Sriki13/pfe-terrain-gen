@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
@@ -30,6 +31,7 @@ public class ServiceController {
     private Generator generator;
     private Context recessive;
     private Context dominant;
+    private List<AdditionalConstraint> constraints;
 
     public ServiceController() throws InvalidContractException, UnsolvableException,
             MissingRequiredException, DuplicatedProductionException {
@@ -46,7 +48,9 @@ public class ServiceController {
         }
 
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
-        this.generator = new MapGenerator(solver.orderContracts());
+        this.constraints = initializer.getConstraints(contracts);
+
+        this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));
     }
 
 
@@ -126,5 +130,23 @@ public class ServiceController {
         return map;
     }
 
+    private AdditionalConstraint[] listToArray(List<AdditionalConstraint> constraints){
+        AdditionalConstraint[] array = new AdditionalConstraint[constraints.size()];
+
+        for(int i = 0 ; i<constraints.size() ; i++){
+            array[i] = constraints.get(i);
+        }
+
+        return array;
+    }
+
+    public List<String> getConstraintList(){
+        List<String> consts = new ArrayList<>();
+        for(AdditionalConstraint constraint : this.constraints){
+            consts.add(constraint.getName());
+        }
+
+        return consts;
+    }
 
 }

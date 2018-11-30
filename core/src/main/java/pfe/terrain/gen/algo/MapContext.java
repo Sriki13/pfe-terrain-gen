@@ -10,6 +10,10 @@ import java.util.Set;
 
 public class MapContext extends Context {
 
+    public MapContext(){
+
+    }
+
     public MapContext(Map<String, Object> map, List<Contract> contracts) {
 
         Set<Param> contractParams = new HashSet<>();
