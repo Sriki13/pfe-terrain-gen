@@ -38,7 +38,7 @@ public class DependencySolver {
      * @throws UnsolvableException thrown if the problem is not solvable by the system
      * @throws MissingRequiredException thrown if required element cannot be found
      */
-    public List<Contract> orderContracts(ContractOrder... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException {
+    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException {
 
         Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element
@@ -99,7 +99,6 @@ public class DependencySolver {
         }
 
         Set<IntVar> toMinimize = new HashSet<>();
-        Set<Constraint> modificationConstraint = new HashSet<>();
 
         for(AdditionalConstraint order : dependencies){
             order.apply(model,contracts,vars);
@@ -135,36 +134,15 @@ public class DependencySolver {
                     }
                 }
 
-                for (Key modified : a.getModified()) {
-                    if (b.getRequired().contains(modified)) {
-                        Constraint constraint = model.arithm(vars[j], ">", vars[i]);
-                        modificationConstraint.add(constraint);
-                        constraint.post();
-                    }
-                }
             }
         }
 
 
 
-        Solution solution = model.getSolver().findSolution();
 
-        try {
-            if (solution == null) {
-                throw new UnsolvableException();
-            }
-        } catch (UnsolvableException e){
-            Constraint[] constraints;
 
-            if(modificationConstraint.isEmpty()){
-                constraints = new Constraint[0];
-            } else {
-                constraints = (Constraint[]) modificationConstraint.toArray();
-            }
+        Solution solution = resolveWithMinimisation(model,toMinimize);
 
-            model.unpost(constraints);
-            solution = resolveWithMinimisation(model,toMinimize);
-        }
 
         //ordering the contracts
         for(int i = 0;i<vars.length;i++){

@@ -4,6 +4,7 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
+import pfe.terrain.gen.exception.NoSuchContractException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ContractOrder implements AdditionalConstraint {
         this.after = after;
     }
 
-    public ContractOrder(String beforeName, String afterName, List<Contract> contracts){
+    public ContractOrder(String beforeName, String afterName, List<Contract> contracts) throws NoSuchContractException{
         for(Contract contract : contracts){
             if(contract.getName().equals(beforeName)){
                 this.before = contract;
@@ -30,6 +31,10 @@ public class ContractOrder implements AdditionalConstraint {
             if(contract.getName().equals(afterName)){
                 this.after = contract;
             }
+        }
+
+        if(this.after == null || this.before == null){
+            throw new NoSuchContractException();
         }
     }
 

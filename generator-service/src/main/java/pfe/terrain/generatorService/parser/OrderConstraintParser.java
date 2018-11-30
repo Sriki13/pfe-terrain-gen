@@ -3,11 +3,15 @@ package pfe.terrain.generatorService.parser;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
+import pfe.terrain.gen.exception.NoSuchContractException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OrderConstraintParser implements SingleConstraintParser{
+    Logger logger = Logger.getLogger("ConstraintParser");
 
     private String name;
     private String beforeKey = "before";
@@ -17,8 +21,9 @@ public class OrderConstraintParser implements SingleConstraintParser{
         this.name = new ContractOrder().getName();
     }
 
-    public AdditionalConstraint getConstraint(Map<String,String> map, List<Contract> contracts){
-        return new ContractOrder(map.get(this.beforeKey),map.get(this.afterKey),contracts);
+    public AdditionalConstraint getConstraint(Map<String,String> map, List<Contract> contracts) throws NoSuchContractException {
+        return new ContractOrder(map.get(this.beforeKey), map.get(this.afterKey), contracts);
+
     }
 
     public String getName(){

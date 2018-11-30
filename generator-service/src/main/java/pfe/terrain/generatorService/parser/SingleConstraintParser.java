@@ -10,5 +10,5 @@ public interface SingleConstraintParser {
 
     String getName();
 
-    AdditionalConstraint getConstraint(Map<String,String> map, List<Contract> contracts);
+    AdditionalConstraint getConstraint(Map<String,String> map, List<Contract> contracts) throws Exception;
 }
