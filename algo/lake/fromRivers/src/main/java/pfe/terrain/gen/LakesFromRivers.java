@@ -7,16 +7,18 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static pfe.terrain.gen.RiverGenerator.*;
 
 public class LakesFromRivers extends Contract {
 
     public static final Param<Integer> lakeSizeParam =
-            new Param<>("lakesSize", Integer.class, "1-10", "The maximum size the lakes will grow to.", 4,
-                    "Maximum lake size");
+            new Param<>("lakesLimit", Integer.class, "1-10", "The limit for the size of the lakes.", 4,
+                    "Lake size limit");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -34,7 +36,6 @@ public class LakesFromRivers extends Contract {
 
     public static final Key<WaterKind> waterKindKey =
             new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
-
 
 
     @Override
@@ -75,6 +76,9 @@ public class LakesFromRivers extends Contract {
         }
         islandMap.putProperty(hasLakesKey, hasLakes);
         newRiverStarts.forEach(start -> start.putProperty(vertexWaterKey, new BooleanType(true)));
+        removeRiversInLakeEdges(map.getFaces().stream().filter(
+                face -> face.getProperty(waterKindKey) == WaterKind.LAKE
+        ).collect(Collectors.toSet()));
     }
 
     private void generateLake(Coord start) {
@@ -89,14 +93,14 @@ public class LakesFromRivers extends Contract {
         while (candidates.isEmpty() && lakeTiles.size() < maxLakeSize) {
             Face newLakeFace = findLowestNeighbour(lakeTiles);
             lakeTiles.add(newLakeFace);
+            lakeHeight = getMaxHeight(lakeTiles);
+            levelFaces(lakeTiles, lakeHeight);
             if (newLakeFace.getProperty(faceWaterKey).value) {
                 if (newLakeFace.getProperty(waterKindKey) == WaterKind.OCEAN) {
                     turnLakeIntoOcean(lakeTiles);
                 }
                 return;
             }
-            lakeHeight = getMaxHeight(lakeTiles);
-            levelFaces(lakeTiles, lakeHeight);
             if (!turnIntoLake(newLakeFace, lakeHeight)) {
                 turnLakeIntoOcean(lakeTiles);
                 return;
@@ -242,6 +246,11 @@ public class LakesFromRivers extends Contract {
             }
             face.getCenter().putProperty(heightKey, new DoubleType(average / face.getBorderVertices().size()));
         }
+    }
+
+    private void removeRiversInLakeEdges(Set<Face> lakes) {
+        lakes.forEach(lake -> lake.getEdges().forEach(edge ->
+                edge.putProperty(riverFlowKey, new OptionalIntegerType(0))));
     }
 
 }
