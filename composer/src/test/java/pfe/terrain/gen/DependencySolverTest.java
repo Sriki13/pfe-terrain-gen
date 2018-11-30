@@ -222,5 +222,33 @@ public class DependencySolverTest {
                 new ContractOrder(D,A));
     }
 
+    @Test
+    public void complexModifyTest() throws Exception{
+        Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
+                new ArrayList<>());
+        Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract C = new TestContract("C", Arrays.asList(),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract D = new TestContract("D", Arrays.asList(),
+                Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                new ArrayList<>());
+
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+
+        List<Contract> contracts = dependencySolver.orderContracts();
+
+        assertEquals(4,contracts.size());
+        assertEquals(A,contracts.get(0));
+        assertEquals(B,contracts.get(1));
+        assertEquals(D,contracts.get(2));
+        assertEquals(C,contracts.get(3));
+
+
+    }
+
 
 }
