@@ -34,6 +34,10 @@ public class AdapterUtils {
 
     public static final int MOISTURE_LIMIT = 1;
 
+    public void setModifiedKey(Set<Face> faces) {
+        faces.forEach(face -> face.putProperty(adaptedMoistureKey, false));
+    }
+
     public void addMoisture(Face face, double bonus) {
         double newVal = face.getProperty(faceMoisture).value + bonus;
         if (newVal > MOISTURE_LIMIT) newVal = MOISTURE_LIMIT;

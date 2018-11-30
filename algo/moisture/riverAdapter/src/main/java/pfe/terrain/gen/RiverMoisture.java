@@ -37,6 +37,7 @@ public class RiverMoisture extends Contract {
         double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(riverMoistureParam)) + MIN_ADD;
         Set<Face> nextToRiver = utils.getTilesNextToRivers(map.getFaces());
         Set<Face> seen = new HashSet<>(nextToRiver);
+        utils.setModifiedKey(map.getFaces());
         for (Face face : nextToRiver) {
             utils.addMoisture(face, moistureBonus);
             utils.spreadToNeighbours(face, seen, moistureBonus / 2);
