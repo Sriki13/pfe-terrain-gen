@@ -2,6 +2,7 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -12,10 +13,12 @@ import java.util.Set;
 
 public class RiverLakeMoisture extends Contract {
 
+    public static final Key<Boolean> lakesKey = new Key<>("LAKES", Boolean.class);
+
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, edges, AdapterUtils.riverFlowKey),
+                asKeySet(faces, edges, AdapterUtils.riverFlowKey, lakesKey),
                 asKeySet(AdapterUtils.adaptedMoistureKey),
                 asKeySet(AdapterUtils.faceMoisture));
     }

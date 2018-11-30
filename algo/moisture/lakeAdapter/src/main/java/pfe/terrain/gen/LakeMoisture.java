@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class LakeMoisture extends Contract {
 
-    public static final Key<Void> lakesKey = new Key<>("LAKES", Void.class);
+    public static final Key<Boolean> lakesKey = new Key<>("LAKES", Boolean.class);
 
     @Override
     public Constraints getContract() {

@@ -1,9 +1,6 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.SerializableKey;
+import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
@@ -16,36 +13,49 @@ import pfe.terrain.gen.algo.types.IntegerType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RiverRidge extends Contract {
 
-    public static final Key<BooleanType> vertexWaterKey =
+    private static final Param<Double> canyonTendencyParam = new Param<>("nbRidges", Double.class,
+            "0-1", "Tendency of rivers to form canyons : 0=no canyons, 1=only canyons", 0.4, "Tendency of forming canyon");
+
+    private static final Param<Double> canyonDepthParam = new Param<>("ridgeDepth", Double.class,
+            "0-1", "How hard the canyons are digging the ground : 0=slowly, 1=very deep", 0.5, "Depth of canyons");
+
+    @Override
+    public Set<Param> getRequestedParameters() {
+        return asParamSet(canyonTendencyParam, canyonDepthParam);
+    }
+
+
+    private static final Key<BooleanType> vertexWaterKey =
             new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
-    public static final Key<DoubleType> vertexHeightKey =
+    private static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
 
 
-    public static final Key<IntegerType> riverFlowKey =
+    private static final Key<IntegerType> riverFlowKey =
             new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", IntegerType.class);
-    public static final Key<Boolean> isSourceKey =
+    private static final Key<Boolean> isSourceKey =
             new Key<>(verticesPrefix + "SOURCE", Boolean.class);
-    public static final Key<Boolean> isRiverEndKey =
+    private static final Key<Boolean> isRiverEndKey =
             new Key<>(verticesPrefix + "RIVER_END", Boolean.class);
-
-    public static final Key<Boolean> keka =
-            new Key<>("keka", Boolean.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(vertices, edges, vertexWaterKey, riverFlowKey, isSourceKey, isRiverEndKey),
-                asKeySet(keka),
+                asKeySet(),
                 asKeySet(vertexHeightKey)
         );
     }
 
     @Override
     public void execute(IslandMap map, Context context) {
+        double canyonDepth = context.getParamOrDefault(canyonDepthParam);
+        double canyonTendency = context.getParamOrDefault(canyonTendencyParam);
+
         List<Coord> sources = new ArrayList<>();
         for (Coord vertex : map.getVertices()) {
             if (vertex.getProperty(isSourceKey)) {
@@ -60,6 +70,7 @@ public class RiverRidge extends Contract {
             }
         }
         List<List<Coord>> flows = new ArrayList<>(sources.size());
+        sources.subList(0, (int) (sources.size() * canyonTendency));
         for (Coord source : sources) {
             List<Coord> flow = new ArrayList<>();
             flow.add(source);
@@ -72,7 +83,9 @@ public class RiverRidge extends Contract {
             for (Coord coord : flow) {
                 height = coord.getProperty(vertexHeightKey).value;
                 coord.putProperty(vertexHeightKey, new DoubleType(height * multiplicator));
-                multiplicator *= 0.9;
+                if (multiplicator > 0.1) {
+                    multiplicator -= 0.01 + (0.08 * canyonDepth);
+                }
             }
         }
     }

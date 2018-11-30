@@ -1,15 +1,37 @@
-{ "context" : {
-  "size": 400,
-  "minMoisture": 0.0,
-  "maxMoisture": 0.5,
-  "nbPoints": 5000,
-  "biomeQuantity": 0.5,
-  "biomeStyle": "classic"
-},
-  "constraint" : [{
-    "name" : "order",
-    "before" : "RiverRidge",
-    "after" : "HeightMoistureBiome"
-  }
+{
+  "context": {
+    "size": 400,
+    "minMoisture": 0.0,
+    "maxMoisture": 0.8,
+    "nbPoints": 8000,
+    "biomeQuantity": 0.5,
+    "biomeStyle": "classic"
+  },
+  "constraint": [
+    {
+      "name": "order",
+      "before": "RandomRivers",
+      "after": "HeightRedistribution"
+    },
+    {
+      "name": "order",
+      "before": "RiverRidge",
+      "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "HeightRedistribution",
+      "after": "HeightSmoothing"
+    },
+    {
+      "name": "order",
+      "before": "HeightSmoothing",
+      "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "RiverMoisture",
+      "after": "HeightMoistureBiome"
+    }
   ]
 }

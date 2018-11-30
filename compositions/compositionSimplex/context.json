@@ -1,1 +1,19 @@
-{}
+{
+  "constraint": [
+    {
+      "name": "order",
+      "before": "RiverRidge",
+      "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "RiverLakeMoisture",
+      "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "RiverRidge",
+      "after": "HeightMoistureBiome"
+    }
+  ]
+}

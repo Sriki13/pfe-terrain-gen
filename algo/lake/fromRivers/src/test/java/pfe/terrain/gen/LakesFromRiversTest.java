@@ -19,6 +19,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
+import static pfe.terrain.gen.RiverGenerator.*;
 
 public class LakesFromRiversTest {
 
@@ -39,7 +40,7 @@ public class LakesFromRiversTest {
     // E
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         islandMap = new IslandMap();
         lakeGenerator = new LakesFromRivers();
         CoordSet allCoords = new CoordSet(new HashSet<>());
@@ -77,26 +78,23 @@ public class LakesFromRiversTest {
         islandMap.putProperty(Contract.faces, allFaces);
     }
 
-    private Coord generateCoord(CoordSet allCoords, int seed, double height, boolean isRiverEnd, boolean isWater)
-            throws Exception {
+    private Coord generateCoord(CoordSet allCoords, int seed, double height, boolean isRiverEnd, boolean isWater) {
         Coord result = new Coord(seed, 0);
         allCoords.add(result);
-        result.putProperty(LakesFromRivers.heightKey, new DoubleType(height));
-        result.putProperty(LakesFromRivers.isRiverEndKey, isRiverEnd);
-        result.putProperty(LakesFromRivers.vertexWaterKey, new BooleanType(isWater));
+        result.putProperty(heightKey, new DoubleType(height));
+        result.putProperty(isRiverEndKey, isRiverEnd);
+        result.putProperty(vertexWaterKey, new BooleanType(isWater));
         return result;
     }
 
-    private Edge generateEdge(EdgeSet allEdges, Coord start, Coord end, boolean isRiver)
-            throws Exception {
+    private Edge generateEdge(EdgeSet allEdges, Coord start, Coord end, boolean isRiver) {
         Edge result = new Edge(start, end);
         allEdges.add(result);
-        result.putProperty(LakesFromRivers.riverFlowKey, new IntegerType(isRiver ? 1 : 0));
+        result.putProperty(riverFlowKey, new IntegerType(isRiver ? 1 : 0));
         return result;
     }
 
-    private Face generateFace(FaceSet allFaces, Coord center, Collection<Edge> edges, WaterKind kind)
-            throws Exception {
+    private Face generateFace(FaceSet allFaces, Coord center, Collection<Edge> edges, WaterKind kind) {
         Face result = new Face(center, new HashSet<>(edges));
         allFaces.add(result);
         result.putProperty(LakesFromRivers.waterKindKey, kind);
@@ -104,23 +102,23 @@ public class LakesFromRiversTest {
         return result;
     }
 
-    private void assertKind(Face face, WaterKind kind) throws Exception {
+    private void assertKind(Face face, WaterKind kind) {
         assertThat(face.getProperty(LakesFromRivers.waterKindKey), is(kind));
     }
 
-    private void assertHeight(Coord vertex, double height) throws Exception {
-        assertThat(vertex.getProperty(LakesFromRivers.heightKey).value, closeTo(height, 0.01));
+    private void assertHeight(Coord vertex, double height) {
+        assertThat(vertex.getProperty(heightKey).value, closeTo(height, 0.01));
     }
 
-    private void assertFaceHeight(Face face, double height) throws Exception {
+    private void assertFaceHeight(Face face) {
         for (Coord vertex : face.getBorderVertices()) {
-            assertHeight(vertex, height);
+            assertHeight(vertex, (double) 0);
         }
-        assertHeight(face.getCenter(), height);
+        assertHeight(face.getCenter(), (double) 0);
     }
 
     @Test
-    public void createLakeTest() throws Exception {
+    public void createLakeTest() {
         Context context = new Context();
         context.putParam(LakesFromRivers.lakeSizeParam, 1);
         lakeGenerator.execute(islandMap, context);
@@ -128,11 +126,11 @@ public class LakesFromRiversTest {
         assertKind(OBC, WaterKind.LAKE);
         assertKind(BCD, WaterKind.NONE);
         assertKind(CDE, WaterKind.OCEAN);
-        assertFaceHeight(OBC, 0);
+        assertFaceHeight(OBC);
     }
 
     @Test
-    public void mergeLakeIntoOceanTest() throws Exception {
+    public void mergeLakeIntoOceanTest() {
         Context context = new Context();
         context.putParam(LakesFromRivers.lakeSizeParam, 2);
         lakeGenerator.execute(islandMap, context);
@@ -140,8 +138,8 @@ public class LakesFromRiversTest {
         assertKind(OBC, WaterKind.OCEAN);
         assertKind(BCD, WaterKind.OCEAN);
         assertKind(CDE, WaterKind.OCEAN);
-        assertFaceHeight(OBC, 0);
-        assertFaceHeight(BCD, 0);
+        assertFaceHeight(OBC);
+        assertFaceHeight(BCD);
     }
 
 }

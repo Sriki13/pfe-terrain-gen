@@ -32,11 +32,6 @@ public class Face extends Mappable {
         this.neighbors.remove(this);
     }
 
-    public void setNeighbors(Set<Face> neighbors){
-        this.neighbors = new HashSet<>(neighbors);
-        this.neighbors.remove(this);
-    }
-
     public Coord getCenter() {
         return center;
     }
@@ -45,6 +40,7 @@ public class Face extends Mappable {
         Set<Coord> result = new HashSet<>();
         for (Edge edge : edges) {
             result.add(edge.getStart());
+            result.add(edge.getEnd());
         }
         return result;
     }

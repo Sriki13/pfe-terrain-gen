@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
+import static pfe.terrain.gen.RiverGenerator.*;
 
 public class RandomRiversTest {
 
@@ -23,7 +24,7 @@ public class RandomRiversTest {
     private IslandMap islandMap;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         islandMap = new IslandMap();
         riverGenerator = new RandomRivers();
         islandMap.putProperty(Contract.seed, 0);
@@ -37,12 +38,12 @@ public class RandomRiversTest {
                 Coord coord = new Coord(i, j);
                 int lim = 4 + random.nextInt(2);
                 if (i < lim || i > mapSize - lim || j < lim || j > mapSize - lim) {
-                    coord.putProperty(RandomRivers.vertexWaterKey, new BooleanType(true));
+                    coord.putProperty(vertexWaterKey, new BooleanType(true));
                 } else {
-                    coord.putProperty(RandomRivers.vertexWaterKey, new BooleanType(false));
+                    coord.putProperty(vertexWaterKey, new BooleanType(false));
                 }
                 int height = random.nextInt(50);
-                coord.putProperty(RandomRivers.heightKey, new DoubleType(height));
+                coord.putProperty(heightKey, new DoubleType(height));
                 coords.add(coord);
                 coordsMatrix.set(j * mapSize + i, coord);
             }
@@ -59,18 +60,18 @@ public class RandomRiversTest {
     }
 
     @Test
-    public void generateRiversTest() throws Exception {
+    public void generateRiversTest() {
         Context context = new Context();
         int nbRivers = 10;
         context.putParam(RandomRivers.nbRiversParam, nbRivers);
         riverGenerator.execute(islandMap, context);
         for (Coord vertex : islandMap.getVertices()) {
-            assertThat(vertex.getProperty(RandomRivers.isSourceKey), notNullValue());
-            assertThat(vertex.getProperty(RandomRivers.isRiverEndKey), notNullValue());
+            assertThat(vertex.getProperty(isSourceKey), notNullValue());
+            assertThat(vertex.getProperty(isRiverEndKey), notNullValue());
         }
         Set<Coord> sources = new HashSet<>();
         for (Coord coord : islandMap.getVertices()) {
-            if (coord.getProperty(RandomRivers.isSourceKey)) {
+            if (coord.getProperty(isSourceKey)) {
                 sources.add(coord);
             }
         }
@@ -78,21 +79,21 @@ public class RandomRiversTest {
         for (Coord source : sources) {
             Coord start = source;
             Edge before = null;
-            while (!start.getProperty(RandomRivers.isRiverEndKey)) {
+            while (!start.getProperty(isRiverEndKey)) {
                 List<Edge> next = findRiverEdge(start, before);
                 assertThat(next.size(), is(1));
                 before = next.get(0);
                 Coord cmp = (start == before.getStart() ? before.getEnd() : before.getStart());
-                assertThat(cmp.getProperty(RandomRivers.heightKey).value, lessThan(start.getProperty(RandomRivers.heightKey).value));
+                assertThat(cmp.getProperty(heightKey).value, lessThan(start.getProperty(heightKey).value));
                 start = cmp;
             }
         }
     }
 
-    private List<Edge> findRiverEdge(Coord coord, Edge ignore) throws Exception {
+    private List<Edge> findRiverEdge(Coord coord, Edge ignore) {
         List<Edge> result = new ArrayList<>();
         for (Edge edge : islandMap.getEdges()) {
-            if (edge.getProperty(RandomRivers.riverFlowKey).value > 0
+            if (edge.getProperty(riverFlowKey).value > 0
                     && (edge.getStart() == coord || edge.getEnd() == coord)
                     && edge != ignore) {
                 result.add(edge);
