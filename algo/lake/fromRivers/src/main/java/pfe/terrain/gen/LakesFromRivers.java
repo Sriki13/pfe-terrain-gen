@@ -7,9 +7,10 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
-import pfe.terrain.gen.algo.types.IntegerType;
 
 import java.util.*;
+
+import static pfe.terrain.gen.RiverGenerator.*;
 
 public class LakesFromRivers extends Contract {
 
@@ -28,26 +29,12 @@ public class LakesFromRivers extends Contract {
 
     // Modified
 
-    public static final Key<BooleanType> vertexWaterKey =
-            new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-
-    public static final Key<DoubleType> heightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-
     public static final Key<BooleanType> faceWaterKey =
             new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
 
     public static final Key<WaterKind> waterKindKey =
             new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
 
-    public static final Key<IntegerType> riverFlowKey =
-            new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", IntegerType.class);
-
-    public static final Key<Boolean> isSourceKey =
-            new Key<>(verticesPrefix + "SOURCE", Boolean.class);
-
-    public static final Key<Boolean> isRiverEndKey =
-            new Key<>(verticesPrefix + "RIVER_END", Boolean.class);
 
 
     @Override
@@ -61,7 +48,7 @@ public class LakesFromRivers extends Contract {
 
     private IslandMap islandMap;
     private Random random;
-    private RandomRivers randomRivers;
+    private RiverGenerator riverGenerator;
     private Set<Coord> newRiverStarts;
 
     private double maxLakeSize;
@@ -70,7 +57,7 @@ public class LakesFromRivers extends Contract {
     public void execute(IslandMap map, Context context) {
         this.islandMap = map;
         this.random = new Random(map.getSeed());
-        this.randomRivers = new RandomRivers(islandMap);
+        this.riverGenerator = new RiverGenerator(islandMap);
         this.maxLakeSize = context.getParamOrDefault(lakeSizeParam);
         this.newRiverStarts = new HashSet<>();
 
@@ -122,7 +109,7 @@ public class LakesFromRivers extends Contract {
             Coord riverStart = candidates.get(random.nextInt(candidates.size()));
             newRiverStarts.add(riverStart);
             riverStart.putProperty(vertexWaterKey, new BooleanType(false));
-            randomRivers.generateRiverFrom(riverStart, seen);
+            riverGenerator.generateRiverFrom(riverStart, seen);
         }
     }
 

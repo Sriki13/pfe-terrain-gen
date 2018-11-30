@@ -1,19 +1,17 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.*;
+import pfe.terrain.gen.algo.Context;
+import pfe.terrain.gen.algo.IslandMap;
+import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.types.BooleanType;
-import pfe.terrain.gen.algo.types.DoubleType;
-import pfe.terrain.gen.algo.types.IntegerType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.*;
+
+import static pfe.terrain.gen.RiverGenerator.*;
 
 public class RandomRivers extends Contract {
 
@@ -25,26 +23,6 @@ public class RandomRivers extends Contract {
         return asParamSet(nbRiversParam);
     }
 
-    // Required
-
-    public static final Key<BooleanType> vertexWaterKey =
-            new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-
-    public static final Key<DoubleType> heightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-
-
-    // Produced
-
-    public static final Key<IntegerType> riverFlowKey =
-            new SerializableKey<>(edgesPrefix + "RIVER_FLOW", "riverFlow", IntegerType.class);
-
-    public static final Key<Boolean> isSourceKey =
-            new Key<>(verticesPrefix + "SOURCE", Boolean.class);
-
-    public static final Key<Boolean> isRiverEndKey =
-            new Key<>(verticesPrefix + "RIVER_END", Boolean.class);
-
 
     @Override
     public Constraints getContract() {
@@ -54,18 +32,9 @@ public class RandomRivers extends Contract {
         );
     }
 
-    public RandomRivers() {
-    }
-
-    public RandomRivers(IslandMap islandMap) {
-        this.islandMap = islandMap;
-    }
-
-    private IslandMap islandMap;
-
     @Override
     public void execute(IslandMap map, Context context) {
-        this.islandMap = map;
+        RiverGenerator generator = new RiverGenerator(map);
         Random random = new Random(map.getSeed());
         List<Coord> land = new ArrayList<>();
         for (Coord vertex : map.getVertices()) {
@@ -90,50 +59,8 @@ public class RandomRivers extends Contract {
             while (start.getProperty(isSourceKey)) {
                 start = land.get(random.nextInt(land.size()));
             }
-            generateRiverFrom(start, new HashSet<>());
+            generator.generateRiverFrom(start, new HashSet<>());
         }
-    }
-
-    public Coord generateRiverFrom(Coord start, Set<Coord> seen)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
-        start.putProperty(isSourceKey, true);
-        while (!start.getProperty(vertexWaterKey).value) {
-            Coord flowTowards = getLowestNeighbour(start, seen, true);
-            if (flowTowards == start) {
-                break;
-            }
-            seen.add(flowTowards);
-            Edge edge = findEdge(start, flowTowards);
-            edge.putProperty(riverFlowKey, new OptionalIntegerType(1));
-            start = flowTowards;
-        }
-        start.putProperty(isRiverEndKey, true);
-        return start;
-    }
-
-    public Coord getLowestNeighbour(Coord coord, Set<Coord> seen, boolean includeStart)
-            throws NoSuchKeyException, KeyTypeMismatch {
-        Set<Coord> neighbours = islandMap.getConnectedVertices(coord);
-        Coord min = includeStart ? coord : null;
-        for (Coord current : neighbours) {
-            if (min == null ||
-                    (!seen.contains(current) &&
-                            current.getProperty(heightKey).value <= min.getProperty(heightKey).value)) {
-                min = current;
-            }
-        }
-        return min;
-    }
-
-    private Edge findEdge(Coord a, Coord b) {
-        Edge searched = new Edge(a, b);
-        for (Edge edge : islandMap.getEdges()) {
-            if (edge.equals(searched)) {
-                return edge;
-            }
-        }
-        throw new RuntimeException("Could not find edge corresponding " +
-                "to the Coordinates " + a + " and " + b);
     }
 
 }
