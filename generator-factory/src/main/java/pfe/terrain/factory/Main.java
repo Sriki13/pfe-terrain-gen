@@ -28,7 +28,7 @@ public class Main {
             try{
                 algos = controller.getAlgoList();
             }catch (Exception e){
-                return e.getMessage();
+                return parser.stringToJson(e.getMessage());
             }
 
             return parser.algoListToJson(algos);
@@ -38,8 +38,11 @@ public class Main {
             Gson gson = new Gson();
 
             List<String> names = gson.fromJson(request.body(),List.class);
-
-            return controller.getGenerator(names).toString();
+            try{
+                return controller.getGenerator(names).toString();
+            } catch (Exception e){
+                return parser.stringToJson(e.getMessage());
+            }
         });
     }
 }

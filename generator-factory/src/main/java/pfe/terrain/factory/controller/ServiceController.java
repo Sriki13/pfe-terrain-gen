@@ -33,7 +33,10 @@ public class ServiceController {
         return this.algorithms;
     }
 
-    public BasePom getGenerator(List<String> algos) throws NoSuchAlgorithmException {
+    public BasePom getGenerator(List<String> algos) throws NoSuchAlgorithmException,IOException, CannotReachRepoException {
+        if(algorithms.isEmpty()){
+            this.getAlgoList();
+        }
         List<Algorithm> requiredAlgorithms = new ArrayList<>();
 
         for(String algo : algos){

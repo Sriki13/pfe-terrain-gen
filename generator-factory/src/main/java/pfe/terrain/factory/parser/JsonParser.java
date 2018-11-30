@@ -10,4 +10,8 @@ public class JsonParser {
     public String algoListToJson(List<Algorithm> algorithms){
         return new Gson().toJson(algorithms);
     }
+
+    public String stringToJson(String toParse){
+        return new Gson().toJson(toParse);
+    }
 }

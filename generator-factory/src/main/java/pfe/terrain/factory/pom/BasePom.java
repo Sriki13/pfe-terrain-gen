@@ -15,6 +15,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static pfe.terrain.factory.pom.PomConstants.artifId;
 import static pfe.terrain.factory.pom.PomConstants.base;
@@ -22,8 +24,10 @@ import static pfe.terrain.factory.pom.PomConstants.base;
 public class BasePom {
 
     private Document doc;
+    private List<Dependency> dependencies;
 
     public BasePom(){
+        this.dependencies = new ArrayList<>();
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             InputStream stream = new ByteArrayInputStream(base.getBytes());
@@ -38,6 +42,7 @@ public class BasePom {
     }
 
     public Node addDependency(Dependency dependency){
+        this.dependencies.add(dependency);
         Node dependencies = doc.getDocumentElement().getElementsByTagName(PomConstants.dependencies).item(0);
 
         Element dep = this.doc.createElement(PomConstants.dependency);
@@ -60,6 +65,10 @@ public class BasePom {
         return dep;
 
 
+    }
+
+    public boolean contain(Dependency dependency){
+        return this.dependencies.contains(dependency);
     }
 
     @Override

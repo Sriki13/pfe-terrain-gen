@@ -36,5 +36,7 @@ public class BasePomTest {
 
 
         Assert.assertNotNull(pom.toString());
+
+        assertTrue(pom.contain(new Dependency("test")));
     }
 }
