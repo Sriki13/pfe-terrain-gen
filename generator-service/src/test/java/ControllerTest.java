@@ -7,10 +7,6 @@ import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
@@ -26,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class ControllerTest {
     private ServiceController controller;
 
-    private static final Param<Integer> salut = new Param<>("salut", Integer.class, "", "", 1);
+    private static final Param<Integer> salut = new Param<>("salut", Integer.class, "", "", 1, "");
 
     private class TestContract extends Contract {
 
@@ -41,7 +37,7 @@ public class ControllerTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        public void execute(IslandMap map, Context context) {
         }
 
         @Override
@@ -88,7 +84,7 @@ public class ControllerTest {
 
         Context context = controller.getContext();
 
-        int val = context.getParamOrDefault(new Param<>("eeeee", Integer.class, "", "", 1));
+        int val = context.getParamOrDefault(new Param<>("eeeee", Integer.class, "", "", 1, ""));
 
         assertEquals(1,val);
 

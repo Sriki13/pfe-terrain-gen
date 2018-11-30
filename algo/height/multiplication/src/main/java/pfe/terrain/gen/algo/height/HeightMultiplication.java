@@ -3,9 +3,6 @@ package pfe.terrain.gen.algo.height;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -14,7 +11,8 @@ import java.util.Set;
 
 public class HeightMultiplication extends Contract {
 
-    private Param<Integer> factorKey = new Param<>("Val Multiplication", Integer.class, "0-10", "Multiplies heights to increase height differences", 1);
+    private Param<Integer> factorKey = new Param<>("Val Multiplication", Integer.class, "0-10",
+            "Multiplies heights to increase height differences", 1, "Height multiplication factor");
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
@@ -35,8 +33,7 @@ public class HeightMultiplication extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
 
         Integer factor = context.getParamOrDefault(factorKey);
 

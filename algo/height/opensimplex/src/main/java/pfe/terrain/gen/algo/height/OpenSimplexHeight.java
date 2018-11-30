@@ -3,7 +3,6 @@ package pfe.terrain.gen.algo.height;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
@@ -34,14 +33,14 @@ public class OpenSimplexHeight extends Contract {
     }
 
     public static final Param<Double> nbIsland = new Param<>("nbIsland", Double.class, "0-1",
-            "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0);
+            "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0, "Number of islands");
 
     public static final Param<Double> seaLevel = new Param<>("seaLevel", Double.class, "0-1",
-            "The height of the sea level. Higher values mean less land will emerge.", 0.55);
+            "The height of the sea level. Higher values mean less land will emerge.", 0.55, "Sea level");
 
     public static final Param<Integer> heightMultiplier = new Param<>("heightMultiplier", Integer.class, "0-100",
             "A coefficient that will be applied to all of the generated height values. Higher values will increase the" +
-                    " height variation of the island.", 1);
+                    " height variation of the island.", 1, "Height variation");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -56,8 +55,7 @@ public class OpenSimplexHeight extends Contract {
 
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         double frequency = (MAX_FREQ - MIN_FREQ) * (context.getParamOrDefault(nbIsland)) + MIN_FREQ;
         OpenNoiseMap elevation = new OpenNoiseMap(map.getVertices(), map.getSeed(), map.getSize());
 

@@ -5,7 +5,6 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.Context;
 import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
@@ -28,7 +27,7 @@ public class RiverMoistureTest {
     private Face oneTileAway;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         islandMap = new IslandMap();
         riverMoisture = new RiverMoisture();
         EdgeSet allEdges = new EdgeSet(new HashSet<>());
@@ -42,17 +41,17 @@ public class RiverMoistureTest {
         islandMap.putProperty(Contract.edges, allEdges);
     }
 
-    private Face generateFace(int seed, boolean hasRiver, Set<Edge> allEdges) throws DuplicateKeyException {
+    public static Face generateFace(int seed, boolean hasRiver, Set<Edge> allEdges) {
         Edge edge = new Edge(new Coord(seed, 0), new Coord(seed, 1));
-        edge.putProperty(RiverMoisture.riverFlowKey, new OptionalIntegerType(hasRiver ? 1 : 0));
+        edge.putProperty(AdapterUtils.riverFlowKey, new OptionalIntegerType(hasRiver ? 1 : 0));
         allEdges.add(edge);
         Face result = new Face(new Coord(seed, 2), Collections.singleton(edge));
-        result.putProperty(RiverMoisture.faceMoisture, new DoubleType(0.0));
+        result.putProperty(AdapterUtils.faceMoisture, new DoubleType(0.0));
         return result;
     }
 
     @Test
-    public void addMoistureTest() throws Exception {
+    public void addMoistureTest() {
         riverMoisture.execute(islandMap, new Context());
         assertThat(getMoisture(farFromRiver), closeTo(0.0, 0.001));
         for (Face face : Arrays.asList(closeToRiver, oneTileAway)) {
@@ -61,8 +60,8 @@ public class RiverMoistureTest {
         assertThat(getMoisture(oneTileAway), lessThan(getMoisture(closeToRiver)));
     }
 
-    private double getMoisture(Face face) throws Exception {
-        return face.getProperty(RiverMoisture.faceMoisture).value;
+    private double getMoisture(Face face) {
+        return face.getProperty(AdapterUtils.faceMoisture).value;
     }
 
 

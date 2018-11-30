@@ -17,6 +17,7 @@
 
     <modules>
         <module>random</module>
+        <module>ridge</module>
     </modules>
 
 </project>

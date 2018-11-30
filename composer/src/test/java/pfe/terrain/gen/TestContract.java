@@ -21,6 +21,13 @@ public class TestContract extends Contract {
         );
     }
 
+    public TestContract(String name, List<Key> created, List<Key> required, List<Key> modify) {
+        this.name = name;
+        this.constraints = new Constraints(
+                new HashSet<>(required), new HashSet<>(created), new HashSet<>(modify)
+        );
+    }
+
     @Override
     public Constraints getContract() {
         return constraints;
@@ -40,4 +47,6 @@ public class TestContract extends Contract {
     public String toString() {
         return name;
     }
+
+
 }

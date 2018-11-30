@@ -7,8 +7,6 @@ import com.flowpowered.noise.module.source.RidgedMulti;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -22,11 +20,11 @@ public class NoiseWaterGeneration extends Contract {
     static final Param<String> noiseParam = new Param<>("NoiseType", String.class,
             Arrays.toString(Noise.values()),
             "Choose the noise algorithm to use : Perlin : classic island, Billow : small and round islands, Ridged : aggressive geology with big island in the middle and a lot of reef",
-            Noise.PERLIN.getNoiseName());
+            Noise.PERLIN.getNoiseName(), "Noise type");
     static final Param<Double> archipelagoTendencyParam = new Param<>("archipelagoTendency", Double.class,
-            "0-1", "Tendency of multiple islands to spawn, (0 = not a lot, 1.0 = max)", 0.0);
+            "0-1", "Tendency of multiple islands to spawn, (0 = not a lot, 1.0 = max)", 0.0, "Number of islands");
     static final Param<Double> coastRoughnessParam = new Param<>("coastRoughness", Double.class,
-            "0-1", "Makes the border of the islands appear more smooth (0.0) or tough (1.0)", 0.3);
+            "0-1", "Makes the border of the islands appear more smooth (0.0) or rough (1.0)", 0.3, "Island border roughness");
 
 
     static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
@@ -47,7 +45,7 @@ public class NoiseWaterGeneration extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         double archipelagoTendency = context.getParamOrDefault(archipelagoTendencyParam);
         double coastRoughness = context.getParamOrDefault(coastRoughnessParam);
         Noise algorithm;

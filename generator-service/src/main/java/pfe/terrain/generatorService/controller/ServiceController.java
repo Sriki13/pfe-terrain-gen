@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.generator.Generator;
 import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
@@ -30,8 +31,10 @@ public class ServiceController {
     private Generator generator;
     private Context recessive;
     private Context dominant;
+    private List<AdditionalConstraint> constraints;
 
-    public ServiceController() throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
+    public ServiceController() throws InvalidContractException, UnsolvableException,
+            MissingRequiredException, DuplicatedProductionException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
@@ -45,20 +48,9 @@ public class ServiceController {
         }
 
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
-        this.generator = new MapGenerator(solver.orderContracts());
-    }
+        this.constraints = initializer.getConstraints(contracts);
 
-    public ServiceController(String contextPath) throws InvalidContractException, UnsolvableException, MissingRequiredException, DuplicatedProductionException {
-        ContractReflection reflection = new ContractReflection();
-        List<Contract> contracts = reflection.getContracts();
-
-        this.recessive = new Context();
-
-        ContextInitializer initializer = new ContextInitializer(contextPath);
-        this.dominant = initializer.getContext(contracts);
-
-        DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
-        this.generator = new MapGenerator(solver.orderContracts());
+        this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));
     }
 
 
@@ -85,16 +77,16 @@ public class ServiceController {
     }
 
     public List<Parameter> getParameters() {
-        List<Parameter> keys = new ArrayList<>();
+        List<Parameter> allParams = new ArrayList<>();
         Map<String,Object> contexts = this.contextToMap(this.dominant);
         for (Contract contract : this.generator.getContracts()) {
-            for (Param key : contract.getRequestedParameters()) {
-                if(contexts.containsKey(key.getId())) continue;
-                keys.add(new Parameter(key, contract.getName(), key.getDescription()));
+            for (Param param : contract.getRequestedParameters()) {
+                if (contexts.containsKey(param.getId())) continue;
+                allParams.add(new Parameter(param, contract.getName(), param.getDescription(), param.getLabel()));
             }
         }
 
-        return keys;
+        return allParams;
     }
 
     public Map<String,Object> getContextMap() {
@@ -109,7 +101,7 @@ public class ServiceController {
     public String getGraph() {
         GraphGenerator graphGenerator = new GraphGenerator(generator.getContracts());
         graphGenerator.generateGraph();
-        return graphGenerator.exportAsJSON();
+        return graphGenerator.exportAsSVG();
     }
 
     public List<Algorithm> getAlgoList() {
@@ -138,5 +130,23 @@ public class ServiceController {
         return map;
     }
 
+    private AdditionalConstraint[] listToArray(List<AdditionalConstraint> constraints){
+        AdditionalConstraint[] array = new AdditionalConstraint[constraints.size()];
+
+        for(int i = 0 ; i<constraints.size() ; i++){
+            array[i] = constraints.get(i);
+        }
+
+        return array;
+    }
+
+    public List<String> getConstraintList(){
+        List<String> consts = new ArrayList<>();
+        for(AdditionalConstraint constraint : this.constraints){
+            consts.add(constraint.getName());
+        }
+
+        return consts;
+    }
 
 }

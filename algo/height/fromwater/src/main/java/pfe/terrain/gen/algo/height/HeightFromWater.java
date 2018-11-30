@@ -3,20 +3,18 @@ package pfe.terrain.gen.algo.height;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class HeightFromWater extends Contract {
 
     private final Param<Double> hardnessParam = new Param<>("hardness", Double.class,
-            "0-1","Defines the elevation of the island, 0 = almost flat, 1 = cliffy",0.5);
+            "0-1", "Defines the elevation of the island, 0 = almost flat, 1 = cliffy", 0.5, "Island elevation");
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
@@ -31,14 +29,13 @@ public class HeightFromWater extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, edges, vertices, vertexWaterKey),
+                asKeySet(seed, faces, edges, vertices, vertexWaterKey),
                 asKeySet(vertexHeightKey)
         );
     }
 
     @Override
-    public void execute(IslandMap map, Context context)
-            throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         double hardness = context.getParamOrDefault(hardnessParam);
         Set<Coord> coordsToProcess = new HashSet<>();
         double height = 0.0;
@@ -53,6 +50,7 @@ public class HeightFromWater extends Contract {
         EdgeSet allEdges = new EdgeSet(map.getEdges());
         EdgeSet edgesToProcess;
         int coordsSize = -1;
+        Random random = new Random(map.getSeed());
 
         // If coordsToProcess size wasn't reduced then only centers are remaining
         while (!(coordsSize == coordsToProcess.size())) {
@@ -68,7 +66,7 @@ public class HeightFromWater extends Contract {
                 }
                 allEdges.remove(e);
             }
-            height += 0.25 + 5 * hardness;
+            height += (random.nextDouble() + 0.1) / 4 + 5 * hardness;
         }
 
         // Set center as mean height to conform

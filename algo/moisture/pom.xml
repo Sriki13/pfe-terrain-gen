@@ -18,6 +18,9 @@
     <modules>
         <module>perlin</module>
         <module>riverAdapter</module>
+        <module>lakeAdapter</module>
+        <module>adapterCore</module>
+        <module>riverLakeAdapter</module>
     </modules>
 
 </project>

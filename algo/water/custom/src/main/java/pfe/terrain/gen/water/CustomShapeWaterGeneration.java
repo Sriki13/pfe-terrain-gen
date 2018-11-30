@@ -3,8 +3,6 @@ package pfe.terrain.gen.water;
 import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -16,10 +14,11 @@ import java.util.logging.Logger;
 public class CustomShapeWaterGeneration extends Contract {
 
     static final Param<String> customShape = new Param<>("islandShape", String.class,
-            "A Square Matrix of 0 and 1 (0 water, 1 land)", "Shape of the island", "");
+            "A Square Matrix of 0 and 1 (0 water, 1 land)", "Shape of the island", "", "Island shape matrix");
 
     static final Param<String> premadeShape = new Param<>("premadeIslandShape", String.class,
-            Arrays.toString(DefaultShape.values()), "Choose a shape of the island in presets", DefaultShape.CIRCLE.name());
+            Arrays.toString(DefaultShape.values()), "Choose a shape of the island in presets", DefaultShape.CIRCLE.name(),
+            "Island shape preset");
 
     static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
     static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
@@ -39,11 +38,11 @@ public class CustomShapeWaterGeneration extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) throws DuplicateKeyException, KeyTypeMismatch {
+    public void execute(IslandMap map, Context context) {
         String islandShape = context.getParamOrDefault(customShape);
         ShapeMatrix matrix = null;
         if (islandShape.equals("")) {
-            matrix = new ShapeMatrix(DefaultShape.valueOf(context.getParamOrDefault(premadeShape)).getMatrix());
+            matrix = new ShapeMatrix(DefaultShape.valueOf(context.getParamOrDefault(premadeShape).toUpperCase()).getMatrix());
         } else {
             try {
                 matrix = new ShapeMatrix(islandShape);
