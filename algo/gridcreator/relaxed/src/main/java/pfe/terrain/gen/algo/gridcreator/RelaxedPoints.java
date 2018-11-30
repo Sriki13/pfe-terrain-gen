@@ -22,9 +22,9 @@ public class RelaxedPoints extends Contract {
 
 
      static final Param<Integer> nbPoints = new Param<>("nbPoints", Integer.class,
-            "100-100000", "number of points in the map (=tiles)", 1024);
+             "100-100000", "number of points in the map (=tiles)", 1024, "Number of points");
      static final Param<Integer> nbIter = new Param<>("nbIterations", Integer.class,
-            "1-10", "number of iterations to smoothen grid repartition", 3);
+             "1-10", "number of iterations to smooth grid repartition", 3, "Number of iterations");
 
     @Override
     public Constraints getContract() {

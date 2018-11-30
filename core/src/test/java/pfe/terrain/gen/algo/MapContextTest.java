@@ -13,10 +13,10 @@ import static org.junit.Assert.assertEquals;
 
 public class MapContextTest {
 
-    Param<Integer> mountain = new Param<>("mountains", Integer.class, "a", "b", 1);
-    Param<String> terrain = new Param<>("terrain", String.class, "c", "d", "kapoue");
-    Param<Double> wave = new Param<>("wave", Double.class, "f", "f", 3.4);
-    Param<Boolean> hill = new Param<>("hill", Boolean.class, "x", "z", true);
+    Param<Integer> mountain = new Param<>("mountains", Integer.class, "a", "b", 1, "");
+    Param<String> terrain = new Param<>("terrain", String.class, "c", "d", "kapoue", "");
+    Param<Double> wave = new Param<>("wave", Double.class, "f", "f", 3.4, "");
+    Param<Boolean> hill = new Param<>("hill", Boolean.class, "x", "z", true, "");
 
     private Contract contract = new Contract() {
         @Override

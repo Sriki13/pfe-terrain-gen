@@ -16,7 +16,7 @@ public class GridPoints extends Contract {
 
 
     private Param<Integer> nbPoints = new Param<>("nbPoints", Integer.class,
-            "256-65536 (power of 2)", "number of points in the map (=tiles)", 1024);
+            "256-65536 (power of 2)", "number of points in the map (=tiles)", 1024, "Number of points");
 
     @Override
     public Set<Param> getRequestedParameters() {

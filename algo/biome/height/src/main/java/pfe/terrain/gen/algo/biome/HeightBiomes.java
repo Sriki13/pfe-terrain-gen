@@ -17,7 +17,7 @@ import static pfe.terrain.gen.algo.Biome.*;
 public class HeightBiomes extends Contract {
 
     private static final Param<Integer> heightStepKey = new Param<>("heightBiomeStep", Integer.class,
-            "1-25", "Average interval between two biomes on the Z-axis", 4);
+            "1-25", "Average interval between two biomes on the Z-axis", 4, "Average height between 2 biomes");
 
     @Override
     public Set<Param> getRequestedParameters() {

@@ -21,7 +21,7 @@ public class RiverMoisture extends Contract {
     }
 
     private final Param<Double> riverMoistureParam = new Param<>("riverMoisture", Double.class, "0-1",
-            "The amount of moisture added around the rivers.", 0.5);
+            "The amount of moisture added around the rivers.", 0.5, "River extra moisture");
 
     public Set<Param> getRequestedParameters() {
         return asParamSet(riverMoistureParam);

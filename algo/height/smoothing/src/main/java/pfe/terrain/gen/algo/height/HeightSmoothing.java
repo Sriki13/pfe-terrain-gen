@@ -19,7 +19,7 @@ public class HeightSmoothing extends Contract {
     static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
 
     static final Param<Double> smoothingFactor = new Param<>("SmoothingLevel", Double.class,
-            "0-1", "Adjust how much you want to smooth the height of the map", 0.3);
+            "0-1", "Adjust how much you want to smooth the height of the map", 0.3, "Smoothing factor");
 
 
     private Map<Coord, List<Double>> verticesHeight;

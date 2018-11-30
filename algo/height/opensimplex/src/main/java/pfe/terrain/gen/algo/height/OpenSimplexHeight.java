@@ -33,14 +33,14 @@ public class OpenSimplexHeight extends Contract {
     }
 
     public static final Param<Double> nbIsland = new Param<>("nbIsland", Double.class, "0-1",
-            "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0);
+            "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0, "Number of islands");
 
     public static final Param<Double> seaLevel = new Param<>("seaLevel", Double.class, "0-1",
-            "The height of the sea level. Higher values mean less land will emerge.", 0.55);
+            "The height of the sea level. Higher values mean less land will emerge.", 0.55, "Sea level");
 
     public static final Param<Integer> heightMultiplier = new Param<>("heightMultiplier", Integer.class, "0-100",
             "A coefficient that will be applied to all of the generated height values. Higher values will increase the" +
-                    " height variation of the island.", 1);
+                    " height variation of the island.", 1, "Height variation");
 
     @Override
     public Set<Param> getRequestedParameters() {

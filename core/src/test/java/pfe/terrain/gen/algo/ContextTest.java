@@ -1,6 +1,5 @@
 package pfe.terrain.gen.algo;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,9 +7,9 @@ import static org.junit.Assert.assertEquals;
 
 public class ContextTest {
 
-    Param<Integer> height = new Param<>("height",Integer.class,"","",1);
-    Param<Integer> water = new Param<>("water",Integer.class,"","",1);
-    Param<Integer> sea = new Param<>("sea",Integer.class,"","",1);
+    Param<Integer> height = new Param<>("height", Integer.class, "", "", 1, "");
+    Param<Integer> water = new Param<>("water", Integer.class, "", "", 1, "");
+    Param<Integer> sea = new Param<>("sea", Integer.class, "", "", 1, "");
 
     Context context;
 

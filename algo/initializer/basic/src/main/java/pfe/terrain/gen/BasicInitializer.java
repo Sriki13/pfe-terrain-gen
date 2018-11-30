@@ -11,8 +11,10 @@ import java.util.Set;
 
 public class BasicInitializer extends Contract {
 
-    private Param<Integer> sizeParam = new Param<>("size", Integer.class, "100-10000", "size of the island in a visualization sense", 400);
-    private Param<Integer> seedParam = new Param<>("seed", Integer.class, "0-4000000000", "seed of the map, defines the behaviour of the random functions", 0);
+    private Param<Integer> sizeParam = new Param<>("size", Integer.class, "100-10000",
+            "size of the island in a visualization sense", 400, "Size of the island");
+    private Param<Integer> seedParam = new Param<>("seed", Integer.class, "0-4000000000",
+            "seed of the map, defines the behaviour of the random functions", 0, "Island seed");
 
     @Override
     public Constraints getContract() {
