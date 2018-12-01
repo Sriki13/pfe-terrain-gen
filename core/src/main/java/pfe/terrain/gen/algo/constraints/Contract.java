@@ -37,7 +37,7 @@ public abstract class Contract implements Parameters {
 
     public abstract Constraints getContract();
 
-    public void debugExecute(IslandMap map, Context context) {
+    public long debugExecute(IslandMap map, Context context) {
         String algorithmName = this.getClass().getSimpleName();
         Logger logger = Logger.getLogger(algorithmName);
         String titleCard = "-------------------------";
@@ -45,8 +45,8 @@ public abstract class Contract implements Parameters {
         long startTime = System.nanoTime();
         execute(map, context);
         long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000;
-        logger.info("Done executing algorithm " + algorithmName + " in " + duration + " microseconds");
+        long duration = (endTime - startTime);
+        logger.info("Done executing algorithm " + algorithmName + " in " + duration / 1000 + " microseconds");
         logger.info("\nVerifying contract...");
         for (Key key : getContract().getCreated()) {
             logger.info("Verifying presence of key : " + key);
@@ -57,6 +57,7 @@ public abstract class Contract implements Parameters {
             logger.info(key.toString() + " is set");
         }
         logger.info(titleCard + " Execution and Verification of " + algorithmName + " done " + titleCard + "\n\n");
+        return duration;
     }
 
 
@@ -66,7 +67,7 @@ public abstract class Contract implements Parameters {
         return getClass().getSimpleName();
     }
 
-    public void setContext(Context context){
+    public void setContext(Context context) {
 
     }
 
@@ -77,8 +78,8 @@ public abstract class Contract implements Parameters {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(!(obj instanceof Contract)) return false;
+        if (this == obj) return true;
+        if (!(obj instanceof Contract)) return false;
 
         return this.getName().equals(((Contract) obj).getName());
     }

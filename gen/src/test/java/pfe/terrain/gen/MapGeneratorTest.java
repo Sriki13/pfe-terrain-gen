@@ -17,7 +17,7 @@ public class MapGeneratorTest {
     private MapGenerator map;
 
     @Before
-    public void init(){
+    public void init() {
         this.map = new MapGenerator(Arrays.asList(new Contract() {
             @Override
             public Constraints getContract() {
@@ -37,7 +37,7 @@ public class MapGeneratorTest {
     }
 
     @Test
-    public void algoOrderTest(){
+    public void algoOrderTest() {
         this.map = new MapGenerator(Arrays.asList(
                 new Contract() {
                     @Override
@@ -92,14 +92,14 @@ public class MapGeneratorTest {
 
         List<Contract> contracts = this.map.getContracts();
 
-        Assert.assertEquals(3,contracts.size());
-        Assert.assertEquals("A",contracts.get(0).getName());
-        Assert.assertEquals("B",contracts.get(1).getName());
-        Assert.assertEquals("C",contracts.get(2).getName());
+        Assert.assertEquals(3, contracts.size());
+        Assert.assertEquals("A", contracts.get(0).getName());
+        Assert.assertEquals("B", contracts.get(1).getName());
+        Assert.assertEquals("C", contracts.get(2).getName());
     }
 
-    @Test(expected = InvalidAlgorithmParameters.class)
-    public void failTest() throws Exception{
+    @Test
+    public void failTest() {
         this.map = new MapGenerator(Arrays.asList(new Contract() {
             @Override
             public Constraints getContract() {
@@ -112,6 +112,6 @@ public class MapGeneratorTest {
             }
         }));
 
-        this.map.generate();
+        Assert.assertEquals("", this.map.generate());
     }
 }

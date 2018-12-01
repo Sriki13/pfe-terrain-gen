@@ -26,16 +26,9 @@ public class Main {
 
         get("/execute", (request, response) -> {
             response.header("Access-Control-Allow-Origin","*");
-            logger.log(Level.INFO,"Beginning map generation");
-            long start = System.currentTimeMillis();
 
             response.type("application/json");
-            String map = controller.execute();
-
-            long time = System.currentTimeMillis() - start;
-            logger.log(Level.INFO,"map generation done in : " + time + " ms");
-
-            return map;
+            return controller.execute();
         });
 
         get("/graph", ((request, response) -> {

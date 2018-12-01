@@ -3,7 +3,8 @@
     "size": 400,
     "minMoisture": 0.0,
     "maxMoisture": 0.8,
-    "nbPoints": 8000,
+    "nbRidged": 1.0,
+    "hardness": 1.0,
     "biomeQuantity": 0.5,
     "biomeStyle": "classic"
   },
@@ -16,7 +17,7 @@
     {
       "name": "order",
       "before": "RiverRidge",
-      "after": "HeightMoistureBiome"
+      "after": "HeightRedistribution"
     },
     {
       "name": "order",

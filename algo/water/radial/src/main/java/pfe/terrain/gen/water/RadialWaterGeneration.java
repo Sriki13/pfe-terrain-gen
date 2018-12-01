@@ -19,8 +19,6 @@ public class RadialWaterGeneration extends Contract {
             "0-1", "Rate of scattering, 0.0 will yield a full island, 1.0 will create an archipelago with ridges", 0.0,
             "Terrain scatter");
 
-    static final Key<BooleanType> faceBorderKey = new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
-
     static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
     static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
     static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);

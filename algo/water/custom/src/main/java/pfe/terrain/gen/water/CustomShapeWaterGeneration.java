@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class CustomShapeWaterGeneration extends Contract {
 
-    static final Param<String> customShape = new Param<>("islandShape", String.class,
+    private static final Param<String> customShape = new Param<>("islandShape", String.class,
             "A Square Matrix of 0 and 1 (0 water, 1 land)", "Shape of the island", "", "Island shape matrix");
 
     static final Param<String> premadeShape = new Param<>("premadeIslandShape", String.class,
@@ -21,7 +21,7 @@ public class CustomShapeWaterGeneration extends Contract {
             "Island shape preset");
 
     static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    private static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
     static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
 
     @Override

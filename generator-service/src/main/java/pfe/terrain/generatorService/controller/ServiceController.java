@@ -60,7 +60,6 @@ public class ServiceController {
 
     public String execute() throws Exception{
         return this.generator.generate();
-
     }
 
     public Map<String, Object> setContext(String contextString) {

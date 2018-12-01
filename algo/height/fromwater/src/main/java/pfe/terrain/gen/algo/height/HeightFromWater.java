@@ -66,7 +66,7 @@ public class HeightFromWater extends Contract {
                 }
                 allEdges.remove(e);
             }
-            height += (random.nextDouble() + 0.1) / 4 + 5 * hardness;
+            height += ((random.nextDouble() + 0.2) / 4) + 5 * hardness;
         }
 
         // Set center as mean height to conform
