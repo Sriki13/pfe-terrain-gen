@@ -22,7 +22,7 @@ public class Main {
         port(9090);
 
         get("/algorithms", (request, response) -> {
-            response.type("application/json");
+            response.type("application/xml");
 
             try{
                 return parser.algoListToJson(controller.getAlgoList());
