@@ -51,6 +51,7 @@ public class ServiceController {
         this.constraints = initializer.getConstraints(contracts);
 
         this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));
+        this.generator.setParams(this.dominant.merge(this.recessive));
     }
 
 
