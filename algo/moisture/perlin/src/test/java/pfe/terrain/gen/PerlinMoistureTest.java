@@ -46,11 +46,11 @@ public class PerlinMoistureTest {
     @Ignore
     public void printPerlin() throws DuplicateKeyException {
         Set<Face> faces = new HashSet<>();
-        int mapSize = 256;
+        int mapSize = 512;
         generateFaces(faces, mapSize);
         final Perlin perlin = new Perlin();
         perlin.setSeed(1);
-        perlin.setFrequency(1.0);
+        perlin.setFrequency(80.0);
         List<Double> values = new ArrayList<>(Collections.nCopies(mapSize * mapSize, 1.0));
         for (Face face : faces) {
             final double noise = perlin.getValue(face.getCenter().x / mapSize, face.getCenter().y / mapSize, 0);

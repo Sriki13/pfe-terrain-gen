@@ -34,6 +34,7 @@
         <module>river</module>
         <module>lake</module>
         <module>pitch</module>
+        <module>tree</module>
     </modules>
 
 </project>
