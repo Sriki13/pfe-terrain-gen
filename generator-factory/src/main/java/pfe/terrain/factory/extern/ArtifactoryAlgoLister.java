@@ -52,9 +52,6 @@ public class ArtifactoryAlgoLister {
                 }
             }
         }
-
-
-
         return new ArrayList<>(algorithms);
     }
 
