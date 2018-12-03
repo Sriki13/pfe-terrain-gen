@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <parent>
         <groupId>pfe.terrain.gen</groupId>
-        <artifactId>algo.gridcreator</artifactId>
+        <artifactId>algo.points</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
