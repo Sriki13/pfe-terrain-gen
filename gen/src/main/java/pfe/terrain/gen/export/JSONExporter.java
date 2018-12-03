@@ -44,6 +44,14 @@ public class JSONExporter {
         end = System.nanoTime();
         printTime(start, end, "Face props export");
 
+        logger.info("Exporting map props...");
+        start = System.nanoTime();
+        // TODO
+        //PropertyExporter mapExporter = new PropertyExporter<>();
+        result.add("face_props", faceExporter.getPropsArray());
+        end = System.nanoTime();
+        printTime(start, end, "Face props export");
+
         result.addProperty("uuid", islandMap.getSeed());
         logger.info(delimiter + " Done building JSON " + delimiter);
         return result;
