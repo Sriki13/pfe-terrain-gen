@@ -35,4 +35,12 @@ public class JsonParser {
     public String parseAlgo(List<Algorithm> algorithms) {
         return new Gson().toJson(algorithms);
     }
+
+    public String exceptionToJson(Exception e){
+        Map<String,String> map = new HashMap<>();
+
+        map.put("error",e.getMessage());
+
+        return new Gson().toJson(map);
+    }
 }

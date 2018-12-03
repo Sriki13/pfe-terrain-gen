@@ -98,7 +98,7 @@ public class MapGeneratorTest {
         Assert.assertEquals("C", contracts.get(2).getName());
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void failTest() {
         this.map = new MapGenerator(Arrays.asList(new Contract() {
             @Override
@@ -112,6 +112,6 @@ public class MapGeneratorTest {
             }
         }));
 
-        Assert.assertEquals("", this.map.generate());
+         this.map.generate();
     }
 }
