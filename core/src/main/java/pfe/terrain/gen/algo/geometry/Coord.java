@@ -22,8 +22,8 @@ public class Coord extends Mappable {
         this.y = wrapped.y;
     }
 
-    public boolean matches(Coordinate coordinate) {
-        return this.x == coordinate.x && this.y == coordinate.y;
+    public double distance(Coord other) {
+        return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2));
     }
 
     @Override
