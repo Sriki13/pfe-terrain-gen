@@ -49,7 +49,7 @@ public class ControllerTest {
 
     private class TestGenerator implements Generator{
         @Override
-        public String generate() throws Exception {
+        public String generate() {
             return "salut";
         }
 
