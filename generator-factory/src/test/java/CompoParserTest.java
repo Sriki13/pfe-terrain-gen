@@ -11,12 +11,12 @@ public class CompoParserTest {
 
     @Before
     public void init() throws Exception{
-        this.parser = new JsonCompoParser("{\"name\" : \"salut\" , \"context\" : \"test\" , \"algorithm\" : [\"test\",\"we\"]}");
+        this.parser = new JsonCompoParser("{\"name\" : \"salut\" , \"context\" : {\"test\" : false} , \"algorithm\" : [\"test\",\"we\"]}");
     }
 
     @Test
     public void getTest(){
-        Assert.assertEquals("test",parser.getContext());
+        Assert.assertEquals("{\"test\":false}",parser.getContext());
         Assert.assertEquals("salut",parser.getName());
 
         List<String> algos = parser.getAlgoName();

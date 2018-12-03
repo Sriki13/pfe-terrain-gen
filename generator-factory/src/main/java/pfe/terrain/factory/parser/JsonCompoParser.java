@@ -29,7 +29,7 @@ public class JsonCompoParser {
             }
 
             if (map.containsKey(this.contextKey)) {
-                this.context = (String) map.get(this.contextKey);
+                this.context = new Gson().toJson(map.get(this.contextKey));
             } else {
                 throw new MissingKeyException(this.contextKey);
             }
