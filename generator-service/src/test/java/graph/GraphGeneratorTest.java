@@ -6,7 +6,7 @@ import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.parse.Parser;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.algo.types.IntegerType;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 

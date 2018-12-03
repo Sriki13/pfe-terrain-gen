@@ -1,12 +1,16 @@
 package pfe.terrain.gen.algo.height;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -22,8 +26,8 @@ public class SimplexHeight extends Contract {
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-    public static final Key<Void> oceanFloorKey =
-            new Key<>("OCEAN_HEIGHT", Void.class);
+    public static final Key<Boolean> oceanFloorKey =
+            new Key<>("OCEAN_HEIGHT", Boolean.class);
 
     @Override
     public Constraints getContract() {
@@ -33,20 +37,21 @@ public class SimplexHeight extends Contract {
         );
     }
 
-    public static final Param<Double> simplexIslandSize = new Param<>("simplexIslandSize", Double.class, "0-1",
-            "The size of ths islands that will be generated. Higher values mean bigger islands.", 0.333333, "Island size");
+    public static final Param<Double> simplexIslandSize = Param.generateDefaultDoubleParam(
+            "simplexIslandSize", "The size of ths islands that will be generated. Higher values mean bigger islands.",
+            0.333333, "Island size");
 
-    public static final Param<Double> seaLevelParam = new Param<>("seaLevel", Double.class, "0-1",
+    public static final Param<Double> seaLevelParam = Param.generateDefaultDoubleParam("seaLevel",
             "The height of the sea level. Higher values mean less land will emerge.", 0.444444, "Sea level");
 
-    public static final Param<Double> nbSimplexPasses = new Param<>("smoothness", Double.class, "0-1",
+    public static final Param<Double> nbSimplexPasses = Param.generateDefaultDoubleParam("smoothness",
             "How smooth the terrain should be. Lower values mean smoother terrain.", 0.333333, "Height smoothness");
 
     public static final Param<String> islandShape = new Param<>("simplexShape", String.class,
             Arrays.toString(SimplexIslandShape.values()),
             "The general shape of the coasts of the island.", "SQUARE", "Coast general shape");
 
-    public static final Param<Double> simplexNbIsland = new Param<>("simplexNbIsland", Double.class, "0-1",
+    public static final Param<Double> simplexNbIsland = Param.generateDefaultDoubleParam("simplexNbIsland",
             "The number of islands that will be generated. Higher values mean more islands.", 0.0, "Number of islands");
 
     @Override
@@ -98,7 +103,7 @@ public class SimplexHeight extends Contract {
         for (Face face : map.getFaces()) {
             face.getCenter().putProperty(vertexHeightKey, new DoubleType(getAverageHeight(face)));
         }
-        map.putProperty(oceanFloorKey, null);
+        map.putProperty(oceanFloorKey, true);
     }
 
     private double getAverageHeight(Face face) throws NoSuchKeyException, KeyTypeMismatch {

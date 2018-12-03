@@ -1,7 +1,7 @@
 package pfe.terrain.gen.algo.biome;
 
 import org.junit.Test;
-import pfe.terrain.gen.algo.Biome;
+import pfe.terrain.gen.algo.island.Biome;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

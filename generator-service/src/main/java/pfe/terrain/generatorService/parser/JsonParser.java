@@ -20,6 +20,7 @@ public class JsonParser {
             map.put("type", param.getKey().getType().getSimpleName());
             map.put("descr", param.getDescription());
             map.put("for", param.getContractName());
+            map.put("label", param.getLabel());
             maps.add(map);
         }
 

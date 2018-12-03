@@ -1,6 +1,6 @@
 package pfe.terrain.generatorService.holder;
 
-import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.key.Key;
 
 public class Parameter {
 

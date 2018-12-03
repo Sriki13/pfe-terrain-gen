@@ -1,13 +1,13 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
 
 import java.util.HashSet;
 import java.util.Set;

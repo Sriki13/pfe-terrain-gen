@@ -1,9 +1,9 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.generator.Generator;
+import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.util.Arrays;

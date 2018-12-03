@@ -3,13 +3,13 @@ package pfe.terrain.gen.algo.height;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 

@@ -2,12 +2,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.generator.Generator;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Param;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
 

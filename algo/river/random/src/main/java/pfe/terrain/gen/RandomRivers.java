@@ -1,12 +1,12 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Param;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.*;
@@ -16,7 +16,7 @@ import static pfe.terrain.gen.RiverGenerator.*;
 public class RandomRivers extends Contract {
 
     public static final Param<Integer> nbRiversParam = new Param<>("nbRivers", Integer.class,
-            "1-100", "Number of rivers in the island.", 10, "Amount of rivers");
+            1, 100, "Number of rivers in the island.", 10, "Amount of rivers");
 
     @Override
     public Set<Param> getRequestedParameters() {

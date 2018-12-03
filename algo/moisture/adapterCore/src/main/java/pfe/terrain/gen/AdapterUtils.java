@@ -1,10 +1,10 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.SerializableKey;
-import pfe.terrain.gen.algo.WaterKind;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;

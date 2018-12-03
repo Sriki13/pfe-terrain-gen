@@ -3,11 +3,9 @@ package pfe.terrain.gen;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
-import java.lang.Void;
-import java.lang.Void;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.exception.MissingRequiredException;
 
 import java.util.*;

@@ -1,12 +1,16 @@
 package pfe.terrain.gen.algo.height;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -18,8 +22,8 @@ public class HeightSmoothing extends Contract {
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
     static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
 
-    static final Param<Double> smoothingFactor = new Param<>("SmoothingLevel", Double.class,
-            "0-1", "Adjust how much you want to smooth the height of the map", 0.3, "Smoothing factor");
+    static final Param<Double> smoothingFactor = Param.generateDefaultDoubleParam("SmoothingLevel",
+            "Adjust how much you want to smooth the height of the map", 0.3, "Smoothing factor");
 
 
     private Map<Coord, List<Double>> verticesHeight;

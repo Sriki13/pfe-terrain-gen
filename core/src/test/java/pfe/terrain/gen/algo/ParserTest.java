@@ -4,7 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.exception.OrderParsingException;
+import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.parsing.OrderParser;
 import pfe.terrain.gen.algo.parsing.OrderedContract;
 

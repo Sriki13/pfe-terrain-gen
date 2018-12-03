@@ -1,7 +1,7 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.exception.MissingRequiredException;
 
 import java.util.ArrayList;

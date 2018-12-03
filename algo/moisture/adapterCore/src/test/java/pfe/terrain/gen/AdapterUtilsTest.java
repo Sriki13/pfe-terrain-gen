@@ -2,10 +2,10 @@ package pfe.terrain.gen;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.WaterKind;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;

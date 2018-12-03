@@ -1,7 +1,7 @@
 import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Param;
+import pfe.terrain.gen.algo.key.Param;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.parser.JsonParser;
 

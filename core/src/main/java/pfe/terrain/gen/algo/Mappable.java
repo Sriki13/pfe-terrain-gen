@@ -3,6 +3,7 @@ package pfe.terrain.gen.algo;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.key.Key;
 
 import java.util.HashMap;
 import java.util.Map;

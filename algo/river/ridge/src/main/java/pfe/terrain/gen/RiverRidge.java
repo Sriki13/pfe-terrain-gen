@@ -1,12 +1,16 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;
@@ -17,11 +21,11 @@ import java.util.Set;
 
 public class RiverRidge extends Contract {
 
-    private static final Param<Double> canyonTendencyParam = new Param<>("nbRidges", Double.class,
-            "0-1", "Tendency of rivers to form canyons : 0=no canyons, 1=only canyons", 0.4, "Tendency of forming canyon");
+    private static final Param<Double> canyonTendencyParam = Param.generateDefaultDoubleParam("nbRidges",
+            "Tendency of rivers to form canyons : 0=no canyons, 1=only canyons", 0.4, "Tendency of forming canyon");
 
-    private static final Param<Double> canyonDepthParam = new Param<>("ridgeDepth", Double.class,
-            "0-1", "How hard the canyons are digging the ground : 0=slowly, 1=very deep", 0.5, "Depth of canyons");
+    private static final Param<Double> canyonDepthParam = Param.generateDefaultDoubleParam("ridgeDepth",
+            "How hard the canyons are digging the ground : 0=slowly, 1=very deep", 0.5, "Depth of canyons");
 
     @Override
     public Set<Param> getRequestedParameters() {

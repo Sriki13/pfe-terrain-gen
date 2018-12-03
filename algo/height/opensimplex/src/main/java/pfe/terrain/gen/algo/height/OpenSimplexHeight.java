@@ -1,12 +1,16 @@
 package pfe.terrain.gen.algo.height;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -32,13 +36,13 @@ public class OpenSimplexHeight extends Contract {
         );
     }
 
-    public static final Param<Double> nbIsland = new Param<>("nbIsland", Double.class, "0-1",
+    public static final Param<Double> nbIsland = Param.generateDefaultDoubleParam("nbIsland",
             "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0, "Number of islands");
 
-    public static final Param<Double> seaLevel = new Param<>("seaLevel", Double.class, "0-1",
+    public static final Param<Double> seaLevel = Param.generateDefaultDoubleParam("seaLevel",
             "The height of the sea level. Higher values mean less land will emerge.", 0.55, "Sea level");
 
-    public static final Param<Integer> heightMultiplier = new Param<>("heightMultiplier", Integer.class, "0-100",
+    public static final Param<Integer> heightMultiplier = Param.generatePositiveIntegerParam("heightMultiplier", 100,
             "A coefficient that will be applied to all of the generated height values. Higher values will increase the" +
                     " height variation of the island.", 1, "Height variation");
 

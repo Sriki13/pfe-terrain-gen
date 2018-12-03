@@ -1,11 +1,11 @@
 package pfe.terrain.gen;
 
 import org.junit.Test;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.MissingRequiredException;

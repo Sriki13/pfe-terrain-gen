@@ -2,15 +2,15 @@ package pfe.terrain.gen.algo.biome;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Biome;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.WaterKind;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.island.Biome;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 

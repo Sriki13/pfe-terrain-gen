@@ -24,7 +24,7 @@
 
     <modules>
         <module>mesh</module>
-        <module>gridcreator</module>
+        <module>points</module>
         <module>borders</module>
         <module>biome</module>
         <module>moisture</module>

@@ -2,10 +2,10 @@ package pfe.terrain.gen.water;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static pfe.terrain.gen.algo.WaterKind.*;
+import static pfe.terrain.gen.algo.island.WaterKind.*;
 
 public class WaterFromHeightTest {
 

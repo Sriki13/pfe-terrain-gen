@@ -2,10 +2,10 @@ package pfe.terrain.gen.export;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
 
 import java.util.*;
 

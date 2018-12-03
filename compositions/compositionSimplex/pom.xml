@@ -68,17 +68,7 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.moisture.riverLakeAdapter</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.lake.fromRivers</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.river.ridge</artifactId>
+            <artifactId>algo.moisture.riverAdapter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
