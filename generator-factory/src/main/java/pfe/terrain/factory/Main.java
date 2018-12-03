@@ -24,24 +24,20 @@ public class Main {
         get("/algorithms", (request, response) -> {
             response.type("application/json");
 
-            List<Algorithm> algos;
             try{
-                algos = controller.getAlgoList();
+                return parser.algoListToJson(controller.getAlgoList());
             }catch (Exception e){
-                return parser.stringToJson(e.getMessage());
+                return parser.exceptionToJson(e);
             }
-
-            return parser.algoListToJson(algos);
         });
 
         post("/generator", (request,response) -> {
             Gson gson = new Gson();
 
-            List<String> names = gson.fromJson(request.body(),List.class);
             try{
-                return controller.getGenerator(names).toString();
+                return controller.getGenerator(gson.fromJson(request.body(),List.class)).toString();
             } catch (Exception e){
-                return parser.stringToJson(e.getMessage());
+                return parser.exceptionToJson(e);
             }
         });
     }
