@@ -1,6 +1,6 @@
 package pfe.terrain.gen.algo.biome;
 
-import pfe.terrain.gen.algo.Biome;
+import pfe.terrain.gen.algo.island.Biome;
 
 import java.util.ArrayList;
 import java.util.List;

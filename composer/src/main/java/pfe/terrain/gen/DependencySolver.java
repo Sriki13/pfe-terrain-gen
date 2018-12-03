@@ -1,15 +1,13 @@
 package pfe.terrain.gen;
 
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.objective.ParetoOptimizer;
 import org.chocosolver.solver.variables.IntVar;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;

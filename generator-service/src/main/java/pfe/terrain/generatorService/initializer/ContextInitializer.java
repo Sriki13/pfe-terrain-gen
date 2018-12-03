@@ -1,17 +1,13 @@
 package pfe.terrain.generatorService.initializer;
 
 import com.google.gson.Gson;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.MapContext;
-import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.context.MapContext;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.generatorService.parser.ConstraintParser;
 
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

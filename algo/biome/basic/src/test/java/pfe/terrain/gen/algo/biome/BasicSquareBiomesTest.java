@@ -2,14 +2,14 @@ package pfe.terrain.gen.algo.biome;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Biome;
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.island.Biome;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.algo.types.OptionalBooleanType;
 
 import java.util.Arrays;

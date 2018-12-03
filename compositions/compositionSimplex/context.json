@@ -14,6 +14,11 @@
       "name": "order",
       "before": "RiverRidge",
       "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "RiverRidge",
+      "after": "LakesFromRivers"
     }
   ]
 }

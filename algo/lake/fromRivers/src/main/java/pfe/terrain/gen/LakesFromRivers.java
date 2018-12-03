@@ -1,10 +1,15 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
@@ -17,8 +22,8 @@ import static pfe.terrain.gen.RiverGenerator.*;
 public class LakesFromRivers extends Contract {
 
     public static final Param<Integer> lakeSizeParam =
-            new Param<>("lakesLimit", Integer.class, "1-10", "The limit for the size of the lakes.", 4,
-                    "Lake size limit");
+            Param.generatePositiveIntegerParam("lakesLimit", 10,
+                    "The limit for the size of the lakes.", 4, "Lake size limit");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -51,6 +56,7 @@ public class LakesFromRivers extends Contract {
     private Random random;
     private RiverGenerator riverGenerator;
     private Set<Coord> newRiverStarts;
+    private Set<Coord> lakeStarts;
 
     private double maxLakeSize;
 
@@ -61,6 +67,7 @@ public class LakesFromRivers extends Contract {
         this.riverGenerator = new RiverGenerator(islandMap);
         this.maxLakeSize = context.getParamOrDefault(lakeSizeParam);
         this.newRiverStarts = new HashSet<>();
+        this.lakeStarts = new HashSet<>();
 
         Coord lakeStart = getRiverEndInHole();
         while (lakeStart != null) {
@@ -82,6 +89,10 @@ public class LakesFromRivers extends Contract {
     }
 
     private void generateLake(Coord start) {
+        if (lakeStarts.contains(start)) {
+            return;
+        }
+        lakeStarts.add(start);
         Face baseLake = findLowestFace(start);
         double lakeHeight = baseLake.getCenter().getProperty(heightKey).value;
         Set<Face> lakeTiles = new HashSet<>();

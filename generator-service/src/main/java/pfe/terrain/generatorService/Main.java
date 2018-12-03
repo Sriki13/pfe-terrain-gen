@@ -19,13 +19,13 @@ public class Main {
 
         Map<String, Object> baseContext = controller.getContextMap();
 
-        logger.log(Level.INFO,"Base Context : " + parser.parseMap(baseContext));
-        logger.log(Level.INFO,"Constraints: " + controller.getConstraintList());
+        logger.log(Level.INFO, "Base Context : " + parser.parseMap(baseContext));
+        logger.log(Level.INFO, "Constraints: " + controller.getConstraintList());
 
         port(8080);
 
         get("/execute", (request, response) -> {
-            response.header("Access-Control-Allow-Origin","*");
+            response.header("Access-Control-Allow-Origin", "*");
 
             response.type("application/json");
             try {
@@ -37,9 +37,9 @@ public class Main {
         });
 
         get("/graph", ((request, response) -> {
-            response.header("Access-Control-Allow-Origin","*");
+            response.header("Access-Control-Allow-Origin", "*");
 
-            logger.log(Level.INFO,"Serving graph");
+            logger.log(Level.INFO, "Serving graph");
 
             response.type("application/json");
             try {
@@ -51,9 +51,9 @@ public class Main {
         }));
 
         post("/context", (request, response) -> {
-            response.header("Access-Control-Allow-Origin","*");
+            response.header("Access-Control-Allow-Origin", "*");
 
-            logger.log(Level.INFO,"Setting new context");
+            logger.log(Level.INFO, "Setting new context");
 
             response.type("application/json");
 
@@ -66,9 +66,9 @@ public class Main {
         });
 
         get("/parameters", (request, response) -> {
-            response.header("Access-Control-Allow-Origin","*");
+            response.header("Access-Control-Allow-Origin", "*");
 
-            logger.log(Level.INFO,"Serving parameters");
+            logger.log(Level.INFO, "Serving parameters");
 
             response.type("application/json");
 
@@ -82,9 +82,9 @@ public class Main {
         });
 
         get("/algorithms", (request, response) -> {
-            response.header("Access-Control-Allow-Origin","*");
+            response.header("Access-Control-Allow-Origin", "*");
 
-            logger.log(Level.INFO,"Serving algorithms list");
+            logger.log(Level.INFO, "Serving algorithms list");
 
             response.type("application/json");
             try {
@@ -98,11 +98,11 @@ public class Main {
         });
 
 
-        options("/context" ,(request,response) -> {
-            response.header("Access-Control-Allow-Origin","*");
-            response.header("Access-Control-Allow-Headers","*");
+        options("/context", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Headers", "*");
 
-            logger.log(Level.INFO,"serving option context, not implemented");
+            logger.log(Level.INFO, "serving option context, not implemented");
 
             return "OK";
         });

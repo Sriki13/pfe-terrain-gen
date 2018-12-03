@@ -1,9 +1,13 @@
 package pfe.terrain.gen.algo.height;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -13,8 +17,8 @@ import java.util.Set;
 
 public class HeightFromWater extends Contract {
 
-    private final Param<Double> hardnessParam = new Param<>("hardness", Double.class,
-            "0-1", "Defines the elevation of the island, 0 = almost flat, 1 = cliffy", 0.5, "Island elevation");
+    private final Param<Double> hardnessParam = Param.generateDefaultDoubleParam("hardness",
+            "Defines the elevation of the island, 0 = almost flat, 1 = cliffy", 0.5, "Island elevation");
 
     public static final Key<DoubleType> vertexHeightKey =
             new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);

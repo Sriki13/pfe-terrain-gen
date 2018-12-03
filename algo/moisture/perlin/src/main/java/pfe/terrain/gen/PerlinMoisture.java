@@ -1,15 +1,19 @@
 package pfe.terrain.gen;
 
 import com.flowpowered.noise.module.source.Perlin;
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -30,12 +34,12 @@ public class PerlinMoisture extends Contract {
         return new Constraints(asKeySet(faces, seed, faceWaterKey), asKeySet(faceMoisture));
     }
 
-    private final Param<Double> minMoisture = new Param<>("minMoisture", Double.class,
-            "0-1", "Minimal Moisture (0.5 means a humid island, 1.0 means all map will have max moisture", 0.0, "Minimum moisture");
-    private final Param<Double> maxMoisture = new Param<>("maxMoisture", Double.class,
-            "0-1", "Maximal Moisture (0.5 means a arid island, 0.0 means all map will have min moisture", 1.0, "Maximum moisture");
-    private final Param<Double> biomeQuantity = new Param<>("biomeQuantity", Double.class,
-            "0-1", "Size of moisture pockets", 0.25, "Size of moisture pockets");
+    private final Param<Double> minMoisture = Param.generateDefaultDoubleParam("minMoisture",
+            "Minimal Moisture (0.5 means a humid island, 1.0 means all map will have max moisture", 0.0, "Minimum moisture");
+    private final Param<Double> maxMoisture = Param.generateDefaultDoubleParam("maxMoisture",
+            "Maximal Moisture (0.5 means a arid island, 0.0 means all map will have min moisture", 1.0, "Maximum moisture");
+    private final Param<Double> biomeQuantity = Param.generateDefaultDoubleParam("biomeQuantity",
+            "Size of moisture pockets", 0.25, "Size of moisture pockets");
 
     public Set<Param> getRequestedParameters() {
         return asParamSet(minMoisture, maxMoisture, biomeQuantity);

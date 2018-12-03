@@ -2,6 +2,8 @@ package pfe.terrain.gen.algo;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.key.Param;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,10 +1,15 @@
 package pfe.terrain.gen.water;
 
-import pfe.terrain.gen.algo.*;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.Random;
@@ -12,11 +17,11 @@ import java.util.Set;
 
 public class RadialWaterGeneration extends Contract {
 
-    static final Param<Double> islandSizeParam = new Param<>("islandSize", Double.class,
-            "0-1", "Size of the island, 0.0 will yield a very small island, 1.0 will create a big island", 1.0,
+    static final Param<Double> islandSizeParam = Param.generateDefaultDoubleParam("islandSize",
+            "Size of the island, 0.0 will yield a very small island, 1.0 will create a big island", 1.0,
             "Island size");
-    static final Param<Double> islandScatterParam = new Param<>("islandScatter", Double.class,
-            "0-1", "Rate of scattering, 0.0 will yield a full island, 1.0 will create an archipelago with ridges", 0.0,
+    static final Param<Double> islandScatterParam = Param.generateDefaultDoubleParam("islandScatter",
+            "Rate of scattering, 0.0 will yield a full island, 1.0 will create an archipelago with ridges", 0.0,
             "Terrain scatter");
 
     static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);

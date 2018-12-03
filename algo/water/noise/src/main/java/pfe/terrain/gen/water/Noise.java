@@ -1,6 +1,7 @@
 package pfe.terrain.gen.water;
 
 public enum Noise {
+
     RIDGED("RIDGED"),
     BILLOW("BILLOW"),
     PERLIN("PERLIN");

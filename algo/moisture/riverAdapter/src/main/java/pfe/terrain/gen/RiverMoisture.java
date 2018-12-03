@@ -1,11 +1,11 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
 import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Param;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ public class RiverMoisture extends Contract {
                 asKeySet(AdapterUtils.faceMoisture));
     }
 
-    private final Param<Double> riverMoistureParam = new Param<>("riverMoisture", Double.class, "0-1",
+    private final Param<Double> riverMoistureParam = Param.generateDefaultDoubleParam("riverMoisture",
             "The amount of moisture added around the rivers.", 0.5, "River extra moisture");
 
     public Set<Param> getRequestedParameters() {

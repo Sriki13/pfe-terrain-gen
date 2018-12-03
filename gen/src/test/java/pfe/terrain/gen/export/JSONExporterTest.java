@@ -3,11 +3,11 @@ package pfe.terrain.gen.export;
 import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.IslandMap;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.geometry.CoordSet;
 import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.island.IslandMap;
 
 import java.util.HashSet;
 

@@ -3,14 +3,14 @@ package pfe.terrain.gen;
 import com.flowpowered.noise.module.source.Perlin;
 import org.junit.Ignore;
 import org.junit.Test;
-import pfe.terrain.gen.algo.Key;
-import pfe.terrain.gen.algo.SerializableKey;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.BooleanType;
 
 import javax.imageio.ImageIO;

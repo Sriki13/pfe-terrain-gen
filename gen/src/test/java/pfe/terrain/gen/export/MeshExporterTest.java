@@ -5,9 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Key;
 import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
 
 import java.util.*;
 import java.util.stream.Collectors;

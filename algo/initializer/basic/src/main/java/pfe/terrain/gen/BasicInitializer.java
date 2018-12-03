@@ -1,20 +1,20 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.Context;
-import pfe.terrain.gen.algo.IslandMap;
-import pfe.terrain.gen.algo.Param;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Param;
 
 import java.util.Collections;
 import java.util.Set;
 
 public class BasicInitializer extends Contract {
 
-    private Param<Integer> sizeParam = new Param<>("size", Integer.class, "100-10000",
-            "size of the island in a visualization sense", 400, "Size of the island");
-    private Param<Integer> seedParam = new Param<>("seed", Integer.class, "0-4000000000",
-            "seed of the map, defines the behaviour of the random functions", 0, "Island seed");
+    private Param<Integer> sizeParam = new Param<>("size", Integer.class, 100, 10000,
+            "Size of the island in a visualization sense", 400, "Size of the island");
+    private Param<Integer> seedParam = Param.generatePositiveIntegerParam("seed", Integer.MAX_VALUE,
+            "Seed of the map, defines the behaviour of the random functions", 0, "Island seed");
 
     @Override
     public Constraints getContract() {
