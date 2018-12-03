@@ -31,6 +31,7 @@ public class Main {
             try {
                 return controller.execute();
             } catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
@@ -44,6 +45,7 @@ public class Main {
             try {
                 return controller.getGraph();
             } catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
         }));
@@ -58,6 +60,7 @@ public class Main {
             try {
                 return parser.parseMap(controller.setContext(request.body()));
             } catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
@@ -73,6 +76,7 @@ public class Main {
             try {
                 return parser.parseKeys(controller.getParameters());
             } catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
@@ -86,6 +90,7 @@ public class Main {
             try {
                 return parser.parseAlgo(controller.getAlgoList());
             } catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
 
