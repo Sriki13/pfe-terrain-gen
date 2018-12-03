@@ -5,6 +5,7 @@ import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.CompositionAlreadyExistException;
 import pfe.terrain.factory.exception.NoSuchAlgorithmException;
+import pfe.terrain.factory.exception.NoSuchCompoException;
 import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
@@ -100,8 +101,32 @@ public class ControllerTest {
 
     @Test(expected = CompositionAlreadyExistException.class)
     public void alreadyExistingCompoException() throws Exception{
-        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
         this.controller.addComposition("test",Arrays.asList("salut"),"context");
 
+        this.controller.addComposition("test",Arrays.asList("salut"),"context");
+
+    }
+
+    @Test
+    public void getPomTest() throws Exception{
+        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
+
+        BasePom pom = this.controller.getCompositionPom(compo.getName());
+
+        assertEquals(compo.getPom(),pom);
+    }
+
+    @Test
+    public void getContextTest() throws Exception{
+        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
+
+        String context = this.controller.getCompositionContext(compo.getName());
+
+        assertEquals(compo.getContext(),context);
+    }
+
+    @Test(expected = NoSuchCompoException.class)
+    public void noCompoTest() throws Exception{
+        this.controller.getCompositionContext("salut");
     }
 }

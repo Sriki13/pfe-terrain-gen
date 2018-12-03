@@ -4,6 +4,7 @@ import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.CompositionAlreadyExistException;
 import pfe.terrain.factory.exception.NoSuchAlgorithmException;
+import pfe.terrain.factory.exception.NoSuchCompoException;
 import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
@@ -76,6 +77,18 @@ public class ServiceController {
         return composition;
     }
 
+    public BasePom getCompositionPom(String compoName) throws NoSuchCompoException{
+        Composition composition = this.getCompoByName(compoName);
+
+        return composition.getPom();
+    }
+
+    public String getCompositionContext(String compoName) throws NoSuchCompoException{
+        Composition composition = this.getCompoByName(compoName);
+
+        return composition.getContext();
+    }
+
     private BasePom pomFromAlgo(List<Algorithm> algorithms){
         BasePom pom = new BasePom();
 
@@ -99,5 +112,14 @@ public class ServiceController {
         }
 
         return requiredAlgorithms;
+    }
+
+    private Composition getCompoByName(String name) throws NoSuchCompoException{
+        for(Composition compo : this.getCompositions()){
+            if(compo.getName().equals(name)){
+                return compo;
+            }
+        }
+        throw new NoSuchCompoException();
     }
 }

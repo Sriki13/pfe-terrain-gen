@@ -60,6 +60,32 @@ public class Main {
                 controller.addComposition(compoParser.getName(),compoParser.getAlgoName(),compoParser.getContext());
                 return parser.okAnswer();
             }catch (Exception e){
+
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        get("/compositions/:compoName/pom", (request,response) -> {
+            response.type("application/xml");
+            try{
+                String name = request.params(":compoName");
+                return controller.getCompositionPom(name);
+
+            }catch (Exception e){
+                response.type("application/json");
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        get("/compositions/:compoName/context", (request,response) -> {
+            response.type("application/json");
+
+            try{
+                String name = request.params(":compoName");
+                return controller.getCompositionContext(name);
+            }catch (Exception e){
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
