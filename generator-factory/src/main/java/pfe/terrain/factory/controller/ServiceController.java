@@ -3,14 +3,12 @@ package pfe.terrain.factory.controller;
 import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.NoSuchAlgorithmException;
 import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
-import pfe.terrain.factory.holder.Algorithm;
+import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ServiceController {
 
@@ -37,27 +35,32 @@ public class ServiceController {
         if(algorithms.isEmpty()){
             this.getAlgoList();
         }
-        List<Algorithm> requiredAlgorithms = new ArrayList<>();
 
-        for(String algo : algos){
-            requiredAlgorithms.add(new Algorithm(algo));
-        }
+        return pomFromAlgo(stringToAlgos(algos));
+    }
 
+    private BasePom pomFromAlgo(List<Algorithm> algorithms){
         BasePom pom = new BasePom();
 
-        for(Algorithm algo : requiredAlgorithms){
-            if(!this.algorithms.contains(algo)){
-                throw new NoSuchAlgorithmException(algo.getName());
-            }
-
+        for(Algorithm algo : algorithms){
             pom.addDependency(algo.toDependency());
         }
 
         return pom;
+    }
 
+    private List<Algorithm> stringToAlgos(List<String> strings) throws NoSuchAlgorithmException{
+        List<Algorithm> requiredAlgorithms = new ArrayList<>();
 
+        for(String algo : strings){
+            Algorithm algorithm = new Algorithm(algo);
+            if(this.algorithms.contains(algorithm)){
+                requiredAlgorithms.add(algorithm);
+                continue;
+            }
+            throw new NoSuchAlgorithmException(algo);
+        }
 
-
-
+        return requiredAlgorithms;
     }
 }

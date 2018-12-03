@@ -1,7 +1,7 @@
 package pfe.terrain.factory.parser;
 
 import com.google.gson.Gson;
-import pfe.terrain.factory.holder.Algorithm;
+import pfe.terrain.factory.entities.Algorithm;
 
 import java.util.HashMap;
 import java.util.List;

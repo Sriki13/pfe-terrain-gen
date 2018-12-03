@@ -4,7 +4,7 @@ import pfe.terrain.factory.controller.ServiceController;
 import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.NoSuchAlgorithmException;
 import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
-import pfe.terrain.factory.holder.Algorithm;
+import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
 import pfe.terrain.factory.pom.Dependency;
 

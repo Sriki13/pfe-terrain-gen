@@ -2,12 +2,9 @@ package pfe.terrain.factory;
 
 import com.google.gson.Gson;
 import pfe.terrain.factory.controller.ServiceController;
-import pfe.terrain.factory.holder.Algorithm;
 import pfe.terrain.factory.parser.JsonParser;
-import spark.Spark;
 
 import java.util.List;
-import java.util.logging.Level;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
