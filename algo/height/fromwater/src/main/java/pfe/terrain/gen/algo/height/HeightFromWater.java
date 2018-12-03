@@ -55,6 +55,7 @@ public class HeightFromWater extends Contract {
         EdgeSet edgesToProcess;
         int coordsSize = -1;
         Random random = new Random(map.getSeed());
+        height += heightStep(hardness, random);
 
         // If coordsToProcess size wasn't reduced then only centers are remaining
         while (!(coordsSize == coordsToProcess.size())) {
@@ -70,7 +71,7 @@ public class HeightFromWater extends Contract {
                 }
                 allEdges.remove(e);
             }
-            height += ((random.nextDouble() + 0.2) / 4) + 5 * hardness;
+            height += heightStep(hardness, random);
         }
 
         // Set center as mean height to conform
@@ -83,6 +84,10 @@ public class HeightFromWater extends Contract {
             }
             face.getCenter().putProperty(vertexHeightKey, new DoubleType(sum / (double) total));
         }
+    }
+
+    private double heightStep(double hardness, Random random) {
+        return ((random.nextDouble() + 0.2) / 4) + 9 * hardness;
     }
 
     private EdgeSet getEdgesToProcess(Set<Coord> coordsToProcess, EdgeSet edges) {

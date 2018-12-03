@@ -83,7 +83,7 @@ public class HeightFromWaterTest {
             assertThat(coord.getProperty(vertexHeightKey).value, is(greaterThanOrEqualTo(0.0)));
             if (coord.getProperty(vertexHeightKey).value < 0.0) {
                 assertThat(coord.getProperty(vertexWaterKey).value, is(true));
-            } else if (coord.getProperty(vertexHeightKey).value > 0.0) {
+            } else if (coord.getProperty(vertexHeightKey).value > 5.0) {
                 assertThat(coord.getProperty(vertexWaterKey).value, is(false));
             }
         }

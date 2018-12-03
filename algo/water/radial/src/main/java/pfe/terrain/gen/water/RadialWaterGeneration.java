@@ -3,6 +3,7 @@ package pfe.terrain.gen.water;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
@@ -57,7 +58,14 @@ public class RadialWaterGeneration extends Contract {
             }
             face.getCenter().putProperty(vertexWaterKey, isWater);
             for (Coord coord : face.getBorderVertices()) {
-                coord.putProperty(vertexWaterKey, isWater);
+                try {
+                    coord.getProperty(vertexWaterKey);
+                    if (isWater.value) {
+                        coord.putProperty(vertexWaterKey, isWater);
+                    }
+                } catch (NoSuchKeyException ke) {
+                    coord.putProperty(vertexWaterKey, isWater);
+                }
             }
         }
     }
