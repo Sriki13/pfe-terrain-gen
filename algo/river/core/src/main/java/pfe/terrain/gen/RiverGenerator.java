@@ -51,7 +51,7 @@ public class RiverGenerator {
                 break;
             }
             seen.add(flowTowards);
-            Edge edge = findEdge(start, flowTowards);
+            Edge edge = islandMap.findEdge(start, flowTowards);
             edge.putProperty(riverFlowKey, new OptionalIntegerType(1));
             start = flowTowards;
         }
@@ -69,17 +69,6 @@ public class RiverGenerator {
             }
         }
         return min;
-    }
-
-    private Edge findEdge(Coord a, Coord b) {
-        Edge searched = new Edge(a, b);
-        for (Edge edge : islandMap.getEdges()) {
-            if (edge.equals(searched)) {
-                return edge;
-            }
-        }
-        throw new RuntimeException("Could not find edge corresponding " +
-                "to the Coordinates " + a + " and " + b);
     }
 
 }

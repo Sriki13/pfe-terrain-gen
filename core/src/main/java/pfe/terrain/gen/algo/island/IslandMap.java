@@ -88,6 +88,17 @@ public class IslandMap extends Mappable {
         return result;
     }
 
+    public Edge findEdge(Coord a, Coord b) {
+        Edge searched = new Edge(a, b);
+        for (Edge edge : edges) {
+            if (edge.equals(searched)) {
+                return edge;
+            }
+        }
+        throw new IllegalArgumentException("Could not find edge corresponding " +
+                "to the Coordinates " + a + " and " + b);
+    }
+
     public EdgeSet getEdges() {
         return edges;
     }
