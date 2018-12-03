@@ -34,6 +34,7 @@ public class MapGenerator implements Generator {
         sb.append("Map Generation Summary\n");
         sb.append(separator);
         sb.append('\n');
+        RuntimeException rte = null;
         for (Contract ctr : contracts) {
             try {
                 if (errored) {
@@ -42,10 +43,11 @@ public class MapGenerator implements Generator {
                     long execTime = ctr.debugExecute(this.islandMap, this.context);
                     sb.append(formatExecution(ctr.getName(), "SUCCESS", execTime));
                 }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
                 errored = true;
                 sb.append(formatExecution(ctr.getName(), "FAILURE", 0));
+                rte = e;
             }
         }
         String result = "";
@@ -58,10 +60,11 @@ public class MapGenerator implements Generator {
                 result = exporter.export(this.islandMap).toString();
                 long endTime = System.nanoTime();
                 sb.append(formatExecution("JSONExportation", "SUCCESS", endTime - startTime));
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 errored = true;
                 Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
                 sb.append(formatExecution("JSONExportation", "FAILURE", 0));
+                rte = e;
             }
         }
         sb.append('\n');
@@ -73,6 +76,9 @@ public class MapGenerator implements Generator {
         }
         sb.append(separator);
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, sb.toString());
+        if(rte != null){
+            throw rte;
+        }
         return result;
     }
 

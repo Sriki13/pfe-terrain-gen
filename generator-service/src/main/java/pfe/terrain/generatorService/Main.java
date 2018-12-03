@@ -28,7 +28,11 @@ public class Main {
             response.header("Access-Control-Allow-Origin","*");
 
             response.type("application/json");
-            return controller.execute();
+            try {
+                return controller.execute();
+            } catch (Exception e){
+                return e.getMessage();
+            }
         });
 
         get("/graph", ((request, response) -> {
