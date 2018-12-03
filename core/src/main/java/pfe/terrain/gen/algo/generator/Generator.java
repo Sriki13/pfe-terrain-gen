@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Generator {
 
-    String generate() throws Exception;
+    String generate();
 
     void setParams(Context map);
 

@@ -56,7 +56,7 @@ public class LakesFromRivers extends Contract {
     private Random random;
     private RiverGenerator riverGenerator;
     private Set<Coord> newRiverStarts;
-    private Set<Coord> lakeStarts;
+    private Set<Coord> newLakeStarts;
 
     private double maxLakeSize;
 
@@ -67,7 +67,7 @@ public class LakesFromRivers extends Contract {
         this.riverGenerator = new RiverGenerator(islandMap);
         this.maxLakeSize = context.getParamOrDefault(lakeSizeParam);
         this.newRiverStarts = new HashSet<>();
-        this.lakeStarts = new HashSet<>();
+        this.newLakeStarts = new HashSet<>();
 
         Coord lakeStart = getRiverEndInHole();
         while (lakeStart != null) {
@@ -89,10 +89,10 @@ public class LakesFromRivers extends Contract {
     }
 
     private void generateLake(Coord start) {
-        if (lakeStarts.contains(start)) {
+        if (newLakeStarts.contains(start)) {
             return;
         }
-        lakeStarts.add(start);
+        newLakeStarts.add(start);
         Face baseLake = findLowestFace(start);
         double lakeHeight = baseLake.getCenter().getProperty(heightKey).value;
         Set<Face> lakeTiles = new HashSet<>();
@@ -130,7 +130,7 @@ public class LakesFromRivers extends Contract {
 
     private Coord getRiverEndInHole() {
         for (Coord vertex : islandMap.getEdgeVertices()) {
-            if (vertex.getProperty(isRiverEndKey) && !vertex.getProperty(vertexWaterKey).value) {
+            if (vertex.getProperty(isRiverEndKey) && !vertex.getProperty(vertexWaterKey).value && !newLakeStarts.contains(vertex)) {
                 return vertex;
             }
         }
