@@ -31,7 +31,7 @@ public class Main {
             try {
                 return controller.execute();
             } catch (Exception e){
-                return e.getMessage();
+                return parser.exceptionToJson(e);
             }
         });
 
@@ -41,7 +41,11 @@ public class Main {
             logger.log(Level.INFO,"Serving graph");
 
             response.type("application/json");
-            return controller.getGraph();
+            try {
+                return controller.getGraph();
+            } catch (Exception e){
+                return parser.exceptionToJson(e);
+            }
         }));
 
         post("/context", (request, response) -> {
@@ -50,7 +54,12 @@ public class Main {
             logger.log(Level.INFO,"Setting new context");
 
             response.type("application/json");
-            return parser.parseMap(controller.setContext(request.body()));
+
+            try {
+                return parser.parseMap(controller.setContext(request.body()));
+            } catch (Exception e){
+                return parser.exceptionToJson(e);
+            }
         });
 
         get("/parameters", (request, response) -> {
@@ -59,7 +68,13 @@ public class Main {
             logger.log(Level.INFO,"Serving parameters");
 
             response.type("application/json");
-            return parser.parseKeys(controller.getParameters());
+
+
+            try {
+                return parser.parseKeys(controller.getParameters());
+            } catch (Exception e){
+                return parser.exceptionToJson(e);
+            }
         });
 
         get("/algorithms", (request, response) -> {
@@ -68,7 +83,13 @@ public class Main {
             logger.log(Level.INFO,"Serving algorithms list");
 
             response.type("application/json");
-            return parser.parseAlgo(controller.getAlgoList());
+            try {
+                return parser.parseAlgo(controller.getAlgoList());
+            } catch (Exception e){
+                return parser.exceptionToJson(e);
+            }
+
+
         });
 
 
