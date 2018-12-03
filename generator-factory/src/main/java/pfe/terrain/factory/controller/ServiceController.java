@@ -1,33 +1,54 @@
 package pfe.terrain.factory.controller;
 
+import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.exception.CannotReachRepoException;
+import pfe.terrain.factory.exception.CompositionAlreadyExistException;
 import pfe.terrain.factory.exception.NoSuchAlgorithmException;
 import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
+import pfe.terrain.factory.storage.CompoStorage;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServiceController {
-
+    private Logger logger = Logger.getLogger("controller");
 
     private ArtifactoryAlgoLister lister;
     private List<Algorithm> algorithms;
+    private CompoStorage storage;
 
     public ServiceController() {
         lister = new ArtifactoryAlgoLister();
         algorithms = new ArrayList<>();
+        this.storage = new CompoStorage();
+        try {
+            this.getAlgoList();
+        } catch (Exception e){
+            logger.log(Level.WARNING,"cannot reach repo at init");
+        }
     }
 
     public ServiceController(ArtifactoryAlgoLister lister){
-        this();
+        algorithms = new ArrayList<>();
+        this.storage = new CompoStorage();
         this.lister = lister;
+        try {
+            this.getAlgoList();
+        } catch (Exception e){
+            logger.log(Level.WARNING,"cannot reach repo at init");
+        }
     }
 
     public List<Algorithm> getAlgoList() throws IOException, CannotReachRepoException {
-        this.algorithms = lister.getAlgo();
+        if(algorithms.isEmpty()){
+            this.algorithms = lister.getAlgo();
+        }
         return this.algorithms;
     }
 
@@ -37,6 +58,22 @@ public class ServiceController {
         }
 
         return pomFromAlgo(stringToAlgos(algos));
+    }
+
+    public List<Composition> getCompositions(){
+        return this.storage.getCompositions();
+    }
+
+    public Composition addComposition(String name, List<String> algoList, String context) throws CompositionAlreadyExistException,NoSuchAlgorithmException{
+        for(Composition composition : this.storage.getCompositions()){
+            if(composition.getName().equals(name)){
+                throw new CompositionAlreadyExistException();
+            }
+        }
+
+        Composition composition  = new Composition(name,stringToAlgos(algoList),context);
+        this.storage.addComposition(composition);
+        return composition;
     }
 
     private BasePom pomFromAlgo(List<Algorithm> algorithms){

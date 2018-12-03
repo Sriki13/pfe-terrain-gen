@@ -2,6 +2,7 @@ package pfe.terrain.factory;
 
 import com.google.gson.Gson;
 import pfe.terrain.factory.controller.ServiceController;
+import pfe.terrain.factory.parser.JsonCompoParser;
 import pfe.terrain.factory.parser.JsonParser;
 
 import java.util.List;
@@ -19,23 +20,51 @@ public class Main {
         port(9090);
 
         get("/algorithms", (request, response) -> {
-            response.type("application/xml");
+            response.type("application/json");
 
             try{
                 return parser.algoListToJson(controller.getAlgoList());
             }catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
 
         post("/generator", (request,response) -> {
-            Gson gson = new Gson();
+            response.type("application/xml");
 
             try{
-                return controller.getGenerator(gson.fromJson(request.body(),List.class)).toString();
+                return controller.getGenerator(parser.listFromJson(request.body())).toString();
             } catch (Exception e){
+                response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
+
+        get("/compositions", (request,response) -> {
+            response.type("application/json");
+
+            try{
+                return parser.compoToJson(controller.getCompositions());
+            } catch (Exception e){
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        post("/compositions", (request,response) -> {
+            response.type("application/json");
+
+            try{
+                JsonCompoParser compoParser = new JsonCompoParser(request.body());
+                controller.addComposition(compoParser.getName(),compoParser.getAlgoName(),compoParser.getContext());
+                return parser.okAnswer();
+            }catch (Exception e){
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+
     }
 }
