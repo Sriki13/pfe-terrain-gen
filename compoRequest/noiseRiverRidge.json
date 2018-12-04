@@ -38,7 +38,7 @@
       }
     ]
   },
-  "algorithm" : ["algo.gridcreator.relaxed",
+  "algorithm" : ["algo.points.relaxed",
     "algo.mesh.builder",
     "algo.borders.basic",
     "algo.height.redistribution",
