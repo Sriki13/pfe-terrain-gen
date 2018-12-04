@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ArtifactoryAlgoLister {
-    private String artifUrl = "http://146.148.16.106/artifactory/";
+    private String artifUrl = "http://35.189.252.97/artifactory/";
     private String path = "api/search/gavc?a=algo.*&repos=pfe";
     private String requestMethod = "GET";
     private String resultKey = "results";
