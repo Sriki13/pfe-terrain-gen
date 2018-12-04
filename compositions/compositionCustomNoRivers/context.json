@@ -1,7 +1,6 @@
 {
   "context": {
     "size": 400,
-    "islandShape": "",
-    "nbPoints": 256
+    "islandShape": ""
   }
 }

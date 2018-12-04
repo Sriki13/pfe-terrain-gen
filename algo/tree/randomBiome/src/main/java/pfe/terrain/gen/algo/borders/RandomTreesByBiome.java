@@ -11,7 +11,6 @@ import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.key.Key;
 import pfe.terrain.gen.algo.key.SerializableKey;
 import pfe.terrain.gen.algo.types.DoubleType;
-import pfe.terrain.gen.algo.types.TreeType;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -29,10 +28,14 @@ public class RandomTreesByBiome extends Contract {
     static final SerializableKey<TreeType> treesKey =
             new SerializableKey<>("TREES", "trees", TreeType.class);
 
+    static final Key<DoubleType> vertexHeightKey =
+            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
+
+
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, faceBiomeKey, facePitchKey, seed),
+                asKeySet(faces, faceBiomeKey, facePitchKey, seed, vertexHeightKey),
                 asKeySet(treesKey)
         );
     }
@@ -45,9 +48,14 @@ public class RandomTreesByBiome extends Contract {
         for (Face face : faces) {
             Biome faceBiome = face.getProperty(faceBiomeKey);
             if (faceBiome != Biome.OCEAN && faceBiome != Biome.LAKE && faceBiome != Biome.GLACIER) {
-                trees.addAll(face.getRandomPointsInside((int) (10 * faceBiome.getTreeDensity()), random));
+                trees.addAll(face.getRandomPointsInside((int) (5 * faceBiome.getTreeDensity()), random));
             }
         }
-        islandMap.putProperty(treesKey, new TreeType(trees));
+        JsonCoord[] coords = new JsonCoord[trees.size()];
+        int i = 0;
+        for (Coord c : trees) {
+            coords[i++] = new JsonCoord(c.x, c.y,0.0);
+        }
+        islandMap.putProperty(treesKey, new TreeType(coords));
     }
 }
