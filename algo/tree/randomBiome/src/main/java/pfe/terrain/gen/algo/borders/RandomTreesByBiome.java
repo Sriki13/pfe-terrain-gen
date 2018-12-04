@@ -50,7 +50,7 @@ public class RandomTreesByBiome extends Contract {
         for (Face face : faces) {
             faceBiome = face.getProperty(faceBiomeKey);
             // pitch influence, high pitch means less trees
-            pitch = 1 - (face.getProperty(facePitchKey).value / 250);
+            pitch = 1 - (face.getProperty(facePitchKey).value / 300);
             if (pitch < 0) {
                 pitch = 0;
             }
