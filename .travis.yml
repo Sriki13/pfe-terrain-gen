@@ -6,6 +6,7 @@ notifications:
 
 before_install:
   - chmod +x *.sh
+  - chmod +x travisScripts/*.sh
 
 services:
 - docker
