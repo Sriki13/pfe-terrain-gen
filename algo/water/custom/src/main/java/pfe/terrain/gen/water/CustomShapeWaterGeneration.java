@@ -3,6 +3,7 @@ package pfe.terrain.gen.water;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
@@ -61,18 +62,23 @@ public class CustomShapeWaterGeneration extends Contract {
             Coord center = face.getCenter();
             boolean water = matrix.isWater((int) (Math.floor((center.y / size) * matrix.getSize())),
                     (int) (Math.floor((center.x / size) * matrix.getSize())));
-
             face.putProperty(faceWaterKey, new BooleanType(water));
-            for (Coord coord : face.getBorderVertices()) {
-                coord.putProperty(vertexWaterKey, new BooleanType(water));
-            }
-            face.getCenter().putProperty(vertexWaterKey, new BooleanType(water));
             if (water) {
                 face.putProperty(waterKindKey, WaterKind.OCEAN);
             } else {
                 face.putProperty(waterKindKey, WaterKind.NONE);
             }
-
+            face.getCenter().putProperty(vertexWaterKey, new BooleanType(water));
+            for (Coord coord : face.getBorderVertices()) {
+                try {
+                    coord.getProperty(vertexWaterKey);
+                    if (water) {
+                        coord.putProperty(vertexWaterKey, new BooleanType(water));
+                    }
+                } catch (NoSuchKeyException ke) {
+                    coord.putProperty(vertexWaterKey, new BooleanType(water));
+                }
+            }
         }
     }
 }
