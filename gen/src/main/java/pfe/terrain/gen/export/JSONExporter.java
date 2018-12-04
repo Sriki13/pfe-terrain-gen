@@ -1,8 +1,12 @@
 package pfe.terrain.gen.export;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.types.SerializableType;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class JSONExporter {
@@ -43,6 +47,20 @@ public class JSONExporter {
         result.add("face_props", faceExporter.getPropsArray());
         end = System.nanoTime();
         printTime(start, end, "Face props export");
+
+        logger.info("Exporting map props...");
+        start = System.nanoTime();
+        Map<Key<?>, Object> properties = islandMap.getProperties();
+        for (Key key : properties.keySet()) {
+            if (key.isSerialized() && properties.get(key) instanceof SerializableType) {
+                JsonElement serialized = ((SerializableType) properties.get(key)).serialize();
+                if (serialized != null) {
+                    result.add(key.getSerializedName(), serialized);
+                }
+            }
+        }
+        end = System.nanoTime();
+        printTime(start, end, "Map props export");
 
         result.addProperty("uuid", islandMap.getSeed());
         logger.info(delimiter + " Done building JSON " + delimiter);

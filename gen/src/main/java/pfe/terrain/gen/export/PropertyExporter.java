@@ -1,6 +1,7 @@
 package pfe.terrain.gen.export;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pfe.terrain.gen.algo.Mappable;
 import pfe.terrain.gen.algo.key.Key;
@@ -32,13 +33,13 @@ public class PropertyExporter<T extends Mappable> {
                 if (!(value instanceof SerializableType)) {
                     continue;
                 }
-                String serialized = ((SerializableType) properties.get(key)).serialize();
+                JsonElement serialized = ((SerializableType) properties.get(key)).serialize();
                 if (serialized == null) {
                     continue;
                 }
                 JsonObject propertyObject = new JsonObject();
                 propertyObject.addProperty("p", key.getSerializedName());
-                propertyObject.addProperty("v", serialized);
+                propertyObject.add("v", serialized);
                 itemProperties.add(propertyObject);
             }
             if (itemProperties.size() > 0) {

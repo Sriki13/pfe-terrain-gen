@@ -1,5 +1,8 @@
 package pfe.terrain.gen.algo.types;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+
 public class DoubleType implements SerializableType {
 
     public double value;
@@ -9,12 +12,12 @@ public class DoubleType implements SerializableType {
     }
 
     @Override
-    public String serialize() {
-        return Double.toString(value);
+    public JsonElement serialize() {
+        return new JsonPrimitive(value);
     }
 
     @Override
     public String toString() {
-        return serialize();
+        return Double.toString(value);
     }
 }
