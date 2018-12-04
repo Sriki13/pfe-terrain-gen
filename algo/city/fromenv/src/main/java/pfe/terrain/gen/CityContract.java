@@ -24,7 +24,7 @@ import static pfe.terrain.gen.criteria.RiverProximity.RIVER_FLOW_KEY;
 
 public class CityContract extends Contract {
 
-    public static final Param<Integer> NB_CITIES = new Param<>("nbCities", Integer.class, 0, 10,
+    public static final Param<Integer> NB_CITIES = new Param<>("nbCities", Integer.class, 0, 50,
             "The number of cities added to the island", 3, "Number of cities");
 
     @Override

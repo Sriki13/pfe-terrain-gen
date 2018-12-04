@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.points.relaxed</artifactId>
+            <artifactId>algo.points.grid</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

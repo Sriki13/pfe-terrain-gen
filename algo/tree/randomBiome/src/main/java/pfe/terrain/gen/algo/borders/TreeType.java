@@ -8,9 +8,9 @@ import java.util.List;
 
 public class TreeType implements SerializableType {
 
-    private List<JsonCoord> value;
+    private List<Coord3D> value;
 
-    public TreeType(List<JsonCoord> value) {
+    public TreeType(List<Coord3D> value) {
         this.value = value;
     }
 

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class CityProximity implements Criterion {
 
-    private static final int WEIGHT = 1;
+    private static final int WEIGHT = 1000;
 
     private Set<Face> cityFaces = new HashSet<>();
 

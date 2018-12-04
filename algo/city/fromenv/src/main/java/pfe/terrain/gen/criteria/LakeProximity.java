@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class LakeProximity implements Criterion {
 
-    private static final double WEIGHT = 1;
+    private static final double WEIGHT = 10;
 
     private Set<Face> lakes;
 

@@ -62,7 +62,6 @@ public class HeightSmoothing extends Contract {
             }
             if (!edge.getEnd().getProperty(VERTEX_WATER_KEY).value) {
                 putInHeightMap(edge.getEnd(), h1);
-
             }
         }
 

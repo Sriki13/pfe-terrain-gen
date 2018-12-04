@@ -41,8 +41,6 @@ public class PitchTest {
     @Test
     public void penalizeHighPitch() {
         pitch.assignScores(scores);
-        assertThat(scores.get(lowPitch), greaterThan(0.0));
-        assertThat(scores.get(highPitch), greaterThan(0.0));
         assertThat(scores.get(lowPitch), greaterThan(scores.get(highPitch)));
     }
 
