@@ -13,6 +13,7 @@ import pfe.terrain.factory.pom.Dependency;
 import pfe.terrain.factory.storage.CompoStorage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -128,5 +129,23 @@ public class ControllerTest {
     @Test(expected = NoSuchCompoException.class)
     public void noCompoTest() throws Exception{
         this.controller.getCompositionContext("salut");
+    }
+
+    @Test
+    public void removeTest() throws Exception{
+        Composition composition = this.controller.addComposition("sa", new ArrayList<>(),"test");
+
+        assertEquals(1,new CompoStorage().getCompositions().size());
+
+        this.controller.deleteComposition(composition.getName());
+
+        assertEquals(0,new CompoStorage().getCompositions().size());
+
+
+    }
+
+    @Test (expected = NoSuchCompoException.class)
+    public void deleteNonExistingCompo() throws Exception{
+        this.controller.deleteComposition("wowowowo");
     }
 }

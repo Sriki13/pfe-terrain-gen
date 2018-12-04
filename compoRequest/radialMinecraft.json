@@ -1,0 +1,20 @@
+{
+  "name" : "radialMinecraft",
+  "context" : {
+    "context": {
+      "size": 400,
+      "hardness" : 1,
+      "biomeStyle" : "Minecraft"
+    }
+  },
+  "algorithm" : ["algo.gridcreator.relaxed",
+    "algo.mesh.builder",
+    "algo.borders.basic",
+    "algo.initializer.basic",
+    "algo.water.radial",
+    "algo.height.fromwater",
+    "algo.moisture.perlin",
+    "algo.river.random",
+    "algo.biome.heightmoisture"
+  ]
+}

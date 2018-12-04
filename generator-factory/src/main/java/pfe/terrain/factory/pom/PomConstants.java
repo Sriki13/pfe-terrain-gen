@@ -7,6 +7,7 @@ public class PomConstants {
     public static String dependency = "dependency";
     public static String dependencies = "dependencies";
 
+    private static String repoUrl = "http://35.189.252.97/artifactory/pfe";
 
     public static final String base = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "\n" +
@@ -22,7 +23,7 @@ public class PomConstants {
             "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n" +
             "        <maven.compiler.source>1.8</maven.compiler.source>\n" +
             "        <maven.compiler.target>1.8</maven.compiler.target>\n" +
-            "        <repo.addr>"+ System.getProperty("repository.address") +"</repo.addr>\n" +
+            "        <repo.addr>"+ repoUrl +"</repo.addr>\n" +
             "    </properties>\n" +
             "\n" +
             "    <dependencies>\n" +

@@ -6,6 +6,10 @@ notifications:
 
 before_install:
   - chmod +x *.sh
+  - chmod +x travisScripts/*.sh
+
+services:
+- docker
 
 jobs:
   include:
@@ -16,3 +20,7 @@ jobs:
       name : "deploy"
       if: branch = master
       script: ./deploy.sh
+    - stage : "DockerPush"
+      name : "docker push"
+      if: branch = master
+      script: ./travisScripts/buildAndPush.sh
