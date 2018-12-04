@@ -3,13 +3,14 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -73,41 +74,43 @@ public class LakesFromRiversTest {
         OBC.addNeighbor(asList(AOB, BCD));
         BCD.addNeighbor(asList(OBC, CDE));
         CDE.addNeighbor(Collections.singleton(BCD));
-        islandMap.putProperty(Contract.vertices, allCoords);
-        islandMap.putProperty(Contract.edges, allEdges);
-        islandMap.putProperty(Contract.faces, allFaces);
+        islandMap.putProperty(Contract.VERTICES, allCoords);
+        islandMap.putProperty(Contract.EDGES, allEdges);
+        islandMap.putProperty(Contract.FACES, allFaces);
     }
 
     private Coord generateCoord(CoordSet allCoords, int seed, double height, boolean isRiverEnd, boolean isWater) {
         Coord result = new Coord(seed, 0);
         allCoords.add(result);
-        result.putProperty(heightKey, new DoubleType(height));
-        result.putProperty(isRiverEndKey, isRiverEnd);
-        result.putProperty(vertexWaterKey, new BooleanType(isWater));
+        result.putProperty(HEIGHT_KEY, new DoubleType(height));
+        if (isRiverEnd) {
+            result.putProperty(IS_RIVER_END_KEY, new MarkerType());
+        }
+        result.putProperty(VERTEX_WATER_KEY, new BooleanType(isWater));
         return result;
     }
 
     private Edge generateEdge(EdgeSet allEdges, Coord start, Coord end, boolean isRiver) {
         Edge result = new Edge(start, end);
         allEdges.add(result);
-        result.putProperty(riverFlowKey, new IntegerType(isRiver ? 1 : 0));
+        result.putProperty(RIVER_FLOW_KEY, new IntegerType(isRiver ? 1 : 0));
         return result;
     }
 
     private Face generateFace(FaceSet allFaces, Coord center, Collection<Edge> edges, WaterKind kind) {
         Face result = new Face(center, new HashSet<>(edges));
         allFaces.add(result);
-        result.putProperty(LakesFromRivers.waterKindKey, kind);
-        result.putProperty(LakesFromRivers.faceWaterKey, new BooleanType(kind != WaterKind.NONE));
+        result.putProperty(LakesFromRivers.WATER_KIND_KEY, kind);
+        result.putProperty(LakesFromRivers.FACE_WATER_KEY, new BooleanType(kind != WaterKind.NONE));
         return result;
     }
 
     private void assertKind(Face face, WaterKind kind) {
-        assertThat(face.getProperty(LakesFromRivers.waterKindKey), is(kind));
+        assertThat(face.getProperty(LakesFromRivers.WATER_KIND_KEY), is(kind));
     }
 
     private void assertHeight(Coord vertex, double height) {
-        assertThat(vertex.getProperty(heightKey).value, closeTo(height, 0.01));
+        assertThat(vertex.getProperty(HEIGHT_KEY).value, closeTo(height, 0.01));
     }
 
     private void assertFaceHeight(Face face) {
@@ -120,7 +123,7 @@ public class LakesFromRiversTest {
     @Test
     public void createLakeTest() {
         Context context = new Context();
-        context.putParam(LakesFromRivers.lakeSizeParam, 1);
+        context.putParam(LakesFromRivers.LAKE_SIZE_PARAM, 1);
         lakeGenerator.execute(islandMap, context);
         assertKind(AOB, WaterKind.NONE);
         assertKind(OBC, WaterKind.LAKE);
@@ -132,7 +135,7 @@ public class LakesFromRiversTest {
     @Test
     public void mergeLakeIntoOceanTest() {
         Context context = new Context();
-        context.putParam(LakesFromRivers.lakeSizeParam, 2);
+        context.putParam(LakesFromRivers.LAKE_SIZE_PARAM, 2);
         lakeGenerator.execute(islandMap, context);
         assertKind(AOB, WaterKind.NONE);
         assertKind(OBC, WaterKind.OCEAN);

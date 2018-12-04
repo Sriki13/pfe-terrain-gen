@@ -2,37 +2,44 @@ package pfe.terrain.gen.algo.height;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.OptionalKey;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.Set;
 
 public class OpenSimplexHeight extends Contract {
 
-    public static final Key<BooleanType> vertexBorderKey =
-            new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
-    public static final Key<BooleanType> faceBorderKey =
-            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    // Required
 
-    public static final Key<DoubleType> vertexHeightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-    public static final Key<Void> oceanFloorKey =
-            new Key<>("OCEAN_HEIGHT", Void.class);
+    public static final Key<MarkerType> VERTEX_BORDER_KEY =
+            new OptionalKey<>(VERTICES_PREFIX + "IS_BORDER", MarkerType.class);
+
+    public static final Key<MarkerType> FACE_BORDER_KEY =
+            new OptionalKey<>(FACES_PREFIX + "IS_BORDER", MarkerType.class);
+
+    // Produced
+
+    public static final Key<DoubleType> VERTEX_HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
+
+    public static final Key<MarkerType> OCEAN_FLOOR_KEY =
+            new Key<>("OCEAN_HEIGHT", MarkerType.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, vertices, vertexBorderKey, faceBorderKey, size, seed),
-                asKeySet(vertexHeightKey)
+                asKeySet(FACES, VERTICES, VERTEX_BORDER_KEY, FACE_BORDER_KEY, SIZE, SEED),
+                asKeySet(VERTEX_HEIGHT_KEY, OCEAN_FLOOR_KEY)
         );
     }
 
@@ -74,23 +81,25 @@ public class OpenSimplexHeight extends Contract {
         elevation.putHeightProperty();
 
         for (Face face : map.getFaces()) {
-            if (face.getProperty(faceBorderKey).value && face.getProperty(vertexHeightKey).value > 0) {
+            if (face.hasProperty(FACE_BORDER_KEY)) {
                 for (Coord coord : face.getBorderVertices()) {
-                    coord.putProperty(vertexHeightKey, new DoubleType(0.0));
+                    if (coord.getProperty(VERTEX_HEIGHT_KEY).value > 0) {
+                        coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(0.0));
+                    }
                 }
             }
         }
 
         for (Face face : map.getFaces()) {
-            face.getCenter().putProperty(vertexHeightKey, new DoubleType(getAverageHeight(face)));
+            face.getCenter().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(getAverageHeight(face)));
         }
-        map.putProperty(oceanFloorKey, null);
+        map.putProperty(OCEAN_FLOOR_KEY, new MarkerType());
     }
 
     private double getAverageHeight(Face face) throws NoSuchKeyException, KeyTypeMismatch {
         double average = 0;
         for (Coord coord : face.getBorderVertices()) {
-            average += coord.getProperty(vertexHeightKey).value;
+            average += coord.getProperty(VERTEX_HEIGHT_KEY).value;
         }
         return average / face.getBorderVertices().size();
     }

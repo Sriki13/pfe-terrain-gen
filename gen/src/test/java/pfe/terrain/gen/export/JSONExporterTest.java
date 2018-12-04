@@ -4,10 +4,10 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
 import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.island.geometry.EdgeSet;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 
 import java.util.HashSet;
 
@@ -24,10 +24,10 @@ public class JSONExporterTest {
     public void setUp() throws Exception {
         jsonExporter = new JSONExporter();
         islandMap = new IslandMap();
-        islandMap.putProperty(Contract.edges, new EdgeSet(new HashSet<>()));
-        islandMap.putProperty(Contract.faces, new FaceSet(new HashSet<>()));
-        islandMap.putProperty(Contract.vertices, new CoordSet(new HashSet<>()));
-        islandMap.putProperty(Contract.size, 100);
+        islandMap.putProperty(Contract.EDGES, new EdgeSet(new HashSet<>()));
+        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
+        islandMap.putProperty(Contract.VERTICES, new CoordSet(new HashSet<>()));
+        islandMap.putProperty(Contract.SIZE, 100);
     }
 
     @Test

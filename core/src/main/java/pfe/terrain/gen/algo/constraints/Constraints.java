@@ -1,6 +1,6 @@
 package pfe.terrain.gen.algo.constraints;
 
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
 
 import java.util.HashSet;
 import java.util.Set;

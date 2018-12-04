@@ -3,11 +3,11 @@ package pfe.terrain.gen.algo.borders;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,7 +59,7 @@ public class BasicBordersTest {
     public void setUp() throws DuplicateKeyException {
         basicBorders = new BasicBorders();
         islandMap = new IslandMap();
-        islandMap.putProperty(Contract.size, 100);
+        islandMap.putProperty(Contract.SIZE, 100);
         List<Coord> allCoords = new ArrayList<>();
         allCoords.addAll(validCoords);
         allCoords.addAll(invalidCoords);
@@ -71,11 +71,11 @@ public class BasicBordersTest {
     }
 
     @Test
-    public void generateBordersTest() throws Exception {
+    public void generateBordersTest() {
         basicBorders.execute(islandMap, new Context());
         Set<Coord> borderVertices = new HashSet<>();
         for (Coord vertice : islandMap.getVertices()) {
-            if (vertice.getProperty(basicBorders.verticeBorderKey).value) {
+            if (vertice.hasProperty(basicBorders.VERTICE_BORDER_KEY)) {
                 borderVertices.add(vertice);
             }
         }
@@ -83,7 +83,7 @@ public class BasicBordersTest {
         invalidCoords.forEach(coord -> assertTrue(borderVertices.contains(coord)));
         Set<Face> borderFaces = new HashSet<>();
         for (Face face : islandMap.getFaces()) {
-            if (face.getProperty(basicBorders.faceBorderKey).value) {
+            if (face.hasProperty(basicBorders.FACE_BORDER_KEY)) {
                 borderFaces.add(face);
             }
         }

@@ -1,48 +1,46 @@
 package pfe.terrain.gen;
 
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.OptionalKey;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.WaterKind;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static pfe.terrain.gen.algo.constraints.Contract.edgesPrefix;
-import static pfe.terrain.gen.algo.constraints.Contract.facesPrefix;
+import static pfe.terrain.gen.algo.constraints.Contract.EDGES_PREFIX;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES_PREFIX;
 
 public class AdapterUtils {
 
-    public static final Key<DoubleType> faceMoisture =
-            new SerializableKey<>(facesPrefix + "HAS_MOISTURE", "moisture", DoubleType.class);
+    public static final Key<DoubleType> FACE_MOISTURE =
+            new SerializableKey<>(FACES_PREFIX + "HAS_MOISTURE", "moisture", DoubleType.class);
 
-    public static final Key<Boolean> adaptedMoistureKey =
-            new Key<>(facesPrefix + "MOISTURE_ADAPTED", Boolean.class);
+    public static final Key<MarkerType> ADAPTED_MOISTURE_KEY =
+            new OptionalKey<>(FACES_PREFIX + "MOISTURE_ADAPTED", MarkerType.class);
 
-    public static final Key<IntegerType> riverFlowKey =
-            new Key<>(edgesPrefix + "RIVER_FLOW", IntegerType.class);
+    public static final Key<IntegerType> RIVER_FLOW_KEY =
+            new OptionalKey<>(EDGES_PREFIX + "RIVER_FLOW", IntegerType.class);
 
-    public static final Key<WaterKind> waterKindKey =
-            new Key<>(facesPrefix + "WATER_KIND", WaterKind.class);
+    public static final Key<WaterKind> WATER_KIND_KEY =
+            new Key<>(FACES_PREFIX + "WATER_KIND", WaterKind.class);
 
-    public static final Key<BooleanType> faceWaterKey =
-            new Key<>(facesPrefix + "IS_WATER", BooleanType.class);
+    public static final Key<BooleanType> FACE_WATER_KEY =
+            new Key<>(FACES_PREFIX + "IS_WATER", BooleanType.class);
 
     public static final int MOISTURE_LIMIT = 1;
 
-    public void setModifiedKey(Set<Face> faces) {
-        faces.forEach(face -> face.putProperty(adaptedMoistureKey, false));
-    }
-
     public void addMoisture(Face face, double bonus) {
-        double newVal = face.getProperty(faceMoisture).value + bonus;
+        double newVal = face.getProperty(FACE_MOISTURE).value + bonus;
         if (newVal > MOISTURE_LIMIT) newVal = MOISTURE_LIMIT;
-        face.putProperty(faceMoisture, new DoubleType(newVal));
-        face.putProperty(adaptedMoistureKey, true);
+        face.putProperty(FACE_MOISTURE, new DoubleType(newVal));
+        face.putProperty(ADAPTED_MOISTURE_KEY, new MarkerType());
     }
 
     public void spreadToNeighbours(Face start, Set<Face> seen, double bonus) {
@@ -58,7 +56,7 @@ public class AdapterUtils {
         Set<Face> result = new HashSet<>();
         for (Face face : allFaces) {
             for (Edge edge : face.getEdges()) {
-                if (edge.getProperty(riverFlowKey).value > 0) {
+                if (edge.hasProperty(RIVER_FLOW_KEY)) {
                     result.add(face);
                     break;
                 }
@@ -70,9 +68,9 @@ public class AdapterUtils {
     public Set<Face> getTilesNextToLakes(Set<Face> allFaces) {
         Set<Face> result = new HashSet<>();
         allFaces.stream()
-                .filter(face -> face.getProperty(waterKindKey) == WaterKind.LAKE)
+                .filter(face -> face.getProperty(WATER_KIND_KEY) == WaterKind.LAKE)
                 .forEach(face -> face.getNeighbors().forEach(neighbour -> {
-                    if (!neighbour.getProperty(faceWaterKey).value) {
+                    if (!neighbour.getProperty(FACE_WATER_KEY).value) {
                         result.add(neighbour);
                     }
                 }));

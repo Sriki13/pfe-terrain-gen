@@ -1,11 +1,11 @@
 package pfe.terrain.gen.algo.gridcreator;
 
 import org.junit.Test;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -13,8 +13,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.core.AllOf.allOf;
-import static pfe.terrain.gen.algo.constraints.Contract.seed;
-import static pfe.terrain.gen.algo.constraints.Contract.size;
+import static pfe.terrain.gen.algo.constraints.Contract.SEED;
+import static pfe.terrain.gen.algo.constraints.Contract.SIZE;
 
 /**
  * Unit test for simple App.
@@ -28,14 +28,14 @@ public class RelaxedTest {
         int sizeV = 64;
         int nbPointsV = 64;
 
-        map.putProperty(size, sizeV);
-        map.putProperty(seed, 0);
+        map.putProperty(SIZE, sizeV);
+        map.putProperty(SEED, 0);
 
         RelaxedPoints builder = new RelaxedPoints();
 
         Context c = new Context();
-        c.putParam(RelaxedPoints.nbPoints, nbPointsV);
-        c.putParam(RelaxedPoints.nbIter, 1);
+        c.putParam(RelaxedPoints.NB_POINTS, nbPointsV);
+        c.putParam(RelaxedPoints.NB_ITER, 1);
 
         builder.execute(map, c);
 

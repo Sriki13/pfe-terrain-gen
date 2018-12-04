@@ -2,16 +2,17 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
 import java.util.*;
@@ -21,34 +22,35 @@ import static pfe.terrain.gen.RiverGenerator.*;
 
 public class LakesFromRivers extends Contract {
 
-    public static final Param<Integer> lakeSizeParam =
+    public static final Param<Integer> LAKE_SIZE_PARAM =
             Param.generatePositiveIntegerParam("lakesLimit", 10,
                     "The limit for the size of the lakes.", 4, "Lake size limit");
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(lakeSizeParam);
+        return asParamSet(LAKE_SIZE_PARAM);
     }
 
     // Produced
 
-    public static final Key<Boolean> hasLakesKey = new Key<>("LAKES", Boolean.class);
+    public static final Key<MarkerType> HAS_LAKES_KEY = new Key<>("LAKES", MarkerType.class);
 
     // Modified
 
-    public static final Key<BooleanType> faceWaterKey =
-            new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<BooleanType> FACE_WATER_KEY =
+            new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
 
-    public static final Key<WaterKind> waterKindKey =
-            new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    public static final Key<WaterKind> WATER_KIND_KEY =
+            new SerializableKey<>(FACES_PREFIX + "WATER_KIND", "waterKind", WaterKind.class);
 
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(vertices, seed, edges, faces),
-                asKeySet(hasLakesKey),
-                asKeySet(vertexWaterKey, heightKey, faceWaterKey, waterKindKey, riverFlowKey, isSourceKey, isRiverEndKey)
+                asKeySet(VERTICES, SEED, EDGES, FACES),
+                asKeySet(HAS_LAKES_KEY),
+                asKeySet(VERTEX_WATER_KEY, HEIGHT_KEY, FACE_WATER_KEY, WATER_KIND_KEY,
+                        RIVER_FLOW_KEY, IS_SOURCE_KEY, IS_RIVER_END_KEY)
         );
     }
 
@@ -65,7 +67,7 @@ public class LakesFromRivers extends Contract {
         this.islandMap = map;
         this.random = new Random(map.getSeed());
         this.riverGenerator = new RiverGenerator(islandMap);
-        this.maxLakeSize = context.getParamOrDefault(lakeSizeParam);
+        this.maxLakeSize = context.getParamOrDefault(LAKE_SIZE_PARAM);
         this.newRiverStarts = new HashSet<>();
         this.newLakeStarts = new HashSet<>();
 
@@ -74,17 +76,10 @@ public class LakesFromRivers extends Contract {
             generateLake(lakeStart);
             lakeStart = getRiverEndInHole();
         }
-        boolean hasLakes = false;
-        for (Face face : map.getFaces()) {
-            if (face.getProperty(waterKindKey) == WaterKind.LAKE) {
-                hasLakes = true;
-                break;
-            }
-        }
-        islandMap.putProperty(hasLakesKey, hasLakes);
-        newRiverStarts.forEach(start -> start.putProperty(vertexWaterKey, new BooleanType(true)));
+        islandMap.putProperty(HAS_LAKES_KEY, new MarkerType());
+        newRiverStarts.forEach(start -> start.putProperty(VERTEX_WATER_KEY, new BooleanType(true)));
         removeRiversInLakeEdges(map.getFaces().stream().filter(
-                face -> face.getProperty(waterKindKey) == WaterKind.LAKE
+                face -> face.getProperty(WATER_KIND_KEY) == WaterKind.LAKE
         ).collect(Collectors.toSet()));
     }
 
@@ -94,7 +89,7 @@ public class LakesFromRivers extends Contract {
         }
         newLakeStarts.add(start);
         Face baseLake = findLowestFace(start);
-        double lakeHeight = baseLake.getCenter().getProperty(heightKey).value;
+        double lakeHeight = baseLake.getCenter().getProperty(HEIGHT_KEY).value;
         Set<Face> lakeTiles = new HashSet<>();
         lakeTiles.add(baseLake);
         if (!turnIntoLake(baseLake, lakeHeight)) {
@@ -106,8 +101,8 @@ public class LakesFromRivers extends Contract {
             lakeTiles.add(newLakeFace);
             lakeHeight = getMaxHeight(lakeTiles);
             levelFaces(lakeTiles, lakeHeight);
-            if (newLakeFace.getProperty(faceWaterKey).value) {
-                if (newLakeFace.getProperty(waterKindKey) == WaterKind.OCEAN) {
+            if (newLakeFace.getProperty(FACE_WATER_KEY).value) {
+                if (newLakeFace.getProperty(WATER_KIND_KEY) == WaterKind.OCEAN) {
                     turnLakeIntoOcean(lakeTiles);
                 }
                 return;
@@ -123,14 +118,14 @@ public class LakesFromRivers extends Contract {
             lakeTiles.forEach(tile -> seen.addAll(tile.getBorderVertices()));
             Coord riverStart = candidates.get(random.nextInt(candidates.size()));
             newRiverStarts.add(riverStart);
-            riverStart.putProperty(vertexWaterKey, new BooleanType(false));
+            riverStart.putProperty(VERTEX_WATER_KEY, new BooleanType(false));
             riverGenerator.generateRiverFrom(riverStart, seen);
         }
     }
 
     private Coord getRiverEndInHole() {
         for (Coord vertex : islandMap.getEdgeVertices()) {
-            if (vertex.getProperty(isRiverEndKey) && !vertex.getProperty(vertexWaterKey).value && !newLakeStarts.contains(vertex)) {
+            if (vertex.hasProperty(IS_RIVER_END_KEY) && !vertex.getProperty(VERTEX_WATER_KEY).value && !newLakeStarts.contains(vertex)) {
                 return vertex;
             }
         }
@@ -140,7 +135,7 @@ public class LakesFromRivers extends Contract {
     private boolean turnIntoLake(Face face, double lakeHeight) {
         WaterKind kind = WaterKind.LAKE;
         for (Face connected : face.getNeighbors()) {
-            if (connected.getProperty(waterKindKey) == WaterKind.OCEAN) {
+            if (connected.getProperty(WATER_KIND_KEY) == WaterKind.OCEAN) {
                 kind = WaterKind.OCEAN;
                 break;
             }
@@ -152,8 +147,8 @@ public class LakesFromRivers extends Contract {
             turnIntoWaterPoint(vertex, lakeHeight);
         }
         turnIntoWaterPoint(face.getCenter(), lakeHeight);
-        face.putProperty(faceWaterKey, new BooleanType(true));
-        face.putProperty(waterKindKey, kind);
+        face.putProperty(FACE_WATER_KEY, new BooleanType(true));
+        face.putProperty(WATER_KIND_KEY, kind);
         recalculateCenterHeight(face.getNeighbors());
         return kind == WaterKind.LAKE;
     }
@@ -164,14 +159,14 @@ public class LakesFromRivers extends Contract {
                 turnIntoWaterPoint(vertex, 0);
             }
             turnIntoWaterPoint(face.getCenter(), 0);
-            face.putProperty(waterKindKey, WaterKind.OCEAN);
+            face.putProperty(WATER_KIND_KEY, WaterKind.OCEAN);
             recalculateCenterHeight(face.getNeighbors());
         }
     }
 
     private void turnIntoWaterPoint(Coord vertex, double height) {
-        vertex.putProperty(vertexWaterKey, new BooleanType(true));
-        vertex.putProperty(heightKey, new DoubleType(height));
+        vertex.putProperty(VERTEX_WATER_KEY, new BooleanType(true));
+        vertex.putProperty(HEIGHT_KEY, new DoubleType(height));
     }
 
     private List<Coord> getRiverStartCandidates(Set<Face> lake) {
@@ -180,7 +175,7 @@ public class LakesFromRivers extends Contract {
             for (Coord vertex : face.getBorderVertices()) {
                 Set<Coord> connected = islandMap.getConnectedVertices(vertex);
                 for (Coord neighbour : connected) {
-                    if (neighbour.getProperty(heightKey).value < vertex.getProperty(heightKey).value) {
+                    if (neighbour.getProperty(HEIGHT_KEY).value < vertex.getProperty(HEIGHT_KEY).value) {
                         result.add(vertex);
                         break;
                     }
@@ -195,9 +190,9 @@ public class LakesFromRivers extends Contract {
     private void levelFaces(Set<Face> faces, double level) {
         for (Face face : faces) {
             for (Coord vertex : face.getBorderVertices()) {
-                vertex.putProperty(heightKey, new DoubleType(level));
+                vertex.putProperty(HEIGHT_KEY, new DoubleType(level));
             }
-            face.putProperty(heightKey, new DoubleType(level));
+            face.putProperty(HEIGHT_KEY, new DoubleType(level));
         }
     }
 
@@ -212,7 +207,7 @@ public class LakesFromRivers extends Contract {
         Face min = candidates.get(0);
         for (int i = 1; i < candidates.size(); i++) {
             Face face = candidates.get(i);
-            if (face.getCenter().getProperty(heightKey).value < min.getCenter().getProperty(heightKey).value) {
+            if (face.getCenter().getProperty(HEIGHT_KEY).value < min.getCenter().getProperty(HEIGHT_KEY).value) {
                 min = face;
             }
         }
@@ -226,8 +221,8 @@ public class LakesFromRivers extends Contract {
                 if (faces.contains(current)) {
                     continue;
                 }
-                if (min == null || current.getCenter().getProperty(heightKey).value <
-                        min.getCenter().getProperty(heightKey).value) {
+                if (min == null || current.getCenter().getProperty(HEIGHT_KEY).value <
+                        min.getCenter().getProperty(HEIGHT_KEY).value) {
                     min = current;
                 }
             }
@@ -238,30 +233,30 @@ public class LakesFromRivers extends Contract {
     private double getMaxHeight(Set<Face> faces) {
         Face max = null;
         for (Face face : faces) {
-            if (max == null || face.getCenter().getProperty(heightKey).value >
-                    max.getCenter().getProperty(heightKey).value) {
+            if (max == null || face.getCenter().getProperty(HEIGHT_KEY).value >
+                    max.getCenter().getProperty(HEIGHT_KEY).value) {
                 max = face;
             }
         }
         if (max == null) {
             throw new IllegalArgumentException("Set used for maxHeight is empty!");
         }
-        return max.getCenter().getProperty(heightKey).value;
+        return max.getCenter().getProperty(HEIGHT_KEY).value;
     }
 
     private void recalculateCenterHeight(Set<Face> faces) {
         for (Face face : faces) {
             double average = 0;
             for (Coord vertex : face.getBorderVertices()) {
-                average += vertex.getProperty(heightKey).value;
+                average += vertex.getProperty(HEIGHT_KEY).value;
             }
-            face.getCenter().putProperty(heightKey, new DoubleType(average / face.getBorderVertices().size()));
+            face.getCenter().putProperty(HEIGHT_KEY, new DoubleType(average / face.getBorderVertices().size()));
         }
     }
 
     private void removeRiversInLakeEdges(Set<Face> lakes) {
         lakes.forEach(lake -> lake.getEdges().forEach(edge ->
-                edge.putProperty(riverFlowKey, new OptionalIntegerType(0))));
+                edge.putProperty(RIVER_FLOW_KEY, new OptionalIntegerType(0))));
     }
 
 }

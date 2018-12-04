@@ -2,20 +2,20 @@ package pfe.terrain.gen;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.geometry.FaceSet;
 import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.criteria.Criterion;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static pfe.terrain.gen.CityContract.CITY_KEY;
-import static pfe.terrain.gen.algo.constraints.Contract.faces;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES;
 import static pfe.terrain.gen.criteria.HeightLevel.HEIGHT_KEY;
 
 public class CityGeneratorTest {
@@ -29,7 +29,6 @@ public class CityGeneratorTest {
             scores -> scores.forEach((key, value) -> scores.put(key, value + key.getCenter().getProperty(HEIGHT_KEY).value));
 
     private CityGenerator cityGenerator;
-    private IslandMap islandMap;
 
     private Face bestCandidate;
     private Face secondBest;
@@ -41,8 +40,8 @@ public class CityGeneratorTest {
         bestCandidate = generateFace(1, 10);
         secondBest = generateFace(3, 10);
         thirdBest = generateFace(2, 5);
-        islandMap = new IslandMap();
-        islandMap.putProperty(faces, new FaceSet(new HashSet<>(Arrays.asList(
+        IslandMap islandMap = new IslandMap();
+        islandMap.putProperty(FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 secondBest, thirdBest, bestCandidate
         ))));
     }
@@ -55,12 +54,12 @@ public class CityGeneratorTest {
 
     @Test
     public void placeCitiesCorrectly() {
-        cityGenerator.generateCities(islandMap, 2, new HashSet<>(Arrays.asList(
+        cityGenerator.generateCities(2, new HashSet<>(Arrays.asList(
                 secondBest, thirdBest, bestCandidate
         )));
-        assertThat(bestCandidate.getProperty(CITY_KEY).value, is(true));
-        assertThat(secondBest.getProperty(CITY_KEY).value, is(true));
-        assertThat(thirdBest.getProperty(CITY_KEY).value, is(false));
+        assertTrue(bestCandidate.hasProperty(CITY_KEY));
+        assertTrue(secondBest.hasProperty(CITY_KEY));
+        assertFalse(thirdBest.hasProperty(CITY_KEY));
     }
 
 }

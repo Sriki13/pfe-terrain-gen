@@ -1,9 +1,9 @@
 package pfe.terrain.gen.algo;
 
 import org.junit.Test;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
 
 import java.util.Arrays;
 import java.util.Random;

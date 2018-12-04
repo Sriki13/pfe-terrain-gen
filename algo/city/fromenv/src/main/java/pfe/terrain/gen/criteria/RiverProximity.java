@@ -1,21 +1,21 @@
 package pfe.terrain.gen.criteria;
 
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.IntegerType;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static pfe.terrain.gen.algo.constraints.Contract.edgesPrefix;
+import static pfe.terrain.gen.algo.constraints.Contract.EDGES_PREFIX;
 
 public class RiverProximity implements Criterion {
 
     public static final Key<IntegerType> RIVER_FLOW_KEY =
-            new Key<>(edgesPrefix + "RIVER_FLOW", IntegerType.class);
+            new Key<>(EDGES_PREFIX + "RIVER_FLOW", IntegerType.class);
 
 
     private static final double WEIGHT = 1;

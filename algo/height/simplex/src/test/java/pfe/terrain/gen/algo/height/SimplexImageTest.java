@@ -4,12 +4,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,20 +29,22 @@ public class SimplexImageTest {
     public static final int SIZE = 500;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         CoordSet allCoords = new CoordSet(new HashSet<>());
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 Coord c = new Coord(i, j);
-                c.putProperty(SimplexHeight.vertexBorderKey, new BooleanType(isBorder(i, j, SIZE)));
+                if (isBorder(i, j, SIZE)) {
+                    c.putProperty(SimplexHeight.VERTEX_BORDER_KEY, new MarkerType());
+                }
                 allCoords.add(c);
             }
         }
         islandMap = new IslandMap();
-        islandMap.putProperty(Contract.vertices, allCoords);
-        islandMap.putProperty(Contract.size, SIZE);
-        islandMap.putProperty(Contract.faces, new FaceSet(new HashSet<>()));
-        islandMap.putProperty(Contract.seed, 25);
+        islandMap.putProperty(Contract.VERTICES, allCoords);
+        islandMap.putProperty(Contract.SIZE, SIZE);
+        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
+        islandMap.putProperty(Contract.SEED, 25);
         simplexHeight = new SimplexHeight();
     }
 
@@ -53,11 +55,11 @@ public class SimplexImageTest {
 
     @Test
     @Ignore
-    public void printPerlin() throws Exception {
+    public void printPerlin() {
         simplexHeight.execute(islandMap, new Context());
         Map<Coord, Double> heightMap = new HashMap<>();
         for (Coord coord : islandMap.getVertices()) {
-            heightMap.put(coord, coord.getProperty(SimplexHeight.vertexHeightKey).value);
+            heightMap.put(coord, coord.getProperty(SimplexHeight.VERTEX_HEIGHT_KEY).value);
         }
         double max = Collections.max(heightMap.values());
         double min = Collections.min(heightMap.values());

@@ -2,8 +2,8 @@ package pfe.terrain.gen.algo.height;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,15 +20,13 @@ public class SimplexNoiseMapTest {
     private SimplexNoiseMap simplexNoiseMap;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         vertices = new HashSet<>();
         for (int i = 0; i < TEST_SIZE; i++) {
             for (int j = 0; j < TEST_SIZE; j++) {
                 Coord vertex = new Coord(i, j);
                 if (isBorder(vertex)) {
-                    vertex.putProperty(SimplexHeight.vertexBorderKey, new BooleanType(true));
-                } else {
-                    vertex.putProperty(SimplexHeight.vertexBorderKey, new BooleanType(false));
+                    vertex.putProperty(SimplexHeight.VERTEX_BORDER_KEY, new MarkerType());
                 }
                 vertices.add(vertex);
             }
@@ -41,7 +39,7 @@ public class SimplexNoiseMapTest {
     }
 
     @Test
-    public void addSimplexTest() throws Exception {
+    public void addSimplexTest() {
         simplexNoiseMap.addSimplexNoise(0.7, 0.05, 0, SimplexIslandShape.CIRCLE);
         simplexNoiseMap.addSimplexNoise(0.35, 0.025, 0, SimplexIslandShape.CIRCLE);
         simplexNoiseMap.addSimplexNoise(0.175, 0.0125, 0, SimplexIslandShape.CIRCLE);
@@ -49,7 +47,7 @@ public class SimplexNoiseMapTest {
         simplexNoiseMap.ensureBordersAreLow();
         simplexNoiseMap.putHeightProperty();
         for (Coord vertex : vertices) {
-            double value = vertex.getProperty(SimplexHeight.vertexHeightKey).value;
+            double value = vertex.getProperty(SimplexHeight.VERTEX_HEIGHT_KEY).value;
             assertThat(value, notNullValue());
             if (isBorder(vertex)) {
                 assertThat(value, lessThanOrEqualTo(0.0));

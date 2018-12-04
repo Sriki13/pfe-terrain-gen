@@ -6,15 +6,15 @@ import com.flowpowered.noise.module.source.Perlin;
 import com.flowpowered.noise.module.source.RidgedMulti;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.Arrays;
@@ -23,43 +23,48 @@ import java.util.logging.Logger;
 
 public class NoiseWaterGeneration extends Contract {
 
-    static final Param<String> noiseParam = new Param<>("NoiseType", String.class,
+    static final Param<String> NOISE_PARAM = new Param<>("NoiseType", String.class,
             Arrays.toString(Noise.values()),
             "Choose the noise algorithm to use : Perlin : classic island, Billow : small and round islands, " +
                     "Ridged : aggressive geology with big island in the middle and a lot of reef",
             Noise.PERLIN.getNoiseName(), "Noise type");
-    static final Param<Double> archipelagoTendencyParam = Param.generateDefaultDoubleParam("archipelagoTendency",
+
+    static final Param<Double> ARCHIPELAGO_TENDENCY_PARAM = Param.generateDefaultDoubleParam("archipelagoTendency",
             "Tendency of multiple islands to spawn, (0 = not a lot, 1.0 = max)", 0.0, "Number of islands");
-    static final Param<Double> coastRoughnessParam = Param.generateDefaultDoubleParam("coastRoughness",
+    static final Param<Double> COAST_ROUGHNESS_PARAM = Param.generateDefaultDoubleParam("coastRoughness",
             "Makes the border of the islands appear more smooth (0.0) or rough (1.0)", 0.3, "Island border roughness");
 
+    static final Key<BooleanType> FACE_WATER_KEY =
+            new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
 
-    static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    private static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    private static final Key<BooleanType> VERTEX_WATER_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
+
+    static final Key<WaterKind> WATER_KIND_KEY =
+            new SerializableKey<>(FACES_PREFIX + "WATER_KIND", "waterKind", WaterKind.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, vertices, seed),
-                asKeySet(faceWaterKey, vertexWaterKey, waterKindKey)
+                asKeySet(FACES, VERTICES, SEED),
+                asKeySet(FACE_WATER_KEY, VERTEX_WATER_KEY, WATER_KIND_KEY)
         );
     }
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(archipelagoTendencyParam, coastRoughnessParam, noiseParam);
+        return asParamSet(ARCHIPELAGO_TENDENCY_PARAM, COAST_ROUGHNESS_PARAM, NOISE_PARAM);
     }
 
     @Override
     public void execute(IslandMap map, Context context) {
-        double archipelagoTendency = context.getParamOrDefault(archipelagoTendencyParam);
-        double coastRoughness = context.getParamOrDefault(coastRoughnessParam);
+        double archipelagoTendency = context.getParamOrDefault(ARCHIPELAGO_TENDENCY_PARAM);
+        double coastRoughness = context.getParamOrDefault(COAST_ROUGHNESS_PARAM);
         Noise algorithm;
         try {
-            algorithm = Noise.valueOf(context.getParamOrDefault(noiseParam).toUpperCase());
+            algorithm = Noise.valueOf(context.getParamOrDefault(NOISE_PARAM).toUpperCase());
         } catch (IllegalArgumentException e) {
-            Logger.getLogger(this.getName()).warning("No Style marching argument " + context.getParamOrDefault(noiseParam)
+            Logger.getLogger(this.getName()).warning("No Style marching argument " + context.getParamOrDefault(NOISE_PARAM)
                     + ", defaulting to classic style");
             algorithm = Noise.PERLIN;
         }
@@ -92,21 +97,22 @@ public class NoiseWaterGeneration extends Contract {
         }
         for (Face face : map.getFaces()) {
             BooleanType isWater = new BooleanType(isWater(noise, 2 * (face.getCenter().x / size - 0.5), 2 * (face.getCenter().y / size - 0.5), borderSmoothingFactor));
-            face.putProperty(faceWaterKey, isWater);
+            face.putProperty(FACE_WATER_KEY, isWater);
             if (isWater.value) {
-                face.putProperty(waterKindKey, WaterKind.OCEAN);
+                face.putProperty(WATER_KIND_KEY, WaterKind.OCEAN);
             } else {
-                face.putProperty(waterKindKey, WaterKind.NONE);
+                face.putProperty(WATER_KIND_KEY, WaterKind.NONE);
             }
-            face.getCenter().putProperty(vertexWaterKey, isWater);
+            face.getCenter().putProperty(VERTEX_WATER_KEY, isWater);
+            //noinspection Duplicates
             for (Coord coord : face.getBorderVertices()) {
                 try {
-                    coord.getProperty(vertexWaterKey);
+                    coord.getProperty(VERTEX_WATER_KEY);
                     if (isWater.value) {
-                        coord.putProperty(vertexWaterKey, isWater);
+                        coord.putProperty(VERTEX_WATER_KEY, isWater);
                     }
                 } catch (NoSuchKeyException ke) {
-                    coord.putProperty(vertexWaterKey, isWater);
+                    coord.putProperty(VERTEX_WATER_KEY, isWater);
                 }
             }
         }

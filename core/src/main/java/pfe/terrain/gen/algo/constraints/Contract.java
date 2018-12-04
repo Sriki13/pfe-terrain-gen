@@ -1,13 +1,13 @@
 package pfe.terrain.gen.algo.constraints;
 
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.island.geometry.EdgeSet;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 
 import java.util.Set;
 import java.util.logging.Level;
@@ -25,15 +25,15 @@ public abstract class Contract implements Parameters {
         return Stream.of(params).collect(Collectors.toSet());
     }
 
-    public static final String verticesPrefix = "VERTICES_";
-    public static final String edgesPrefix = "EDGES_";
-    public static final String facesPrefix = "FACES_";
+    public static final String VERTICES_PREFIX = "VERTICES_";
+    public static final String EDGES_PREFIX = "EDGES_";
+    public static final String FACES_PREFIX = "FACES_";
 
-    public static final Key<CoordSet> vertices = new Key<>("VERTICES", CoordSet.class);
-    public static final Key<EdgeSet> edges = new Key<>("EDGES", EdgeSet.class);
-    public static final Key<FaceSet> faces = new Key<>("FACES", FaceSet.class);
-    public static final Key<Integer> size = new Key<>("SIZE", Integer.class);
-    public static final Key<Integer> seed = new Key<>("SEED", Integer.class);
+    public static final Key<CoordSet> VERTICES = new Key<>("VERTICES", CoordSet.class);
+    public static final Key<EdgeSet> EDGES = new Key<>("EDGES", EdgeSet.class);
+    public static final Key<FaceSet> FACES = new Key<>("FACES", FaceSet.class);
+    public static final Key<Integer> SIZE = new Key<>("SIZE", Integer.class);
+    public static final Key<Integer> SEED = new Key<>("SEED", Integer.class);
 
     public abstract Constraints getContract();
 
@@ -49,6 +49,9 @@ public abstract class Contract implements Parameters {
         logger.info("Done executing algorithm " + algorithmName + " in " + duration / 1000 + " microseconds");
         logger.info("\nVerifying contract...");
         for (Key key : getContract().getCreated()) {
+            if (key.isOptional()) {
+                continue;
+            }
             logger.info("Verifying presence of key : " + key);
             if (!(map.assertContaining(key))) {
                 logger.log(Level.SEVERE, "Unrespected contract for " + algorithmName);

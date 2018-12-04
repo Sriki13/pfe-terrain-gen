@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo.key;
+package pfe.terrain.gen.algo.constraints.key;
 
 import java.util.Objects;
 
@@ -6,7 +6,6 @@ public class Key<T> {
 
     private final String identifier;
     private final Class<T> type;
-
 
     public Key(String identifier, Class<T> type) {
         this.identifier = identifier;
@@ -22,6 +21,10 @@ public class Key<T> {
     }
 
     public boolean isSerialized() {
+        return false;
+    }
+
+    public boolean isOptional() {
         return false;
     }
 

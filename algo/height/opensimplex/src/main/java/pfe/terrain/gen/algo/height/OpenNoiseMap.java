@@ -1,9 +1,7 @@
 package pfe.terrain.gen.algo.height;
 
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.HashMap;
@@ -18,15 +16,14 @@ public class OpenNoiseMap {
     private Map<Coord, Double> heightMap;
     private OpenSimplexNoise noise;
 
-    public OpenNoiseMap(Set<Coord> vertices, long seed, int islandSize)
-            throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
+    public OpenNoiseMap(Set<Coord> vertices, long seed, int islandSize) {
         this.heightMap = new HashMap<>();
         this.newToOriginal = new HashMap<>();
         this.noise = new OpenSimplexNoise(seed);
         for (Coord vertex : vertices) {
             Coord normalized = normalize(vertex, islandSize);
-            normalized.putProperty(OpenSimplexHeight.vertexBorderKey,
-                    vertex.getProperty(OpenSimplexHeight.vertexBorderKey));
+            normalized.putProperty(OpenSimplexHeight.VERTEX_BORDER_KEY,
+                    vertex.getProperty(OpenSimplexHeight.VERTEX_BORDER_KEY));
             newToOriginal.put(normalized, vertex);
             heightMap.put(normalized, 0.0);
         }
@@ -64,9 +61,9 @@ public class OpenNoiseMap {
         }
     }
 
-    public void ensureBordersAreLow() throws NoSuchKeyException, KeyTypeMismatch {
+    public void ensureBordersAreLow() {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            if (entry.getKey().getProperty(OpenSimplexHeight.vertexBorderKey).value && entry.getValue() > 0) {
+            if (entry.getKey().hasProperty(OpenSimplexHeight.VERTEX_BORDER_KEY) && entry.getValue() > 0) {
                 heightMap.put(entry.getKey(), 0.0);
             }
         }
@@ -81,7 +78,7 @@ public class OpenNoiseMap {
     public void putHeightProperty() throws DuplicateKeyException {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             newToOriginal.get(entry.getKey())
-                    .putProperty(OpenSimplexHeight.vertexHeightKey, new DoubleType(entry.getValue()));
+                    .putProperty(OpenSimplexHeight.VERTEX_HEIGHT_KEY, new DoubleType(entry.getValue()));
         }
     }
 

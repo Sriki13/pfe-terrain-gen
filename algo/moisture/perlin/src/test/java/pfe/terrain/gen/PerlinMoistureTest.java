@@ -3,14 +3,14 @@ package pfe.terrain.gen;
 import com.flowpowered.noise.module.source.Perlin;
 import org.junit.Ignore;
 import org.junit.Test;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.geometry.FaceSet;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.BooleanType;
 
 import javax.imageio.ImageIO;
@@ -22,11 +22,11 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static pfe.terrain.gen.algo.constraints.Contract.facesPrefix;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES_PREFIX;
 
 public class PerlinMoistureTest {
 
-    protected final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    protected final Key<BooleanType> faceWaterKey = new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
 
 
     @Test

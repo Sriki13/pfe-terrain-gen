@@ -2,52 +2,47 @@ package pfe.terrain.gen.algo.height;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.Set;
 
 public class HeightMultiplication extends Contract {
 
-    private Param<Integer> factorKey = Param.generatePositiveIntegerParam("Val Multiplication", 10,
+    private Param<Integer> FACTOR_KEY = Param.generatePositiveIntegerParam("Val Multiplication", 10,
             "Multiplies heights to increase height differences", 1, "Height multiplication factor");
 
-    public static final Key<DoubleType> vertexHeightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
+    public static final Key<DoubleType> VERTEX_HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(factorKey);
+        return asParamSet(FACTOR_KEY);
     }
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(vertices),
+                asKeySet(VERTICES),
                 asKeySet(),
-                asKeySet(vertexHeightKey)
+                asKeySet(VERTEX_HEIGHT_KEY)
         );
     }
 
     @Override
     public void execute(IslandMap map, Context context) {
-
-        Integer factor = context.getParamOrDefault(factorKey);
-
+        Integer factor = context.getParamOrDefault(FACTOR_KEY);
         CoordSet vertices = map.getVertices();
-
         for (Coord coord : vertices) {
-            DoubleType height = coord.getProperty(vertexHeightKey);
-
-            coord.putProperty(vertexHeightKey, new DoubleType(height.value * factor));
+            DoubleType height = coord.getProperty(VERTEX_HEIGHT_KEY);
+            coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(height.value * factor));
         }
-
     }
 }

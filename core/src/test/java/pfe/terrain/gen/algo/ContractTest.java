@@ -3,7 +3,7 @@ package pfe.terrain.gen.algo;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;

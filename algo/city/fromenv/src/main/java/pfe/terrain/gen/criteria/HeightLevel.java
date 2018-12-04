@@ -1,7 +1,7 @@
 package pfe.terrain.gen.criteria;
 
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.Collections;
@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static pfe.terrain.gen.algo.constraints.Contract.verticesPrefix;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES_PREFIX;
 
 public class HeightLevel implements Criterion {
 
     public static final Key<DoubleType> HEIGHT_KEY =
-            new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
+            new Key<>(VERTICES_PREFIX + "HEIGHT", DoubleType.class);
 
     public static final double RANGE_START = 0.1;
     public static final double RANGE_END = 0.5;

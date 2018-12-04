@@ -2,9 +2,9 @@ package pfe.terrain.gen.criteria;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +38,9 @@ public class CityProximityTest {
 
     private Face generateFace(boolean isCity, int x, int y) {
         Face result = new Face(new Coord(x, y), new HashSet<>());
-        result.putProperty(CITY_KEY, new BooleanType(isCity));
+        if (isCity) {
+            result.putProperty(CITY_KEY, new MarkerType());
+        }
         return result;
     }
 

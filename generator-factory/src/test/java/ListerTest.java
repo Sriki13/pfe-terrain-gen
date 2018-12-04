@@ -17,7 +17,6 @@ public class ListerTest {
 
     @Test
     public void listTest() throws Exception{
-
         assertNotNull(this.lister.getAlgo());
     }
 

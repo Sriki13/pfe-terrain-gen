@@ -3,8 +3,9 @@ package pfe.terrain.gen.algo.height;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.*;
 
@@ -23,8 +24,9 @@ public class SimplexNoiseMap {
         this.noise = new SimplexNoise(seed);
         for (Coord vertex : vertices) {
             Coord normalized = normalize(vertex, islandSize);
-            normalized.putProperty(SimplexHeight.vertexBorderKey,
-                    vertex.getProperty(SimplexHeight.vertexBorderKey));
+            if (vertex.hasProperty(SimplexHeight.VERTEX_BORDER_KEY)) {
+                normalized.putProperty(SimplexHeight.VERTEX_BORDER_KEY, new MarkerType());
+            }
             newToOriginal.put(normalized, vertex);
             heightMap.put(normalized, 0.0);
         }
@@ -52,7 +54,7 @@ public class SimplexNoiseMap {
     public void setWaterLevel(double level) throws NoSuchKeyException, KeyTypeMismatch {
         List<Double> heightList = new ArrayList<>();
         for (Map.Entry<Coord, Coord> entry : newToOriginal.entrySet()) {
-            if (!entry.getValue().getProperty(SimplexHeight.vertexBorderKey).value) {
+            if (!entry.getValue().hasProperty(SimplexHeight.VERTEX_BORDER_KEY)) {
                 heightList.add(heightMap.get(entry.getKey()));
             }
         }
@@ -65,7 +67,7 @@ public class SimplexNoiseMap {
 
     public void ensureBordersAreLow() throws NoSuchKeyException, KeyTypeMismatch {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
-            if (entry.getKey().getProperty(SimplexHeight.vertexBorderKey).value && entry.getValue() > 0) {
+            if (entry.getKey().hasProperty(SimplexHeight.VERTEX_BORDER_KEY) && entry.getValue() > 0) {
                 heightMap.put(entry.getKey(), 0.0);
             }
         }
@@ -86,7 +88,7 @@ public class SimplexNoiseMap {
     public void putHeightProperty() throws DuplicateKeyException {
         for (Map.Entry<Coord, Double> entry : heightMap.entrySet()) {
             newToOriginal.get(entry.getKey())
-                    .putProperty(SimplexHeight.vertexHeightKey, new DoubleType(entry.getValue()));
+                    .putProperty(SimplexHeight.VERTEX_HEIGHT_KEY, new DoubleType(entry.getValue()));
         }
     }
 

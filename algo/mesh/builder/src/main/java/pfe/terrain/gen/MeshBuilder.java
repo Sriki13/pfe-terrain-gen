@@ -8,12 +8,12 @@ import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.*;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.*;
 
@@ -28,8 +28,8 @@ public class MeshBuilder extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(new Key<>("POINTS", CoordSet.class), size),
-                asKeySet(vertices, edges, faces)
+                asKeySet(new Key<>("POINTS", CoordSet.class), SIZE),
+                asKeySet(VERTICES, EDGES, FACES)
         );
     }
 
@@ -43,11 +43,11 @@ public class MeshBuilder extends Contract {
         this.centerFaces = new HashMap<>();
         genStuff(polygons, map);
         genNeighbor();
-        map.putProperty(faces, new FaceSet(centerFaces.values()));
+        map.putProperty(FACES, new FaceSet(centerFaces.values()));
         verticesSet.addAll(new CoordSet(allCoordsA.keySet()));
         verticesSet.addAll(new CoordSet(allCoordsB.keySet()));
-        map.putProperty(vertices, verticesSet);
-        map.putProperty(edges, new EdgeSet(allEdgesMap.keySet()));
+        map.putProperty(VERTICES, verticesSet);
+        map.putProperty(EDGES, new EdgeSet(allEdgesMap.keySet()));
     }
 
     private List<Polygon> genPolygons(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
