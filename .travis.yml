@@ -29,4 +29,5 @@ jobs:
     script: "./travisScripts/buildAndPush.sh"
   - stage: VmDeploy
     name: Vm deploy
+    if: branch = master
     script: "./travisScripts/gcloudPush.sh"
