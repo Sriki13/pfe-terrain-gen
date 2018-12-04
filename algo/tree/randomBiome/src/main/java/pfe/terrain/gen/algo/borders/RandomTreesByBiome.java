@@ -23,7 +23,7 @@ public class RandomTreesByBiome extends Contract {
             new SerializableKey<>(FACES_PREFIX + "BIOME", "biome", Biome.class);
 
     static final SerializableKey<DoubleType> FACE_PITCH_KEY =
-            new SerializableKey<>(FACES_PREFIX + "HAS_PITCH", "pitch", DoubleType.class);
+            new SerializableKey<>(FACES_PREFIX + "PITCH", "pitch", DoubleType.class);
 
     static final SerializableKey<TreeType> TREES_KEY =
             new SerializableKey<>("TREES", "trees", TreeType.class);

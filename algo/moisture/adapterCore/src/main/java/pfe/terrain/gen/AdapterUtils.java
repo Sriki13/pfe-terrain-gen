@@ -20,7 +20,7 @@ import static pfe.terrain.gen.algo.constraints.Contract.FACES_PREFIX;
 public class AdapterUtils {
 
     public static final Key<DoubleType> FACE_MOISTURE =
-            new SerializableKey<>(FACES_PREFIX + "HAS_MOISTURE", "moisture", DoubleType.class);
+            new SerializableKey<>(FACES_PREFIX + "MOISTURE", "moisture", DoubleType.class);
 
     public static final Key<MarkerType> ADAPTED_MOISTURE_KEY =
             new OptionalKey<>(FACES_PREFIX + "MOISTURE_ADAPTED", MarkerType.class);

@@ -39,7 +39,7 @@ public class HeightMoistureBiome extends Contract {
         return asParamSet(BIOME_STYLE_PARAM);
     }
 
-    private final Key<DoubleType> faceMoisture = new Key<>(FACES_PREFIX + "HAS_MOISTURE", DoubleType.class);
+    private final Key<DoubleType> faceMoisture = new Key<>(FACES_PREFIX + "MOISTURE", DoubleType.class);
 
 
     @Override
