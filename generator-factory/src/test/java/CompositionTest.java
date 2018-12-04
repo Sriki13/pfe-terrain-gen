@@ -5,9 +5,11 @@ import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.pom.Dependency;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CompositionTest {
@@ -36,5 +38,22 @@ public class CompositionTest {
         
         assertTrue(this.compo.getPom().contain(new Dependency("wow")));
         assertTrue(this.compo.getPom().contain(new Dependency("test")));
+    }
+
+    @Test
+    public void equalTest(){
+        Composition composition = new Composition("salut",new ArrayList<>(),"context");
+        Composition compo2 = new Composition("salut",new ArrayList<>(),"context");
+
+        assertEquals(composition,compo2);
+        assertEquals(composition.hashCode(),compo2.hashCode());
+    }
+
+    @Test
+    public void notEqual(){
+        Composition composition = new Composition("salut",new ArrayList<>(),"context");
+        Composition compo2 = new Composition("azeaze",new ArrayList<>(),"context");
+
+        assertNotEquals(composition,compo2);
     }
 }

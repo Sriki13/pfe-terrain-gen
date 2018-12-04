@@ -7,9 +7,7 @@ import pfe.terrain.factory.parser.JsonParser;
 
 import java.util.List;
 
-import static spark.Spark.get;
-import static spark.Spark.port;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 
 public class Main {
@@ -85,6 +83,19 @@ public class Main {
             try{
                 String name = request.params(":compoName");
                 return controller.getCompositionContext(name);
+            }catch (Exception e){
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        delete("/compositions/:compoName", (request, response) -> {
+            response.type("application/json");
+
+            try{
+                String name = request.params(":compoName");
+                controller.deleteComposition(name);
+                return parser.okAnswer();
             }catch (Exception e){
                 response.status(500);
                 return parser.exceptionToJson(e);

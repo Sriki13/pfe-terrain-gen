@@ -89,6 +89,14 @@ public class ServiceController {
         return composition.getContext();
     }
 
+    public void deleteComposition(String name) throws NoSuchCompoException{
+        Composition composition = getCompoByName(name);
+
+        this.storage.removeComposition(composition);
+
+
+    }
+
     private BasePom pomFromAlgo(List<Algorithm> algorithms){
         BasePom pom = new BasePom();
 

@@ -20,4 +20,8 @@ public class CompoStorage {
     public void clear(){
         compositions = new ArrayList<>();
     }
+
+    public void removeComposition(Composition composition){
+        compositions.remove(composition);
+    }
 }
