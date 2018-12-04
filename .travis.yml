@@ -7,11 +7,7 @@ before_install:
   -in secret.json.enc -out secret.json -d
 - chmod +x *.sh
 - chmod +x travisScripts/*.sh
-- if [ ! -d ${HOME}/google-cloud-sdk ]; then
-  export CLOUDSDK_CORE_DISABLE_PROMPTS=1;
-  curl https://sdk.cloud.google.com | bash;
-  fi
-- gcloud auth activate-service-account --key-file secret.json
+
 services:
 - docker
 jobs:
@@ -29,5 +25,4 @@ jobs:
     script: "./travisScripts/buildAndPush.sh"
   - stage: VmDeploy
     name: Vm deploy
-    if: branch = master
     script: "./travisScripts/gcloudPush.sh"
