@@ -33,6 +33,7 @@
         <module>water</module>
         <module>river</module>
         <module>lake</module>
+        <module>city</module>
     </modules>
 
 </project>
