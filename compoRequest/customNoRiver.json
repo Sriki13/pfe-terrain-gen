@@ -1,0 +1,18 @@
+{
+  "name" : "CustomNoRiver",
+  "context" : {
+    "context": {
+      "size": 400,
+      "islandShape": "",
+      "nbPoints": 5000
+    }
+  },
+  "algorithm" : ["algo.gridcreator.relaxed",
+    "algo.mesh.builder",
+    "algo.borders.basic",
+    "algo.initializer.basic",
+  "algo.water.custom",
+  "algo.height.fromwater",
+  "algo.moisture.perlin",
+  "algo.biome.heightmoisture"]
+}
