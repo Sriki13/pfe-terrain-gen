@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class PerlinMoisture extends Contract {
 
     private final SerializableKey<DoubleType> FACE_MOISTURE =
-            new SerializableKey<>(FACES_PREFIX + "HAS_MOISTURE", "moisture", DoubleType.class);
+            new SerializableKey<>(FACES_PREFIX + "MOISTURE", "moisture", DoubleType.class);
 
     private final Key<BooleanType> FACE_WATER_KEY =
             new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);

@@ -17,7 +17,7 @@ import java.util.Set;
 public class BasicPitch extends Contract {
 
     static final SerializableKey<DoubleType> FACE_PITCH_KEY =
-            new SerializableKey<>(FACES_PREFIX + "HAS_PITCH", "pitch", DoubleType.class);
+            new SerializableKey<>(FACES_PREFIX + "PITCH", "pitch", DoubleType.class);
 
     static final Key<DoubleType> VERTEX_HEIGHT_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);

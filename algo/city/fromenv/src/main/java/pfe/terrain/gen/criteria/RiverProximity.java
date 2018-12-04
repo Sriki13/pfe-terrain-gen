@@ -25,7 +25,7 @@ public class RiverProximity implements Criterion {
     public RiverProximity(Set<Edge> edges) {
         this.riverPoints = new HashSet<>();
         edges.forEach(edge -> {
-            if (edge.getProperty(RIVER_FLOW_KEY).value > 0) {
+            if (edge.hasProperty(RIVER_FLOW_KEY)) {
                 riverPoints.add(edge.getStart());
                 riverPoints.add(edge.getEnd());
             }
