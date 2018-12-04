@@ -5,6 +5,7 @@ import pfe.terrain.gen.algo.geometry.Coord;
 import pfe.terrain.gen.algo.geometry.Edge;
 import pfe.terrain.gen.algo.geometry.Face;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +43,18 @@ public class FaceTest {
             if (c.y > 7) {
                 assertThat(c.x, greaterThan(4.5));
             }
+        }
+    }
+
+    @Test
+    public void testTrianglesContains() {
+        Set<Coord[]> triangles = myFace.getTriangles();
+        for (Coord[] triangle : triangles) {
+            System.out.println(Arrays.toString(triangle));
+            for (int i = 0; i < 3; i++) {
+                System.out.println(Face.getRandomPointInsideTriangle(triangle, new Random()));
+            }
+            System.out.println();
         }
     }
 }

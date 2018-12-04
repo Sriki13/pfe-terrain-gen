@@ -59,6 +59,26 @@ public class Face extends Mappable {
                 Objects.equals(edges, face.edges);
     }
 
+    public Set<Coord[]> getTriangles() {
+        Set<Coord[]> triangles = new HashSet<>();
+        for (Edge e : edges) {
+            triangles.add(new Coord[]{e.getStart(), e.getEnd(), center});
+        }
+        return triangles;
+    }
+
+    public static Coord getRandomPointInsideTriangle(Coord[] triangle, Random random) {
+        double r1 = random.nextDouble();
+        double r2 = random.nextDouble();
+        double x = (1 - Math.sqrt(r1)) * triangle[0].x +
+                (Math.sqrt(r1) * (1 - r2)) * triangle[1].x +
+                (r2 * Math.sqrt(r1)) * triangle[2].x;
+        double y = (1 - Math.sqrt(r1)) * triangle[0].y +
+                (Math.sqrt(r1) * (1 - r2)) * triangle[1].y +
+                (r2 * Math.sqrt(r1)) * triangle[2].y;
+        return new Coord(x, y);
+    }
+
     public Set<Coord> getRandomPointsInside(int number, Random random) {
         List<Coord> coords = new ArrayList<>(getBorderVertices());
         Set<Coord> points = new HashSet<>();
