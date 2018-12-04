@@ -1,26 +1,24 @@
 language: java
 jdk: oraclejdk8
-
 notifications:
   slack: si5-2018-2019-pns:Qay3sY9mRk9ItOQ4tuD8Rarr
-
 before_install:
-  - chmod +x *.sh
-  - chmod +x travisScripts/*.sh
-
+- openssl aes-256-cbc -K $encrypted_e412fa419cdd_key -iv $encrypted_e412fa419cdd_iv
+  -in secret.json.enc -out secret.json -d
+- chmod +x *.sh
+- chmod +x travisScripts/*.sh
 services:
 - docker
-
 jobs:
   include:
-    - stage: "Build"
-      name : "build"
-      script: ./build.sh
-    - stage : "Deploy"
-      name : "deploy"
-      if: branch = master
-      script: ./deploy.sh
-    - stage : "DockerPush"
-      name : "docker push"
-      if: branch = master
-      script: ./travisScripts/buildAndPush.sh
+  - stage: Build
+    name: build
+    script: "./build.sh"
+  - stage: Deploy
+    name: deploy
+    if: branch = master
+    script: "./deploy.sh"
+  - stage: DockerPush
+    name: docker push
+    if: branch = master
+    script: "./travisScripts/buildAndPush.sh"
