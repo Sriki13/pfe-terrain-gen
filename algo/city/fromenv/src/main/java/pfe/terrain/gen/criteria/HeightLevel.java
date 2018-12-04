@@ -19,7 +19,7 @@ public class HeightLevel implements Criterion {
     public static final double RANGE_START = 0.1;
     public static final double RANGE_END = 0.5;
 
-    private static final int WEIGHT = 1;
+    private static final int WEIGHT = 15;
 
     private Map<Face, Double> normalizedHeight;
 

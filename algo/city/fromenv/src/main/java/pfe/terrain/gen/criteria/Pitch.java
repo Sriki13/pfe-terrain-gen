@@ -13,11 +13,11 @@ public class Pitch implements Criterion {
     public static final Key<DoubleType> PITCH_KEY =
             new Key<>(FACES_PREFIX + "PITCH", DoubleType.class);
 
-    private static final double WEIGHT = 0.1;
+    private static final double WEIGHT = 1;
 
     @Override
     public void assignScores(Map<Face, Double> scores) {
         scores.forEach((key, value) ->
-                scores.put(key, value + (1 / (key.getProperty(PITCH_KEY).value + 0.1)) * WEIGHT));
+                scores.put(key, value - key.getProperty(PITCH_KEY).value * WEIGHT));
     }
 }
