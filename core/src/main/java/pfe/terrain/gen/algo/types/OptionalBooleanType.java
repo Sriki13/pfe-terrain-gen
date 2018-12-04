@@ -1,5 +1,7 @@
 package pfe.terrain.gen.algo.types;
 
+import com.google.gson.JsonElement;
+
 public class OptionalBooleanType extends BooleanType {
 
     public OptionalBooleanType(boolean value) {
@@ -7,8 +9,8 @@ public class OptionalBooleanType extends BooleanType {
     }
 
     @Override
-    public Boolean serialize() {
-        return value ? true : null;
+    public JsonElement serialize() {
+        return value ? super.serialize() : null;
     }
 
 }

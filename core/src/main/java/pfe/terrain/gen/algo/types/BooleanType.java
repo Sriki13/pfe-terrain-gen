@@ -1,6 +1,9 @@
 package pfe.terrain.gen.algo.types;
 
-public class BooleanType implements SerializableType<Boolean> {
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+
+public class BooleanType implements SerializableType {
 
     public boolean value;
 
@@ -9,8 +12,8 @@ public class BooleanType implements SerializableType<Boolean> {
     }
 
     @Override
-    public Boolean serialize() {
-        return value;
+    public JsonElement serialize() {
+        return new JsonPrimitive(value);
     }
 
     @Override

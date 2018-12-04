@@ -1,5 +1,7 @@
 package pfe.terrain.gen.algo.island;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import pfe.terrain.gen.algo.types.SerializableType;
 
 public enum Biome implements SerializableType {
@@ -48,8 +50,8 @@ public enum Biome implements SerializableType {
     }
 
     @Override
-    public String serialize() {
-        return code;
+    public JsonElement serialize() {
+        return new JsonPrimitive(code);
     }
 
     @Override

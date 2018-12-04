@@ -1,7 +1,9 @@
 package pfe.terrain.gen.algo.types;
 
-public interface SerializableType<T> {
+import com.google.gson.JsonElement;
 
-    T serialize();
+public interface SerializableType {
+
+    JsonElement serialize();
 
 }

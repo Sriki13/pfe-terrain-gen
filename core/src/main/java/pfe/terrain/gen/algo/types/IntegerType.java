@@ -1,6 +1,9 @@
 package pfe.terrain.gen.algo.types;
 
-public class IntegerType implements SerializableType<Integer> {
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+
+public class IntegerType implements SerializableType {
 
     public int value;
 
@@ -9,8 +12,8 @@ public class IntegerType implements SerializableType<Integer> {
     }
 
     @Override
-    public Integer serialize() {
-        return value;
+    public JsonElement serialize() {
+        return new JsonPrimitive(value);
     }
 
     @Override
