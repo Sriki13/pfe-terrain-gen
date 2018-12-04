@@ -1,7 +1,5 @@
 package pfe.terrain.factory.pom;
 
-import com.sun.webkit.dom.NodeImpl;
-import org.w3c.dom.Node;
 
 import java.util.Objects;
 
