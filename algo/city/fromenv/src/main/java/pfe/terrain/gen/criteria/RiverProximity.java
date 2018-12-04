@@ -18,7 +18,7 @@ public class RiverProximity implements Criterion {
             new Key<>(EDGES_PREFIX + "RIVER_FLOW", IntegerType.class);
 
 
-    private static final double WEIGHT = 1;
+    private static final double WEIGHT = 10;
 
     private Set<Coord> riverPoints;
 
