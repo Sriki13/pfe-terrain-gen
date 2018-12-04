@@ -1,6 +1,6 @@
 package pfe.terrain.gen.algo.types;
 
-public class BooleanType implements SerializableType {
+public class BooleanType implements SerializableType<Boolean> {
 
     public boolean value;
 
@@ -9,12 +9,12 @@ public class BooleanType implements SerializableType {
     }
 
     @Override
-    public String serialize() {
-        return Boolean.toString(value);
+    public Boolean serialize() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return serialize();
+        return Boolean.toString(value);
     }
 }

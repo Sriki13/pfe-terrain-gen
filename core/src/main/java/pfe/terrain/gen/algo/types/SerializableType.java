@@ -1,7 +1,7 @@
 package pfe.terrain.gen.algo.types;
 
-public interface SerializableType {
+public interface SerializableType<T> {
 
-    String serialize();
+    T serialize();
 
 }

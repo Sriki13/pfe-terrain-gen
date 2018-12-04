@@ -7,8 +7,8 @@ public class OptionalIntegerType extends IntegerType {
     }
 
     @Override
-    public String serialize() {
-        return value > 0 ? super.serialize() : null;
+    public Integer serialize() {
+        return value > 0 ? value : null;
     }
 
 }

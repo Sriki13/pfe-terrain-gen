@@ -7,10 +7,8 @@ public class OptionalBooleanType extends BooleanType {
     }
 
     @Override
-    public String serialize() {
-        if (!value) {
-            return null;
-        } else return "true";
+    public Boolean serialize() {
+        return value ? true : null;
     }
 
 }

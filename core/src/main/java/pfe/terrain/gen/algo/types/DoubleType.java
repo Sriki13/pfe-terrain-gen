@@ -1,6 +1,6 @@
 package pfe.terrain.gen.algo.types;
 
-public class DoubleType implements SerializableType {
+public class DoubleType implements SerializableType<Double> {
 
     public double value;
 
@@ -9,12 +9,12 @@ public class DoubleType implements SerializableType {
     }
 
     @Override
-    public String serialize() {
-        return Double.toString(value);
+    public Double serialize() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return serialize();
+        return Double.toString(value);
     }
 }

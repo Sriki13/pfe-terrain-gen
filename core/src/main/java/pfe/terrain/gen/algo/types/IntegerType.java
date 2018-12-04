@@ -1,6 +1,6 @@
 package pfe.terrain.gen.algo.types;
 
-public class IntegerType implements SerializableType {
+public class IntegerType implements SerializableType<Integer> {
 
     public int value;
 
@@ -9,12 +9,12 @@ public class IntegerType implements SerializableType {
     }
 
     @Override
-    public String serialize() {
-        return Integer.toString(value);
+    public Integer serialize() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return serialize();
+        return Integer.toString(value);
     }
 }
