@@ -89,4 +89,7 @@ public class BasePom {
         }
     }
 
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
 }

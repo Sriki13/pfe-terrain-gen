@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class BasePomTest {
 
     @Test
-    public void addDepTest(){
+    public void addDepTest() {
         BasePom pom = new BasePom();
 
         Node dep = pom.addDependency(new Dependency("test"));
@@ -27,12 +28,11 @@ public class BasePomTest {
 
         List<Node> nodes = new ArrayList<>();
 
-        for(int i = 0 ; i<list.getLength();i++){
+        for (int i = 0; i < list.getLength(); i++) {
             nodes.add(list.item(i));
         }
 
         assertTrue(nodes.contains(dep));
-
 
 
         Assert.assertNotNull(pom.toString());

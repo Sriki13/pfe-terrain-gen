@@ -1,4 +1,4 @@
-package pfe.terrain.factory.holder;
+package pfe.terrain.factory.entities;
 
 import pfe.terrain.factory.pom.Dependency;
 
