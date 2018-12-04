@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
-import static pfe.terrain.gen.CityGenerator.CITY_KEY;
+import static pfe.terrain.gen.CityContract.CITY_KEY;
 
 public class CityProximityTest {
 

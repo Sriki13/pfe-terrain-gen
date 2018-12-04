@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
-import static pfe.terrain.gen.CityGenerator.WATER_KIND_KEY;
+import static pfe.terrain.gen.CityContract.WATER_KIND_KEY;
 
 public class LakeProximityTest {
 
