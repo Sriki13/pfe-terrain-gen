@@ -38,7 +38,7 @@ public class BasicPitch extends Contract {
     @Override
     public void execute(IslandMap islandMap, Context context) {
         FaceSet faces = islandMap.getFaces();
-        double factor = islandMap.getSize() / 1600.0;
+        double factor = 1 - islandMap.getSize() / 1600.0;
         for (Face face : faces) {
             face.putProperty(facePitchKey, new DoubleType(computePitch(face, factor)));
         }
@@ -49,8 +49,8 @@ public class BasicPitch extends Contract {
         Coord lowest = borders.stream().min(byHeight).get();
         Coord highest = borders.stream().max(byHeight).get();
         double rise = highest.getProperty(vertexHeightKey).value - lowest.getProperty(vertexHeightKey).value;
-        double run = Math.sqrt(Math.pow(highest.x - lowest.x, 2) + Math.pow(highest.y - lowest.y, 2)) * factor;
+        double run = Math.sqrt(Math.pow(highest.x - lowest.x, 2) + Math.pow(highest.y - lowest.y, 2));
         if (run == 0) return 0;
-        return 100 * (rise / run);
+        return (100 * (rise / run)) / factor;
     }
 }

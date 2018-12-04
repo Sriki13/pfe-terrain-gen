@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import pfe.terrain.gen.algo.types.SerializableType;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class TreeType implements SerializableType {
 
-    private JsonCoord[] value;
+    private List<JsonCoord> value;
 
-    public TreeType(JsonCoord[] value) {
+    public TreeType(List<JsonCoord> value) {
         this.value = value;
     }
 
@@ -22,6 +22,6 @@ public class TreeType implements SerializableType {
 
     @Override
     public String toString() {
-        return Arrays.toString(value);
+        return value.toString();
     }
 }
