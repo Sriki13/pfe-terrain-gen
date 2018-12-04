@@ -1,5 +1,7 @@
 package pfe.terrain.gen.algo.island;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import pfe.terrain.gen.algo.types.SerializableType;
 
 public enum WaterKind implements SerializableType {
@@ -15,8 +17,11 @@ public enum WaterKind implements SerializableType {
     }
 
     @Override
-    public String serialize() {
-        return name;
+    public JsonElement serialize() {
+        if (this == NONE) {
+            return null;
+        }
+        return new JsonPrimitive(name);
     }
 
 }

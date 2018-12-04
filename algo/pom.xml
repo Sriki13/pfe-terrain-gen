@@ -33,6 +33,8 @@
         <module>water</module>
         <module>river</module>
         <module>lake</module>
+        <module>pitch</module>
+        <module>tree</module>
         <module>city</module>
     </modules>
 

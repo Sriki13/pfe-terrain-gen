@@ -2,22 +2,25 @@ package pfe.terrain.gen.algo.types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import pfe.terrain.gen.algo.geometry.Coord;
 
-public class DoubleType implements SerializableType {
+import java.util.Set;
 
-    public double value;
+public class TreeType implements SerializableType {
 
-    public DoubleType(double value) {
+    private Set<Coord> value;
+
+    public TreeType(Set<Coord> value) {
         this.value = value;
     }
 
     @Override
     public JsonElement serialize() {
-        return new JsonPrimitive(value);
+        return new JsonPrimitive(value.toString());
     }
 
     @Override
     public String toString() {
-        return Double.toString(value);
+        return "";
     }
 }
