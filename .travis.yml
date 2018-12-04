@@ -22,4 +22,5 @@ jobs:
       script: ./deploy.sh
     - stage : "DockerPush"
       name : "docker push"
+      if: branch = master
       script: ./travisScripts/buildAndPush.sh
