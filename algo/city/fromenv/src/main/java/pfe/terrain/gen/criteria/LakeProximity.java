@@ -1,7 +1,6 @@
 package pfe.terrain.gen.criteria;
 
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.Face;
 
 import java.util.Map;
 import java.util.Set;
@@ -9,9 +8,6 @@ import java.util.Set;
 public class LakeProximity implements Criterion {
 
     private static final double WEIGHT = 1;
-
-    public static final Key<Boolean> LAKES_KEY =
-            new Key<>("LAKES", Boolean.class);
 
     private Set<Face> lakes;
 

@@ -2,10 +2,10 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.island.geometry.Face;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,9 +15,9 @@ public class RiverMoisture extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, edges, AdapterUtils.riverFlowKey),
-                asKeySet(AdapterUtils.adaptedMoistureKey),
-                asKeySet(AdapterUtils.faceMoisture));
+                asKeySet(FACES, EDGES, AdapterUtils.RIVER_FLOW_KEY),
+                asKeySet(AdapterUtils.ADAPTED_MOISTURE_KEY),
+                asKeySet(AdapterUtils.FACE_MOISTURE));
     }
 
     private final Param<Double> riverMoistureParam = Param.generateDefaultDoubleParam("riverMoisture",
@@ -37,7 +37,6 @@ public class RiverMoisture extends Contract {
         double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(riverMoistureParam)) + MIN_ADD;
         Set<Face> nextToRiver = utils.getTilesNextToRivers(map.getFaces());
         Set<Face> seen = new HashSet<>(nextToRiver);
-        utils.setModifiedKey(map.getFaces());
         for (Face face : nextToRiver) {
             utils.addMoisture(face, moistureBonus);
             utils.spreadToNeighbours(face, seen, moistureBonus / 2);

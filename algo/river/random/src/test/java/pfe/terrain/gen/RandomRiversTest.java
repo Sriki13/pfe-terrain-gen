@@ -3,9 +3,9 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -14,7 +14,6 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static pfe.terrain.gen.RiverGenerator.*;
 
@@ -27,7 +26,7 @@ public class RandomRiversTest {
     public void setUp() {
         islandMap = new IslandMap();
         riverGenerator = new RandomRivers();
-        islandMap.putProperty(Contract.seed, 0);
+        islandMap.putProperty(Contract.SEED, 0);
         int mapSize = 40;
         Random random = new Random(0);
         CoordSet coords = new CoordSet(new HashSet<>());
@@ -38,12 +37,12 @@ public class RandomRiversTest {
                 Coord coord = new Coord(i, j);
                 int lim = 4 + random.nextInt(2);
                 if (i < lim || i > mapSize - lim || j < lim || j > mapSize - lim) {
-                    coord.putProperty(vertexWaterKey, new BooleanType(true));
+                    coord.putProperty(VERTEX_WATER_KEY, new BooleanType(true));
                 } else {
-                    coord.putProperty(vertexWaterKey, new BooleanType(false));
+                    coord.putProperty(VERTEX_WATER_KEY, new BooleanType(false));
                 }
                 int height = random.nextInt(50);
-                coord.putProperty(heightKey, new DoubleType(height));
+                coord.putProperty(HEIGHT_KEY, new DoubleType(height));
                 coords.add(coord);
                 coordsMatrix.set(j * mapSize + i, coord);
             }
@@ -54,24 +53,20 @@ public class RandomRiversTest {
                 edges.add(new Edge(coordsMatrix.get(j * mapSize + i), coordsMatrix.get((j + 1) * mapSize + i)));
             }
         }
-        islandMap.putProperty(Contract.vertices, coords);
-        islandMap.putProperty(Contract.edges, edges);
-        islandMap.putProperty(Contract.faces, new FaceSet(new HashSet<>()));
+        islandMap.putProperty(Contract.VERTICES, coords);
+        islandMap.putProperty(Contract.EDGES, edges);
+        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
     }
 
     @Test
     public void generateRiversTest() {
         Context context = new Context();
         int nbRivers = 10;
-        context.putParam(RandomRivers.nbRiversParam, nbRivers);
+        context.putParam(RandomRivers.NB_RIVERS_PARAM, nbRivers);
         riverGenerator.execute(islandMap, context);
-        for (Coord vertex : islandMap.getVertices()) {
-            assertThat(vertex.getProperty(isSourceKey), notNullValue());
-            assertThat(vertex.getProperty(isRiverEndKey), notNullValue());
-        }
         Set<Coord> sources = new HashSet<>();
         for (Coord coord : islandMap.getVertices()) {
-            if (coord.getProperty(isSourceKey)) {
+            if (coord.hasProperty(IS_SOURCE_KEY)) {
                 sources.add(coord);
             }
         }
@@ -79,12 +74,12 @@ public class RandomRiversTest {
         for (Coord source : sources) {
             Coord start = source;
             Edge before = null;
-            while (!start.getProperty(isRiverEndKey)) {
+            while (!start.hasProperty(IS_RIVER_END_KEY)) {
                 List<Edge> next = findRiverEdge(start, before);
                 assertThat(next.size(), is(1));
                 before = next.get(0);
                 Coord cmp = (start == before.getStart() ? before.getEnd() : before.getStart());
-                assertThat(cmp.getProperty(heightKey).value, lessThan(start.getProperty(heightKey).value));
+                assertThat(cmp.getProperty(HEIGHT_KEY).value, lessThan(start.getProperty(HEIGHT_KEY).value));
                 start = cmp;
             }
         }
@@ -93,7 +88,7 @@ public class RandomRiversTest {
     private List<Edge> findRiverEdge(Coord coord, Edge ignore) {
         List<Edge> result = new ArrayList<>();
         for (Edge edge : islandMap.getEdges()) {
-            if (edge.getProperty(riverFlowKey).value > 0
+            if (edge.hasProperty(RIVER_FLOW_KEY) && edge.getProperty(RIVER_FLOW_KEY).value > 0
                     && (edge.getStart() == coord || edge.getEnd() == coord)
                     && edge != ignore) {
                 result.add(edge);

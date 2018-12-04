@@ -2,15 +2,15 @@ package pfe.terrain.gen.algo.height;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.EdgeSet;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -18,11 +18,12 @@ import java.util.*;
 
 public class HeightSmoothing extends Contract {
 
-    static final Key<DoubleType> vertexHeightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-    static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
+    static final Key<DoubleType> VERTEX_HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
-    static final Param<Double> smoothingFactor = Param.generateDefaultDoubleParam("SmoothingLevel",
+    static final Key<BooleanType> VERTEX_WATER_KEY = new Key<>(VERTICES_PREFIX + "IS_WATER", BooleanType.class);
+
+    static final Param<Double> SMOOTHING_FACTOR = Param.generateDefaultDoubleParam("SmoothingLevel",
             "Adjust how much you want to smooth the height of the map", 0.3, "Smoothing factor");
 
 
@@ -32,15 +33,15 @@ public class HeightSmoothing extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, edges, vertexWaterKey),
+                asKeySet(FACES, EDGES, VERTEX_WATER_KEY),
                 asKeySet(),
-                asKeySet(vertexHeightKey)
+                asKeySet(VERTEX_HEIGHT_KEY)
         );
     }
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(smoothingFactor);
+        return asParamSet(SMOOTHING_FACTOR);
     }
 
     @Override
@@ -50,16 +51,16 @@ public class HeightSmoothing extends Contract {
 
 
         // Adding neighbors of coordinates to the map
-        double smoothingRate = 0.1 + (context.getParamOrDefault(smoothingFactor) / 1.75);
+        double smoothingRate = 0.1 + (context.getParamOrDefault(SMOOTHING_FACTOR) / 1.75);
         double h1;
         double h2;
         for (Edge edge : edges) {
-            h1 = edge.getStart().getProperty(vertexHeightKey).value;
-            h2 = edge.getEnd().getProperty(vertexHeightKey).value;
-            if (!edge.getStart().getProperty(vertexWaterKey).value) {
+            h1 = edge.getStart().getProperty(VERTEX_HEIGHT_KEY).value;
+            h2 = edge.getEnd().getProperty(VERTEX_HEIGHT_KEY).value;
+            if (!edge.getStart().getProperty(VERTEX_WATER_KEY).value) {
                 putInHeightMap(edge.getStart(), h2);
             }
-            if (!edge.getEnd().getProperty(vertexWaterKey).value) {
+            if (!edge.getEnd().getProperty(VERTEX_WATER_KEY).value) {
                 putInHeightMap(edge.getEnd(), h1);
 
             }
@@ -74,14 +75,14 @@ public class HeightSmoothing extends Contract {
             Coord origin = entry.getKey();
             List<Double> neighborList = entry.getValue();
             finalHeight = 0;
-            originHeight = origin.getProperty(vertexHeightKey).value;
+            originHeight = origin.getProperty(VERTEX_HEIGHT_KEY).value;
             smoothingRateMean = smoothingRate / neighborList.size();
             originRate = 1 - smoothingRate;
             for (Double neighborHeight : neighborList) {
                 finalHeight += neighborHeight * smoothingRateMean;
             }
             finalHeight += originHeight * originRate;
-            origin.putProperty(vertexHeightKey, new DoubleType(finalHeight));
+            origin.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(finalHeight));
         }
 
         // Adjusting faces center
@@ -91,10 +92,10 @@ public class HeightSmoothing extends Contract {
             sum = 0;
             total = 0;
             for (Coord border : face.getBorderVertices()) {
-                sum += border.getProperty(vertexHeightKey).value;
+                sum += border.getProperty(VERTEX_HEIGHT_KEY).value;
                 total++;
             }
-            face.getCenter().putProperty(vertexHeightKey, new DoubleType(sum / (double) total));
+            face.getCenter().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(sum / (double) total));
         }
     }
 

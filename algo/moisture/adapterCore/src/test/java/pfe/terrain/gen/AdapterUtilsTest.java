@@ -2,10 +2,10 @@ package pfe.terrain.gen;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;
@@ -34,19 +34,19 @@ public class AdapterUtilsTest {
 
     private Face generateFace(int seed, boolean isLake) {
         Face face = generateFace(seed, 1);
-        face.putProperty(AdapterUtils.faceWaterKey, new BooleanType(isLake));
-        face.putProperty(AdapterUtils.waterKindKey, isLake ? WaterKind.LAKE : WaterKind.NONE);
+        face.putProperty(AdapterUtils.FACE_WATER_KEY, new BooleanType(isLake));
+        face.putProperty(AdapterUtils.WATER_KIND_KEY, isLake ? WaterKind.LAKE : WaterKind.NONE);
         return face;
     }
 
     private Face generateFace(int seed, double moisture, Set<Edge> edges) {
         Face face = new Face(new Coord(seed, 0), edges);
-        face.putProperty(AdapterUtils.faceMoisture, new DoubleType(moisture));
+        face.putProperty(AdapterUtils.FACE_MOISTURE, new DoubleType(moisture));
         return face;
     }
 
     private double getMoisture(Face face) {
-        return face.getProperty(AdapterUtils.faceMoisture).value;
+        return face.getProperty(AdapterUtils.FACE_MOISTURE).value;
     }
 
     @Test
@@ -81,7 +81,7 @@ public class AdapterUtilsTest {
     @Test
     public void tilesNextToRiverTest() {
         Edge river = new Edge(new Coord(0, 1), new Coord(1, 0));
-        river.putProperty(AdapterUtils.riverFlowKey, new IntegerType(1));
+        river.putProperty(AdapterUtils.RIVER_FLOW_KEY, new IntegerType(1));
         Face correct = generateFace(2, 0.5, new HashSet<>(Collections.singleton(river)));
         Face incorrect = generateFace(3, 0.5);
         Set<Face> got = utils.getTilesNextToRivers(new HashSet<>(Arrays.asList(correct, incorrect)));

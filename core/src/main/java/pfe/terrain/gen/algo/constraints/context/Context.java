@@ -1,7 +1,7 @@
-package pfe.terrain.gen.algo.context;
+package pfe.terrain.gen.algo.constraints.context;
 
+import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
-import pfe.terrain.gen.algo.key.Param;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,14 +3,14 @@ package pfe.terrain.gen.algo.biome;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.Biome;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -53,26 +53,26 @@ public class HeightBiomesTest {
         oceanFace = generateWaterFace(5, WaterKind.OCEAN);
         lakeFace = generateWaterFace(6, WaterKind.LAKE);
         allFaces.addAll(Arrays.asList(highFace, lowFace, lowFaceOnAverage, oceanFace, lakeFace));
-        islandMap.putProperty(Contract.faces, allFaces);
+        islandMap.putProperty(Contract.FACES, allFaces);
     }
 
     private Coord generateCoord(int z, int seed) throws Exception {
         Coord result = new Coord(seed, 0);
-        result.putProperty(HeightBiomes.heightKey, new DoubleType(z));
+        result.putProperty(HeightBiomes.HEIGHT_KEY, new DoubleType(z));
         return result;
     }
 
     private void setAsLand(Face face) throws Exception {
-        face.putProperty(HeightBiomes.waterKindKey, WaterKind.NONE);
-        face.putProperty(HeightBiomes.faceWaterKey, new BooleanType(false));
+        face.putProperty(HeightBiomes.WATER_KIND_KEY, WaterKind.NONE);
+        face.putProperty(HeightBiomes.FACE_WATER_KEY, new BooleanType(false));
     }
 
     private Face generateWaterFace(int seed, WaterKind kind) throws Exception {
         Face result = new Face(new Coord(1, seed), new HashSet<>(Collections.singleton(
                 new Edge(generateCoord(0, seed), generateCoord(0, seed))
         )));
-        result.putProperty(HeightBiomes.waterKindKey, kind);
-        result.putProperty(HeightBiomes.faceWaterKey, new BooleanType(true));
+        result.putProperty(HeightBiomes.WATER_KIND_KEY, kind);
+        result.putProperty(HeightBiomes.FACE_WATER_KEY, new BooleanType(true));
         return result;
     }
 
@@ -89,7 +89,7 @@ public class HeightBiomesTest {
     }
 
     private Biome getBiome(Face face) throws Exception {
-        return face.getProperty(HeightBiomes.faceBiomeKey);
+        return face.getProperty(HeightBiomes.FACE_BIOME_KEY);
     }
 
 

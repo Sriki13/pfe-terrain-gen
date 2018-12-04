@@ -1,8 +1,8 @@
-package pfe.terrain.gen.algo.context;
+package pfe.terrain.gen.algo.constraints.context;
 
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.exception.WrongTypeException;
-import pfe.terrain.gen.algo.key.Param;
 
 import java.util.HashSet;
 import java.util.List;

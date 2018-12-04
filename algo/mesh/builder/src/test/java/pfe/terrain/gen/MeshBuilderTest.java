@@ -3,10 +3,10 @@ package pfe.terrain.gen;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.ArrayList;
 import java.util.List;

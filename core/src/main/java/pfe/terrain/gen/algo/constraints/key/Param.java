@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo.key;
+package pfe.terrain.gen.algo.constraints.key;
 
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 

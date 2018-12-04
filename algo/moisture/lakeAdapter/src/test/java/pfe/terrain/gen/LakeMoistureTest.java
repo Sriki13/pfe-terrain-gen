@@ -3,12 +3,12 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -39,7 +39,7 @@ public class LakeMoistureTest {
         oneTileAway.addNeighbor(closeToLake);
         lake.addNeighbor(closeToLake);
         closeToLake.addNeighbor(lake);
-        islandMap.putProperty(Contract.faces, new FaceSet(new HashSet<>(Arrays.asList(
+        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 farFromLake, closeToLake, oneTileAway, lake
         ))));
     }
@@ -47,9 +47,9 @@ public class LakeMoistureTest {
     @SuppressWarnings("Duplicates") // no test lib necessary for a single test util method
     public static Face generateFace(int seed, boolean isLake) {
         Face result = new Face(new Coord(seed, 2), new HashSet<>());
-        result.putProperty(AdapterUtils.faceMoisture, new DoubleType(0.0));
-        result.putProperty(AdapterUtils.faceWaterKey, new BooleanType(isLake));
-        result.putProperty(AdapterUtils.waterKindKey, isLake ? WaterKind.LAKE : WaterKind.NONE);
+        result.putProperty(AdapterUtils.FACE_MOISTURE, new DoubleType(0.0));
+        result.putProperty(AdapterUtils.FACE_WATER_KEY, new BooleanType(isLake));
+        result.putProperty(AdapterUtils.WATER_KIND_KEY, isLake ? WaterKind.LAKE : WaterKind.NONE);
         return result;
     }
 
@@ -64,7 +64,7 @@ public class LakeMoistureTest {
     }
 
     private double getMoisture(Face face) {
-        return face.getProperty(AdapterUtils.faceMoisture).value;
+        return face.getProperty(AdapterUtils.FACE_MOISTURE).value;
     }
 
 

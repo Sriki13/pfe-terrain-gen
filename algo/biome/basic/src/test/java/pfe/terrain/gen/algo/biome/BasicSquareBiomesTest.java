@@ -2,15 +2,15 @@ package pfe.terrain.gen.algo.biome;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
-import pfe.terrain.gen.algo.geometry.FaceSet;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.island.Biome;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.types.OptionalBooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -35,19 +35,18 @@ public class BasicSquareBiomesTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         biomeMapper = new BasicSquareBiomes();
         islandMap = new IslandMap();
         islandMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(Arrays.asList(land, ocean)));
-        ocean.putProperty(biomeMapper.faceBorderKey, new OptionalBooleanType(true));
-        land.putProperty(biomeMapper.faceBorderKey, new OptionalBooleanType(false));
+        ocean.putProperty(biomeMapper.FACE_BORDER_KEY, new MarkerType());
     }
 
     @Test
-    public void dumbSquareBiomesTest() throws Exception {
+    public void dumbSquareBiomesTest() {
         biomeMapper.execute(islandMap, new Context());
-        assertThat(land.getProperty(biomeMapper.faceBiomeKey), is(Biome.SUB_TROPICAL_DESERT));
-        assertThat(ocean.getProperty(biomeMapper.faceBiomeKey), is(Biome.OCEAN));
+        assertThat(land.getProperty(biomeMapper.FACE_BIOME_KEY), is(Biome.SUB_TROPICAL_DESERT));
+        assertThat(ocean.getProperty(biomeMapper.FACE_BIOME_KEY), is(Biome.OCEAN));
     }
 
 

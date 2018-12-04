@@ -6,7 +6,7 @@ import org.chocosolver.solver.objective.ParetoOptimizer;
 import org.chocosolver.solver.variables.IntVar;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;

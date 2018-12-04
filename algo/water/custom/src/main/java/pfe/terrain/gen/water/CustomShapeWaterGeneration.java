@@ -2,15 +2,15 @@ package pfe.terrain.gen.water;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.Arrays;
@@ -19,36 +19,41 @@ import java.util.logging.Logger;
 
 public class CustomShapeWaterGeneration extends Contract {
 
-    private static final Param<String> customShape = new Param<>("islandShape", String.class,
+    private static final Param<String> CUSTOM_SHAPE = new Param<>("islandShape", String.class,
             "A Square Matrix of 0 and 1 (0 water, 1 land)", "Shape of the island", "", "Island shape matrix");
 
-    static final Param<String> premadeShape = new Param<>("premadeIslandShape", String.class,
+    static final Param<String> PRE_MADE_SHAPE = new Param<>("premadeIslandShape", String.class,
             Arrays.toString(DefaultShape.values()), "Choose a shape of the island in presets", DefaultShape.CIRCLE.name(),
             "Island shape preset");
 
-    static final Key<BooleanType> faceWaterKey = new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    private static final Key<BooleanType> vertexWaterKey = new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
-    static final Key<WaterKind> waterKindKey = new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    static final Key<BooleanType> FACE_WATER_KEY =
+            new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
+
+    private static final Key<BooleanType> VERTEX_WATER_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
+
+    static final Key<WaterKind> WATER_KIND_KEY =
+            new SerializableKey<>(FACES_PREFIX + "WATER_KIND", "waterKind", WaterKind.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, vertices, seed),
-                asKeySet(faceWaterKey, vertexWaterKey, waterKindKey)
+                asKeySet(FACES, VERTICES, SEED),
+                asKeySet(FACE_WATER_KEY, VERTEX_WATER_KEY, WATER_KIND_KEY)
         );
     }
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(customShape, premadeShape);
+        return asParamSet(CUSTOM_SHAPE, PRE_MADE_SHAPE);
     }
 
     @Override
     public void execute(IslandMap map, Context context) {
-        String islandShape = context.getParamOrDefault(customShape);
-        ShapeMatrix matrix = null;
+        String islandShape = context.getParamOrDefault(CUSTOM_SHAPE);
+        ShapeMatrix matrix;
         if (islandShape.equals("")) {
-            matrix = new ShapeMatrix(DefaultShape.valueOf(context.getParamOrDefault(premadeShape).toUpperCase()).getMatrix());
+            matrix = new ShapeMatrix(DefaultShape.valueOf(context.getParamOrDefault(PRE_MADE_SHAPE).toUpperCase()).getMatrix());
         } else {
             try {
                 matrix = new ShapeMatrix(islandShape);
@@ -62,21 +67,21 @@ public class CustomShapeWaterGeneration extends Contract {
             Coord center = face.getCenter();
             boolean water = matrix.isWater((int) (Math.floor((center.y / size) * matrix.getSize())),
                     (int) (Math.floor((center.x / size) * matrix.getSize())));
-            face.putProperty(faceWaterKey, new BooleanType(water));
+            face.putProperty(FACE_WATER_KEY, new BooleanType(water));
             if (water) {
-                face.putProperty(waterKindKey, WaterKind.OCEAN);
+                face.putProperty(WATER_KIND_KEY, WaterKind.OCEAN);
             } else {
-                face.putProperty(waterKindKey, WaterKind.NONE);
+                face.putProperty(WATER_KIND_KEY, WaterKind.NONE);
             }
-            face.getCenter().putProperty(vertexWaterKey, new BooleanType(water));
+            face.getCenter().putProperty(VERTEX_WATER_KEY, new BooleanType(water));
             for (Coord coord : face.getBorderVertices()) {
                 try {
-                    coord.getProperty(vertexWaterKey);
+                    coord.getProperty(VERTEX_WATER_KEY);
                     if (water) {
-                        coord.putProperty(vertexWaterKey, new BooleanType(water));
+                        coord.putProperty(VERTEX_WATER_KEY, new BooleanType(true));
                     }
                 } catch (NoSuchKeyException ke) {
-                    coord.putProperty(vertexWaterKey, new BooleanType(water));
+                    coord.putProperty(VERTEX_WATER_KEY, new BooleanType(water));
                 }
             }
         }

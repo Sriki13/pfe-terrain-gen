@@ -2,61 +2,68 @@ package pfe.terrain.gen.algo.height;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.OptionalKey;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.Arrays;
 import java.util.Set;
 
 public class SimplexHeight extends Contract {
 
-    public static final Key<BooleanType> vertexBorderKey =
-            new Key<>(verticesPrefix + "IS_BORDER", BooleanType.class);
-    public static final Key<BooleanType> faceBorderKey =
-            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    // Required
 
-    public static final Key<DoubleType> vertexHeightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-    public static final Key<Boolean> oceanFloorKey =
-            new Key<>("OCEAN_HEIGHT", Boolean.class);
+    public static final Key<MarkerType> VERTEX_BORDER_KEY =
+            new OptionalKey<>(VERTICES_PREFIX + "IS_BORDER", MarkerType.class);
+
+    public static final Key<MarkerType> FACE_BORDER_KEY =
+            new OptionalKey<>(FACES_PREFIX + "IS_BORDER", MarkerType.class);
+
+    // Produced
+
+    public static final Key<DoubleType> VERTEX_HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
+
+    public static final Key<MarkerType> OCEAN_FLOOR_KEY =
+            new Key<>("OCEAN_HEIGHT", MarkerType.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, vertices, vertexBorderKey, faceBorderKey, size, seed),
-                asKeySet(vertexHeightKey)
+                asKeySet(FACES, VERTICES, VERTEX_BORDER_KEY, FACE_BORDER_KEY, SIZE, SEED),
+                asKeySet(VERTEX_HEIGHT_KEY)
         );
     }
 
-    public static final Param<Double> simplexIslandSize = Param.generateDefaultDoubleParam(
+    public static final Param<Double> SIMPLEX_ISLAND_SIZE = Param.generateDefaultDoubleParam(
             "simplexIslandSize", "The size of ths islands that will be generated. Higher values mean bigger islands.",
             0.333333, "Island size");
 
-    public static final Param<Double> seaLevelParam = Param.generateDefaultDoubleParam("seaLevel",
+    public static final Param<Double> SEA_LEVEL_PARAM = Param.generateDefaultDoubleParam("seaLevel",
             "The height of the sea level. Higher values mean less land will emerge.", 0.444444, "Sea level");
 
-    public static final Param<Double> nbSimplexPasses = Param.generateDefaultDoubleParam("smoothness",
+    public static final Param<Double> NB_SIMPLEX_PASSES = Param.generateDefaultDoubleParam("smoothness",
             "How smooth the terrain should be. Lower values mean smoother terrain.", 0.333333, "Height smoothness");
 
-    public static final Param<String> islandShape = new Param<>("simplexShape", String.class,
+    public static final Param<String> ISLAND_SHAPE = new Param<>("simplexShape", String.class,
             Arrays.toString(SimplexIslandShape.values()),
             "The general shape of the coasts of the island.", "SQUARE", "Coast general shape");
 
-    public static final Param<Double> simplexNbIsland = Param.generateDefaultDoubleParam("simplexNbIsland",
+    public static final Param<Double> SIMPLEX_NB_ISLAND = Param.generateDefaultDoubleParam("simplexNbIsland",
             "The number of islands that will be generated. Higher values mean more islands.", 0.0, "Number of islands");
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(simplexIslandSize, seaLevelParam, nbSimplexPasses, islandShape, simplexNbIsland);
+        return asParamSet(SIMPLEX_ISLAND_SIZE, SEA_LEVEL_PARAM, NB_SIMPLEX_PASSES, ISLAND_SHAPE, SIMPLEX_NB_ISLAND);
     }
 
     // default = 0.05
@@ -79,13 +86,13 @@ public class SimplexHeight extends Contract {
     public void execute(IslandMap map, Context context) {
 
         SimplexNoiseMap elevation = new SimplexNoiseMap(map.getVertices(), map.getSize(), map.getSeed());
-        double passes = (MAX_PASSES - MIN_PASSES) * (context.getParamOrDefault(nbSimplexPasses)) + MIN_PASSES;
-        double islandSize = (MAX_SIZE - MIN_SIZE) * (context.getParamOrDefault(simplexIslandSize)) + MIN_SIZE;
-        double seaLevel = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(seaLevelParam)) + MIN_SEA;
-        double factor = (MAX_NB - MIN_NB) * (context.getParamOrDefault(simplexNbIsland)) + MIN_NB;
+        double passes = (MAX_PASSES - MIN_PASSES) * (context.getParamOrDefault(NB_SIMPLEX_PASSES)) + MIN_PASSES;
+        double islandSize = (MAX_SIZE - MIN_SIZE) * (context.getParamOrDefault(SIMPLEX_ISLAND_SIZE)) + MIN_SIZE;
+        double seaLevel = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(SEA_LEVEL_PARAM)) + MIN_SEA;
+        double factor = (MAX_NB - MIN_NB) * (context.getParamOrDefault(SIMPLEX_NB_ISLAND)) + MIN_NB;
 
         double total = 0;
-        SimplexIslandShape shape = SimplexIslandShape.getFromString(context.getParamOrDefault(islandShape));
+        SimplexIslandShape shape = SimplexIslandShape.getFromString(context.getParamOrDefault(ISLAND_SHAPE));
 
         for (int i = 0; i < passes; i++) {
             elevation.addSimplexNoise(1 / Math.pow(2, i), factor * Math.pow(2, i), islandSize, shape);
@@ -101,15 +108,15 @@ public class SimplexHeight extends Contract {
         elevation.putHeightProperty();
 
         for (Face face : map.getFaces()) {
-            face.getCenter().putProperty(vertexHeightKey, new DoubleType(getAverageHeight(face)));
+            face.getCenter().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(getAverageHeight(face)));
         }
-        map.putProperty(oceanFloorKey, true);
+        map.putProperty(OCEAN_FLOOR_KEY, new MarkerType());
     }
 
     private double getAverageHeight(Face face) throws NoSuchKeyException, KeyTypeMismatch {
         double average = 0;
         for (Coord coord : face.getBorderVertices()) {
-            average += coord.getProperty(vertexHeightKey).value;
+            average += coord.getProperty(VERTEX_HEIGHT_KEY).value;
         }
         return average / face.getBorderVertices().size();
     }

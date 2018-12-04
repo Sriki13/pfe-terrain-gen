@@ -2,51 +2,41 @@ package pfe.terrain.gen.algo.height;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.EdgeSet;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.SerializableKey;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static pfe.terrain.gen.algo.constraints.Contract.verticesPrefix;
+import static org.hamcrest.Matchers.closeTo;
+import static org.junit.Assert.assertThat;
+import static pfe.terrain.gen.algo.height.HeightMultiplication.VERTEX_HEIGHT_KEY;
 
 public class MultiplicationTest {
 
-    private static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
-    public static final Key<DoubleType> vertexHeightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-
     private IslandMap map;
     private CoordSet coords;
-    private EdgeSet edges;
     private int mapSize;
 
     @Before
-    public void setUp() throws Exception {
-        HeightMultiplication heightGen = new HeightMultiplication();
+    public void setUp() {
         map = new IslandMap();
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 3);
-        Random random = new Random(map.getSeed());
         coords = new CoordSet();
-        edges = new EdgeSet();
         mapSize = 64;
-        List<Coord> coordsMatrix = new ArrayList<>(Collections.nCopies(mapSize * mapSize, new Coord(0, 0)));
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
                 Coord coord = new Coord(i, j);
 
-                coord.putProperty(vertexHeightKey,new DoubleType(5));
+                coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(5));
             }
         }
 
@@ -59,18 +49,18 @@ public class MultiplicationTest {
 
         coords = map.getVertices();
         for (Coord coord : coords) {
-            heightMap.put(coord,coord.getProperty(vertexHeightKey).value);
+            heightMap.put(coord, coord.getProperty(VERTEX_HEIGHT_KEY).value);
         }
 
-        HeightMultiplication mult = new HeightMultiplication();
+        HeightMultiplication multiplier = new HeightMultiplication();
 
-        mult.execute(map,new Context());
+        multiplier.execute(map, new Context());
 
         coords = map.getVertices();
         for (Coord coord : coords) {
             Double oldHeight = heightMap.get(coord);
 
-            assertEquals(oldHeight * 2 , coord.getProperty(vertexHeightKey).value);
+            assertThat(oldHeight * 2, closeTo(coord.getProperty(VERTEX_HEIGHT_KEY).value, 0.01));
         }
     }
 }

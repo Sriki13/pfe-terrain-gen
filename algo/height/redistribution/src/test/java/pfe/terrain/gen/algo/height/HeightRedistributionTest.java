@@ -2,15 +2,15 @@ package pfe.terrain.gen.algo.height;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.FaceSet;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -20,10 +20,10 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
-import static pfe.terrain.gen.algo.constraints.Contract.faces;
-import static pfe.terrain.gen.algo.constraints.Contract.vertices;
-import static pfe.terrain.gen.algo.height.HeightRedistribution.vertexHeightKey;
-import static pfe.terrain.gen.algo.height.HeightRedistribution.vertexWaterKey;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
+import static pfe.terrain.gen.algo.height.HeightRedistribution.VERTEX_HEIGHT_KEY;
+import static pfe.terrain.gen.algo.height.HeightRedistribution.VERTEX_WATER_KEY;
 
 public class HeightRedistributionTest {
 
@@ -42,29 +42,29 @@ public class HeightRedistributionTest {
             for (int j = 0; j < mapSize; j++) {
                 Coord coord = new Coord(i, j);
                 if (i < 1 || i > mapSize || j < 1 || j > mapSize) {
-                    coord.putProperty(vertexWaterKey, new BooleanType(true));
-                    coord.putProperty(vertexHeightKey, new DoubleType(0));
+                    coord.putProperty(VERTEX_WATER_KEY, new BooleanType(true));
+                    coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(0));
                 } else {
-                    coord.putProperty(vertexWaterKey, new BooleanType(false));
+                    coord.putProperty(VERTEX_WATER_KEY, new BooleanType(false));
                     if (i < halfSize) {
                         if (j < halfSize) {
-                            coord.putProperty(vertexHeightKey, new DoubleType(i + j));
+                            coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(i + j));
                         } else {
-                            coord.putProperty(vertexHeightKey, new DoubleType(i + (j - (j - halfSize))));
+                            coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(i + (j - (j - halfSize))));
                         }
                     } else {
                         if (j < halfSize) {
-                            coord.putProperty(vertexHeightKey, new DoubleType((i - (i - halfSize) + j)));
+                            coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType((i - (i - halfSize) + j)));
                         } else {
-                            coord.putProperty(vertexHeightKey, new DoubleType((i - (i - halfSize) + (j - (j - halfSize)))));
+                            coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType((i - (i - halfSize) + (j - (j - halfSize)))));
                         }
                     }
                 }
                 coords.add(coord);
             }
         }
-        map.putProperty(faces, new FaceSet());
-        map.putProperty(vertices, coords);
+        map.putProperty(FACES, new FaceSet());
+        map.putProperty(VERTICES, coords);
     }
 
     @Test
@@ -72,11 +72,11 @@ public class HeightRedistributionTest {
         HeightRedistribution heightGen = new HeightRedistribution();
         List<Coord> coordList = new ArrayList<>(map.getVertices());
         coordList.sort(compare());
-        double median = coordList.get(coordList.size() / 2).getProperty(vertexHeightKey).value;
+        double median = coordList.get(coordList.size() / 2).getProperty(VERTEX_HEIGHT_KEY).value;
         heightGen.execute(map, new Context());
         coordList = new ArrayList<>(map.getVertices());
         coordList.sort(compare());
-        double medianAfter = coordList.get(coordList.size() / 2).getProperty(vertexHeightKey).value;
+        double medianAfter = coordList.get(coordList.size() / 2).getProperty(VERTEX_HEIGHT_KEY).value;
 
         // Assert that there are more low values now
         assertThat(medianAfter, lessThan(median));
@@ -85,7 +85,7 @@ public class HeightRedistributionTest {
     private Comparator<Coord> compare() {
         return (o1, o2) -> {
             try {
-                return (int) (1000 * o2.getProperty(vertexHeightKey).value - o1.getProperty(vertexHeightKey).value);
+                return (int) (1000 * o2.getProperty(VERTEX_HEIGHT_KEY).value - o1.getProperty(VERTEX_HEIGHT_KEY).value);
             } catch (NoSuchKeyException | KeyTypeMismatch e) {
                 e.printStackTrace();
             }

@@ -2,11 +2,11 @@ package pfe.terrain.gen.algo.island;
 
 import pfe.terrain.gen.algo.Mappable;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.*;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -117,15 +117,15 @@ public class IslandMap extends Mappable {
 
     public <T> boolean assertContaining(Key<T> key) {
         try {
-            if (key.getId().startsWith(Contract.verticesPrefix)) {
+            if (key.getId().startsWith(Contract.VERTICES_PREFIX)) {
                 for (Coord coord : vertices) {
                     coord.getProperty(key);
                 }
-            } else if (key.getId().startsWith(Contract.edgesPrefix)) {
+            } else if (key.getId().startsWith(Contract.EDGES_PREFIX)) {
                 for (Edge edge : edges) {
                     edge.getProperty(key);
                 }
-            } else if (key.getId().startsWith(Contract.facesPrefix)) {
+            } else if (key.getId().startsWith(Contract.FACES_PREFIX)) {
                 for (Face face : faces) {
                     face.getProperty(key);
                 }

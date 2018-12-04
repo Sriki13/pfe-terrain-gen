@@ -3,11 +3,11 @@ package pfe.terrain.gen.water;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,35 +24,37 @@ public class WaterFromHeightTest {
     private FaceSet allFaces;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         generator = new WaterFromHeight();
         islandMap = new IslandMap();
         allCoords = new CoordSet();
         allFaces = new FaceSet();
-        islandMap.putProperty(Contract.faces, allFaces);
-        islandMap.putProperty(Contract.vertices, allCoords);
+        islandMap.putProperty(Contract.FACES, allFaces);
+        islandMap.putProperty(Contract.VERTICES, allCoords);
     }
 
-    private Face generateFace(boolean border, boolean hasLandVertices, int seed) throws Exception {
+    private Face generateFace(boolean border, boolean hasLandVertices, int seed) {
         int z = hasLandVertices ? 5 : -5;
         Face face = new Face(new Coord(seed, 5), new HashSet<>(Collections.singleton(
                 new Edge(generateCoord(0, seed, z), generateCoord(seed, 0, -5))
         )));
-        face.putProperty(WaterFromHeight.faceBorderKey, new BooleanType(border));
+        if (border) {
+            face.putProperty(WaterFromHeight.FACE_BORDER_KEY, new MarkerType());
+        }
         allFaces.add(face);
         return face;
     }
 
-    private Coord generateCoord(int x, int y, int z) throws Exception {
+    private Coord generateCoord(int x, int y, int z) {
         Coord coord = new Coord(x, y);
-        coord.putProperty(WaterFromHeight.heightKey, new DoubleType(z));
+        coord.putProperty(WaterFromHeight.HEIGHT_KEY, new DoubleType(z));
         allCoords.add(coord);
         return coord;
     }
 
 
     @Test
-    public void oceanPropagationTest() throws Exception {
+    public void oceanPropagationTest() {
         Face ocean = generateFace(true, false, 4);
         Face neighbor = generateFace(false, false, 1);
         ocean.addNeighbor(neighbor);
@@ -63,21 +65,21 @@ public class WaterFromHeightTest {
         assertOcean(ocean);
         assertOcean(neighbor);
         assertOcean(neighborNeighbor);
-        assertThat(lake.getProperty(WaterFromHeight.faceWaterKey).value, is(true));
-        assertThat(lake.getProperty(WaterFromHeight.waterKindKey), is(LAKE));
+        assertThat(lake.getProperty(WaterFromHeight.FACE_WATER_KEY).value, is(true));
+        assertThat(lake.getProperty(WaterFromHeight.WATER_KIND_KEY), is(LAKE));
     }
 
-    private void assertOcean(Face ocean) throws Exception {
-        assertThat(ocean.getProperty(WaterFromHeight.faceWaterKey).value, is(true));
-        assertThat(ocean.getProperty(WaterFromHeight.waterKindKey), is(OCEAN));
+    private void assertOcean(Face ocean) {
+        assertThat(ocean.getProperty(WaterFromHeight.FACE_WATER_KEY).value, is(true));
+        assertThat(ocean.getProperty(WaterFromHeight.WATER_KIND_KEY), is(OCEAN));
     }
 
     @Test
-    public void mappingLandTest() throws Exception {
+    public void mappingLandTest() {
         Face land = generateFace(false, true, 1);
         generator.execute(islandMap, new Context());
-        assertThat(land.getProperty(WaterFromHeight.faceWaterKey).value, is(false));
-        assertThat(land.getProperty(WaterFromHeight.waterKindKey), is(NONE));
+        assertThat(land.getProperty(WaterFromHeight.FACE_WATER_KEY).value, is(false));
+        assertThat(land.getProperty(WaterFromHeight.WATER_KIND_KEY), is(NONE));
     }
 
 }

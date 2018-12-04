@@ -1,4 +1,4 @@
-package pfe.terrain.gen.algo.geometry;
+package pfe.terrain.gen.algo.island.geometry;
 
 import pfe.terrain.gen.algo.Mappable;
 

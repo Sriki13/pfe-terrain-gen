@@ -2,9 +2,9 @@ package pfe.terrain.gen.algo.borders;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Edge;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.stream.Collectors;
@@ -37,28 +37,28 @@ public class BasicPitchTest {
 
     @Test
     public void pitch45Degrees() {
-        c1.putProperty(BasicPitch.vertexHeightKey, new DoubleType(0.0));
-        c2.putProperty(BasicPitch.vertexHeightKey, new DoubleType(10.0));
-        c3.putProperty(BasicPitch.vertexHeightKey, new DoubleType(5.0));
-        c4.putProperty(BasicPitch.vertexHeightKey, new DoubleType(5.0));
+        c1.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(0.0));
+        c2.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(10.0));
+        c3.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(5.0));
+        c4.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(5.0));
         assertThat(bp.computePitch(myFace, 1), equalTo(100.0));
     }
 
     @Test
     public void pitch0Degrees() {
-        c1.putProperty(BasicPitch.vertexHeightKey, new DoubleType(0.0));
-        c2.putProperty(BasicPitch.vertexHeightKey, new DoubleType(0.0));
-        c3.putProperty(BasicPitch.vertexHeightKey, new DoubleType(0.0));
-        c4.putProperty(BasicPitch.vertexHeightKey, new DoubleType(0.0));
+        c1.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(0.0));
+        c2.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(0.0));
+        c3.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(0.0));
+        c4.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(0.0));
         assertThat(bp.computePitch(myFace, 1), equalTo(0.0));
     }
 
     @Test
     public void megaPitch() {
-        c1.putProperty(BasicPitch.vertexHeightKey, new DoubleType(0.0));
-        c2.putProperty(BasicPitch.vertexHeightKey, new DoubleType(3.0));
-        c3.putProperty(BasicPitch.vertexHeightKey, new DoubleType(4.0));
-        c4.putProperty(BasicPitch.vertexHeightKey, new DoubleType(10.0));
+        c1.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(0.0));
+        c2.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(3.0));
+        c3.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(4.0));
+        c4.putProperty(BasicPitch.VERTEX_HEIGHT_KEY, new DoubleType(10.0));
         assertThat(bp.computePitch(myFace, 0.01), greaterThan(200.0));
     }
 

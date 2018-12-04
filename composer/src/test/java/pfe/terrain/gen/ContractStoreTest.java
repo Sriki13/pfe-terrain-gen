@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.exception.MissingRequiredException;
 
 import java.util.*;

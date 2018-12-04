@@ -2,32 +2,33 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class LakeMoisture extends Contract {
 
-    public static final Key<Boolean> lakesKey = new Key<>("LAKES", Boolean.class);
+    public static final Key<MarkerType> LAKES_KEY = new Key<>("LAKES", MarkerType.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, edges, lakesKey, AdapterUtils.faceWaterKey, AdapterUtils.waterKindKey),
-                asKeySet(AdapterUtils.adaptedMoistureKey),
-                asKeySet(AdapterUtils.faceMoisture));
+                asKeySet(FACES, EDGES, LAKES_KEY, AdapterUtils.FACE_WATER_KEY, AdapterUtils.WATER_KIND_KEY),
+                asKeySet(AdapterUtils.ADAPTED_MOISTURE_KEY),
+                asKeySet(AdapterUtils.FACE_MOISTURE));
     }
 
-    private final Param<Double> lakeMoistureParam = Param.generateDefaultDoubleParam("lakeMoisture",
+    private final Param<Double> LAKE_MOISTURE_PARAM = Param.generateDefaultDoubleParam("lakeMoisture",
             "The amount of moisture added around the lakes.", 0.5, "Lake extra moisture");
 
     public Set<Param> getRequestedParameters() {
-        return asParamSet(lakeMoistureParam);
+        return asParamSet(LAKE_MOISTURE_PARAM);
     }
 
     private static final double MAX_ADD = 0.5;
@@ -37,10 +38,9 @@ public class LakeMoisture extends Contract {
 
     @Override
     public void execute(IslandMap map, Context context) {
-        double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(lakeMoistureParam)) + MIN_ADD;
+        double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(LAKE_MOISTURE_PARAM)) + MIN_ADD;
         Set<Face> nextToLake = utils.getTilesNextToLakes(map.getFaces());
         Set<Face> seen = new HashSet<>(nextToLake);
-        utils.setModifiedKey(map.getFaces());
         for (Face face : nextToLake) {
             utils.addMoisture(face, moistureBonus);
             utils.spreadToNeighbours(face, seen, moistureBonus / 2);

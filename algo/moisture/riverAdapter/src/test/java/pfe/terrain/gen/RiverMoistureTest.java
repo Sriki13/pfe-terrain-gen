@@ -3,9 +3,9 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.*;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
 
@@ -35,18 +35,20 @@ public class RiverMoistureTest {
         closeToRiver = generateFace(1, true, allEdges);
         oneTileAway = generateFace(2, false, allEdges);
         closeToRiver.addNeighbor(oneTileAway);
-        islandMap.putProperty(Contract.faces, new FaceSet(new HashSet<>(Arrays.asList(
+        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 farFromRiver, closeToRiver, oneTileAway
         ))));
-        islandMap.putProperty(Contract.edges, allEdges);
+        islandMap.putProperty(Contract.EDGES, allEdges);
     }
 
     public static Face generateFace(int seed, boolean hasRiver, Set<Edge> allEdges) {
         Edge edge = new Edge(new Coord(seed, 0), new Coord(seed, 1));
-        edge.putProperty(AdapterUtils.riverFlowKey, new OptionalIntegerType(hasRiver ? 1 : 0));
+        if (hasRiver) {
+            edge.putProperty(AdapterUtils.RIVER_FLOW_KEY, new OptionalIntegerType(1));
+        }
         allEdges.add(edge);
         Face result = new Face(new Coord(seed, 2), Collections.singleton(edge));
-        result.putProperty(AdapterUtils.faceMoisture, new DoubleType(0.0));
+        result.putProperty(AdapterUtils.FACE_MOISTURE, new DoubleType(0.0));
         return result;
     }
 
@@ -61,7 +63,7 @@ public class RiverMoistureTest {
     }
 
     private double getMoisture(Face face) {
-        return face.getProperty(AdapterUtils.faceMoisture).value;
+        return face.getProperty(AdapterUtils.FACE_MOISTURE).value;
     }
 
 

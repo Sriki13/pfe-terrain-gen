@@ -10,7 +10,7 @@ import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,18 +2,19 @@ package pfe.terrain.gen.water;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.Face;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -21,26 +22,26 @@ import java.util.Set;
 
 public class WaterFromHeight extends Contract {
 
-    public static final Key<DoubleType> heightKey =
-            new Key<>(verticesPrefix + "HEIGHT", DoubleType.class);
+    public static final Key<DoubleType> HEIGHT_KEY =
+            new Key<>(VERTICES_PREFIX + "HEIGHT", DoubleType.class);
 
-    public static final Key<BooleanType> faceBorderKey =
-            new Key<>(facesPrefix + "IS_BORDER", BooleanType.class);
+    public static final Key<MarkerType> FACE_BORDER_KEY =
+            new Key<>(FACES_PREFIX + "IS_BORDER", MarkerType.class);
 
-    public static final Key<BooleanType> faceWaterKey =
-            new SerializableKey<>(facesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<BooleanType> FACE_WATER_KEY =
+            new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
 
-    public static final Key<BooleanType> vertexWaterKey =
-            new SerializableKey<>(verticesPrefix + "IS_WATER", "isWater", BooleanType.class);
+    public static final Key<BooleanType> VERTEX_WATER_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
 
-    public static final Key<WaterKind> waterKindKey =
-            new SerializableKey<>(facesPrefix + "WATER_KIND", "waterKind", WaterKind.class);
+    public static final Key<WaterKind> WATER_KIND_KEY =
+            new SerializableKey<>(FACES_PREFIX + "WATER_KIND", "waterKind", WaterKind.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(faces, vertices, heightKey),
-                asKeySet(faceWaterKey, vertexWaterKey, waterKindKey)
+                asKeySet(FACES, VERTICES, HEIGHT_KEY),
+                asKeySet(FACE_WATER_KEY, VERTEX_WATER_KEY, WATER_KIND_KEY)
         );
     }
 
@@ -54,7 +55,7 @@ public class WaterFromHeight extends Contract {
     private void identifyWaterVertices(IslandMap map)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         for (Coord vertex : map.getVertices()) {
-            vertex.putProperty(vertexWaterKey, new BooleanType(vertex.getProperty(heightKey).value <= 0));
+            vertex.putProperty(VERTEX_WATER_KEY, new BooleanType(vertex.getProperty(HEIGHT_KEY).value <= 0));
         }
     }
 
@@ -63,20 +64,20 @@ public class WaterFromHeight extends Contract {
         for (Face face : map.getFaces()) {
             boolean isWater = true;
             for (Coord vertex : face.getBorderVertices()) {
-                if (!vertex.getProperty(vertexWaterKey).value) {
+                if (!vertex.getProperty(VERTEX_WATER_KEY).value) {
                     isWater = false;
                     break;
                 }
             }
-            face.putProperty(faceWaterKey, new BooleanType(isWater));
+            face.putProperty(FACE_WATER_KEY, new BooleanType(isWater));
             if (isWater) {
-                if (face.getProperty(faceBorderKey).value) {
-                    face.putProperty(waterKindKey, WaterKind.OCEAN);
+                if (face.hasProperty(FACE_BORDER_KEY)) {
+                    face.putProperty(WATER_KIND_KEY, WaterKind.OCEAN);
                 } else {
-                    face.putProperty(waterKindKey, WaterKind.LAKE);
+                    face.putProperty(WATER_KIND_KEY, WaterKind.LAKE);
                 }
             } else {
-                face.putProperty(waterKindKey, WaterKind.NONE);
+                face.putProperty(WATER_KIND_KEY, WaterKind.NONE);
             }
         }
     }
@@ -86,7 +87,7 @@ public class WaterFromHeight extends Contract {
         Set<Face> oceanFaces = new HashSet<>();
         Set<Face> borders = new HashSet<>();
         for (Face face : map.getFaces()) {
-            if (face.getProperty(faceBorderKey).value) {
+            if (face.hasProperty(FACE_BORDER_KEY)) {
                 borders.add(face);
             }
         }
@@ -99,15 +100,15 @@ public class WaterFromHeight extends Contract {
                     continue;
                 }
                 seen.add(neighbor);
-                if (neighbor.getProperty(faceWaterKey).value) {
+                if (neighbor.getProperty(FACE_WATER_KEY).value) {
                     oceanFaces.add(neighbor);
                     queue.add(neighbor);
                 }
             }
         }
         for (Face face : oceanFaces) {
-            face.putProperty(waterKindKey, WaterKind.OCEAN);
-            face.putProperty(faceWaterKey, new BooleanType(true));
+            face.putProperty(WATER_KIND_KEY, WaterKind.OCEAN);
+            face.putProperty(FACE_WATER_KEY, new BooleanType(true));
         }
     }
 

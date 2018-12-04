@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pfe.terrain.gen.algo.Mappable;
-import pfe.terrain.gen.algo.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.types.SerializableType;
 
 import java.util.Map;

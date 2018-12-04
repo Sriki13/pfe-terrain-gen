@@ -2,14 +2,15 @@ package pfe.terrain.gen;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.OptionalKey;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
-import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.types.MarkerType;
 import pfe.terrain.gen.criteria.*;
 
 import java.util.Arrays;
@@ -17,7 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static pfe.terrain.gen.criteria.HeightLevel.HEIGHT_KEY;
-import static pfe.terrain.gen.criteria.LakeProximity.LAKES_KEY;
 import static pfe.terrain.gen.criteria.MoistureLevel.MOISTURE_KEY;
 import static pfe.terrain.gen.criteria.Pitch.PITCH_KEY;
 import static pfe.terrain.gen.criteria.RiverProximity.RIVER_FLOW_KEY;
@@ -35,20 +35,20 @@ public class CityContract extends Contract {
     // Required
 
     public static final Key<WaterKind> WATER_KIND_KEY =
-            new Key<>(facesPrefix + "WATER_KIND", WaterKind.class);
+            new Key<>(FACES_PREFIX + "WATER_KIND", WaterKind.class);
 
 
     // Produced
 
-    public static final Key<BooleanType> CITY_KEY =
-            new SerializableKey<>(facesPrefix + "HAS_CITY", "isCity", BooleanType.class);
+    public static final Key<MarkerType> CITY_KEY =
+            new SerializableKey<>(new OptionalKey<>(FACES_PREFIX + "HAS_CITY", MarkerType.class), "isCity");
 
 
     @Override
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(PITCH_KEY, RIVER_FLOW_KEY, HEIGHT_KEY, MOISTURE_KEY,
-                        LAKES_KEY, WATER_KIND_KEY, faces, edges, vertices),
+                        WATER_KIND_KEY, FACES, EDGES, VERTICES),
                 asKeySet(CITY_KEY)
         );
     }
@@ -72,6 +72,6 @@ public class CityContract extends Contract {
                 new Pitch(),
                 new RiverProximity(map.getEdges())
         ));
-        generator.generateCities(map, context.getParamOrDefault(NB_CITIES), land);
+        generator.generateCities(context.getParamOrDefault(NB_CITIES), land);
     }
 }

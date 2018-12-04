@@ -2,8 +2,8 @@ package pfe.terrain.generatorService.initializer;
 
 import com.google.gson.Gson;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.context.MapContext;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.context.MapContext;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.generatorService.parser.ConstraintParser;
 

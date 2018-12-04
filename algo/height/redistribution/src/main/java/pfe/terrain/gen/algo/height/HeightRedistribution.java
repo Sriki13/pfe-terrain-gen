@@ -2,14 +2,14 @@ package pfe.terrain.gen.algo.height;
 
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
-import pfe.terrain.gen.algo.geometry.Coord;
-import pfe.terrain.gen.algo.geometry.CoordSet;
-import pfe.terrain.gen.algo.geometry.Face;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.key.Key;
-import pfe.terrain.gen.algo.key.Param;
-import pfe.terrain.gen.algo.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
 
@@ -17,11 +17,12 @@ import java.util.*;
 
 public class HeightRedistribution extends Contract {
 
-    static final Key<DoubleType> vertexHeightKey =
-            new SerializableKey<>(verticesPrefix + "HEIGHT", "height", DoubleType.class);
-    static final Key<BooleanType> vertexWaterKey = new Key<>(verticesPrefix + "IS_WATER", BooleanType.class);
+    static final Key<DoubleType> VERTEX_HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
-    private Param<Double> redistributionFactorKey = Param.generateDefaultDoubleParam("Height factor",
+    static final Key<BooleanType> VERTEX_WATER_KEY = new Key<>(VERTICES_PREFIX + "IS_WATER", BooleanType.class);
+
+    private Param<Double> REDISTRIBUTION_FACTOR_KEY = Param.generateDefaultDoubleParam("Height factor",
             "How the height is distributed, for very low value there will be more high altitude points than low level one " +
             "and for medium to high value there will be a tendency to have more low level altitude points than high one", 0.5,
             "Redistribution factor");
@@ -29,15 +30,15 @@ public class HeightRedistribution extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(vertices, faces, vertexWaterKey),
+                asKeySet(VERTICES, FACES, VERTEX_WATER_KEY),
                 asKeySet(),
-                asKeySet(vertexHeightKey)
+                asKeySet(VERTEX_HEIGHT_KEY)
         );
     }
 
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(redistributionFactorKey);
+        return asParamSet(REDISTRIBUTION_FACTOR_KEY);
     }
 
     @Override
@@ -45,15 +46,15 @@ public class HeightRedistribution extends Contract {
 
         // This code is a mess but it works
 
-        double scaleFactor = context.getParamOrDefault(redistributionFactorKey);
+        double scaleFactor = context.getParamOrDefault(REDISTRIBUTION_FACTOR_KEY);
         scaleFactor = 1 / (0.8 + (scaleFactor * 3.2));
         Map<Coord, Double> verticesHeight = new HashMap<>();
         List<Map.Entry<Coord, Double>> orderedVertices;
         CoordSet vertices = map.getVertices();
 
         for (Coord coord : vertices) {
-            if (!coord.getProperty(vertexWaterKey).value) {
-                verticesHeight.put(coord, coord.getProperty(vertexHeightKey).value);
+            if (!coord.getProperty(VERTEX_WATER_KEY).value) {
+                verticesHeight.put(coord, coord.getProperty(VERTEX_HEIGHT_KEY).value);
             }
         }
         double minV = Collections.min(verticesHeight.values());
@@ -70,18 +71,18 @@ public class HeightRedistribution extends Contract {
             c.setValue(c.getValue() * (maxV - minV) + minV);
         }
         for (Coord coord : vertices) {
-            if (!coord.getProperty(vertexWaterKey).value) {
-                coord.putProperty(vertexHeightKey, new DoubleType(verticesHeight.get(coord)));
+            if (!coord.getProperty(VERTEX_WATER_KEY).value) {
+                coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(verticesHeight.get(coord)));
             }
         }
         for (Face face : map.getFaces()) {
             double sum = 0;
             int total = 0;
             for (Coord border : face.getBorderVertices()) {
-                sum += border.getProperty(vertexHeightKey).value;
+                sum += border.getProperty(VERTEX_HEIGHT_KEY).value;
                 total += 1;
             }
-            face.getCenter().putProperty(vertexHeightKey, new DoubleType(sum / (double) total));
+            face.getCenter().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(sum / (double) total));
         }
     }
 }

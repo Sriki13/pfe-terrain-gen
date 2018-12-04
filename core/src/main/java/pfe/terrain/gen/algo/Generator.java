@@ -1,7 +1,7 @@
-package pfe.terrain.gen.algo.generator;
+package pfe.terrain.gen.algo;
 
 import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.context.Context;
+import pfe.terrain.gen.algo.constraints.context.Context;
 
 import java.util.List;
 
