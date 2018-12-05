@@ -12,7 +12,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.*;
@@ -34,14 +34,15 @@ public class MeshBuilder extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
-        List<Polygon> polygons = genPolygons(map);
+    public void execute(TerrainMap map, Context context) {
+        int size = map.getProperty(SIZE);
+        List<Polygon> polygons = genPolygons(map, size);
         this.allCoordsA = new HashMap<>();
         this.allCoordsB = new HashMap<>();
         this.allEdgesMap = new HashMap<>();
         this.verticesSet = new CoordSet();
         this.centerFaces = new HashMap<>();
-        genStuff(polygons, map);
+        genStuff(polygons, size);
         genNeighbor();
         map.putProperty(FACES, new FaceSet(centerFaces.values()));
         verticesSet.addAll(new CoordSet(allCoordsA.keySet()));
@@ -50,7 +51,7 @@ public class MeshBuilder extends Contract {
         map.putProperty(EDGES, new EdgeSet(allEdgesMap.keySet()));
     }
 
-    private List<Polygon> genPolygons(IslandMap map) throws NoSuchKeyException, KeyTypeMismatch {
+    private List<Polygon> genPolygons(TerrainMap map, int size) throws NoSuchKeyException, KeyTypeMismatch {
         List<Polygon> res = new ArrayList<>();
 
         VoronoiDiagramBuilder builder = new VoronoiDiagramBuilder();
@@ -59,9 +60,9 @@ public class MeshBuilder extends Contract {
         builder.setSites(coordinateSet);
 
         Coordinate[] boundaries = {new Coordinate(0, 0),
-                new Coordinate(0, map.getSize()),
-                new Coordinate(map.getSize(), map.getSize()),
-                new Coordinate(map.getSize(), 0),
+                new Coordinate(0, size),
+                new Coordinate(size, size),
+                new Coordinate(size, 0),
                 new Coordinate(0, 0)};
 
         Geometry geo = builder.getDiagram(new GeometryFactory());
@@ -86,8 +87,8 @@ public class MeshBuilder extends Contract {
         return res;
     }
 
-    private void genStuff(List<Polygon> polygons, IslandMap map) {
-        int midSize = map.getSize() / 2;
+    private void genStuff(List<Polygon> polygons, int size) {
+        int midSize = size / 2;
         for (Polygon polygon : polygons) {
             Coord center = new Coord(polygon.getCentroid().getCoordinate());
             verticesSet.add(center);

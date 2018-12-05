@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -39,11 +39,11 @@ public class HeightFromWater extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double hardness = context.getParamOrDefault(HARDNESS_PARAM);
         Set<Coord> coordsToProcess = new HashSet<>();
         double height = 0.0;
-        CoordSet vertices = map.getVertices();
+        CoordSet vertices = map.getProperty(VERTICES);
         for (Coord vertex : vertices) {
             if (vertex.getProperty(VERTEX_WATER_KEY).value) {
                 vertex.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(height));
@@ -51,10 +51,10 @@ public class HeightFromWater extends Contract {
                 coordsToProcess.add(vertex);
             }
         }
-        EdgeSet allEdges = new EdgeSet(map.getEdges());
+        EdgeSet allEdges = new EdgeSet(map.getProperty(EDGES));
         EdgeSet edgesToProcess;
         int coordsSize = -1;
-        Random random = new Random(map.getSeed());
+        Random random = new Random(map.getProperty(SEED));
         height += heightStep(hardness, random);
 
         // If coordsToProcess size wasn't reduced then only centers are remaining
@@ -75,7 +75,7 @@ public class HeightFromWater extends Contract {
         }
 
         // Set center as mean height to conform
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             double sum = 0;
             int total = 0;
             for (Coord border : face.getBorderVertices()) {

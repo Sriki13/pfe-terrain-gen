@@ -8,7 +8,7 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -59,19 +59,19 @@ public class RiverRidge extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double canyonDepth = context.getParamOrDefault(CANYON_DEPTH_PARAM);
         double canyonTendency = context.getParamOrDefault(CANYON_TENDENCY_PARAM);
 
         List<Coord> sources = new ArrayList<>();
-        for (Coord vertex : map.getVertices()) {
+        for (Coord vertex : map.getProperty(VERTICES)) {
             if (vertex.hasProperty(IS_SOURCE_KEY)) {
                 sources.add(vertex);
             }
         }
         sources.sort((o1, o2) -> (int) (o1.x + o1.y - o2.x - o2.y));
         List<Edge> riverEdges = new ArrayList<>();
-        for (Edge edge : map.getEdges()) {
+        for (Edge edge : map.getProperty(EDGES)) {
             if (edge.hasProperty(RIVER_FLOW_KEY)) {
                 riverEdges.add(edge);
             }

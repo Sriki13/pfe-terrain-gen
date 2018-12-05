@@ -3,7 +3,7 @@ package pfe.terrain.gen;
 import pfe.terrain.gen.algo.Generator;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.export.JSONExporter;
 
 import java.util.Arrays;
@@ -14,12 +14,12 @@ import java.util.logging.Logger;
 public class MapGenerator implements Generator {
 
     private List<Contract> contracts;
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private Context context;
 
     public MapGenerator(List<Contract> contracts) {
         this.contracts = contracts;
-        this.islandMap = new IslandMap();
+        this.terrainMap = new TerrainMap();
         this.context = new Context();
     }
 
@@ -40,7 +40,7 @@ public class MapGenerator implements Generator {
                 if (errored) {
                     sb.append(formatExecution(ctr.getName(), "SKIPPED", 0));
                 } else {
-                    long execTime = ctr.debugExecute(this.islandMap, this.context);
+                    long execTime = ctr.debugExecute(this.terrainMap, this.context);
                     sb.append(formatExecution(ctr.getName(), "SUCCESS", execTime));
                 }
             } catch (RuntimeException e) {
@@ -57,7 +57,7 @@ public class MapGenerator implements Generator {
             JSONExporter exporter = new JSONExporter();
             try {
                 long startTime = System.nanoTime();
-                result = exporter.export(this.islandMap).toString();
+                result = exporter.export(this.terrainMap).toString();
                 long endTime = System.nanoTime();
                 sb.append(formatExecution("JSONExportation", "SUCCESS", endTime - startTime));
             } catch (RuntimeException e) {

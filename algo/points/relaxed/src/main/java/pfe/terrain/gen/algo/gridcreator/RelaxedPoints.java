@@ -10,7 +10,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 
 import java.util.HashSet;
@@ -36,13 +36,14 @@ public class RelaxedPoints extends Contract {
     }
 
     @Override
-    public void execute(IslandMap islandMap, Context context) {
+    public void execute(TerrainMap terrainMap, Context context) {
         int numberOfPoints = context.getParamOrDefault(NB_POINTS);
         int relaxationIterations = context.getParamOrDefault(NB_ITER);
         Set<Coordinate> points = new HashSet<>();
-        Random random = new Random(islandMap.getSeed());
+        Random random = new Random(terrainMap.getProperty(SEED));
+        int size = terrainMap.getProperty(SIZE);
         for (int i = 0; i < numberOfPoints; i++) {
-            points.add(new Coordinate(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
+            points.add(new Coordinate(random.nextDouble() * size, random.nextDouble() * size));
         }
         for (int i = 0; i < relaxationIterations; i++) {
             VoronoiDiagramBuilder voronoiBuilder = new VoronoiDiagramBuilder();
@@ -50,18 +51,18 @@ public class RelaxedPoints extends Contract {
             GeometryCollection voronoiDiagram = (GeometryCollection) voronoiBuilder.getDiagram(new GeometryFactory());
             CoordinateFilter stayInbounds = coordinate -> coordinate.setCoordinate(
                     new Coordinate(
-                            insideValue(coordinate.x, islandMap.getSize()),
-                            insideValue(coordinate.y, islandMap.getSize())));
+                            insideValue(coordinate.x, size),
+                            insideValue(coordinate.y, size)));
             voronoiDiagram.apply(stayInbounds);
             Set<Coordinate> centroids = new HashSet<>();
             for (int j = 0; j < voronoiDiagram.getNumGeometries(); j++) {
                 centroids.add(voronoiDiagram.getGeometryN(j).getCentroid().getCoordinate());
             }
             points = centroids.stream()
-                    .map(c -> new Coordinate(insideValue(c.x, islandMap.getSize()), insideValue(c.y, islandMap.getSize())))
+                    .map(c -> new Coordinate(insideValue(c.x, size), insideValue(c.y, size)))
                     .collect(Collectors.toSet());
         }
-        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), CoordSet.buildFromCoordinates(points));
+        terrainMap.putProperty(new Key<>("POINTS", CoordSet.class), CoordSet.buildFromCoordinates(points));
     }
 
 

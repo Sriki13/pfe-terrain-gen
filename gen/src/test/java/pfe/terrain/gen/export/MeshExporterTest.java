@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.key.Key;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.*;
@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MeshExporterTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private MeshExporter meshExporter;
 
     private Edge commonInFaces = new Edge(new Coord(0, 5), new Coord(5, 8));
@@ -51,25 +51,26 @@ public class MeshExporterTest {
 
     @Before
     public void setUp() throws Exception {
-        islandMap = new IslandMap();
-        islandMap.putProperty(new Key<>("SIZE", Integer.class), 100);
-        islandMap.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(vertices));
+        terrainMap = new TerrainMap();
+        terrainMap.putProperty(new Key<>("SIZE", Integer.class), 100);
+        terrainMap.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(vertices));
         List<Edge> allEdges = new ArrayList<>(firstFaceEdges);
         allEdges.addAll(secondFaceEdges);
         allEdges.add(loneEdge);
-        islandMap.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(allEdges));
+        terrainMap.putProperty(new Key<>("EDGES", EdgeSet.class), new EdgeSet(allEdges));
+        terrainMap.putProperty(new Key<>("SEED", Integer.class), 1);
         firstFace.addNeighbor(secondFace);
         secondFace.addNeighbor(firstFace);
-        islandMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(Arrays.asList(
+        terrainMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(Arrays.asList(
                 firstFace, secondFace
         )));
-        meshExporter = new MeshExporter(islandMap);
+        meshExporter = new MeshExporter(terrainMap);
     }
 
     @Test
     public void meshExportTest() throws Exception {
         JsonObject json = meshExporter.export();
-        assertThat(json.get("size").getAsInt(), is(islandMap.getSize()));
+        assertThat(json.get("size").getAsInt(), is(terrainMap.getProperty(MeshExporter.sizeKey)));
         assertThat(json.get("uuid"), is(notNullValue()));
         checkVertices(json);
         checkEdges(json, meshExporter.getVerticesMap());

@@ -8,7 +8,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -23,21 +23,23 @@ import java.util.stream.Collector;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static pfe.terrain.gen.algo.constraints.Contract.SEED;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
 import static pfe.terrain.gen.algo.height.HeightSmoothing.VERTEX_HEIGHT_KEY;
 import static pfe.terrain.gen.algo.height.HeightSmoothing.VERTEX_WATER_KEY;
 
 public class HeightSmoothingTest {
 
-    private IslandMap map;
+    private TerrainMap map;
     private CoordSet coords;
     private int mapSize;
 
     @Before
     public void setUp() {
-        map = new IslandMap();
+        map = new TerrainMap();
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 3);
-        Random random = new Random(map.getSeed());
+        Random random = new Random(map.getProperty(SEED));
         coords = new CoordSet();
         EdgeSet edges = new EdgeSet();
         mapSize = 128;
@@ -77,7 +79,7 @@ public class HeightSmoothingTest {
     }
 
     private double getStandardDeviationFromCoordSet() {
-        return map.getVertices().stream().map(c -> {
+        return map.getProperty(VERTICES).stream().map(c -> {
             try {
                 return c.getProperty(VERTEX_HEIGHT_KEY).value;
             } catch (NoSuchKeyException | KeyTypeMismatch e) {
@@ -99,7 +101,7 @@ public class HeightSmoothingTest {
     }
 
     private void toImage(String name) throws NoSuchKeyException, KeyTypeMismatch {
-        coords = map.getVertices();
+        coords = map.getProperty(VERTICES);
         final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);
         short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
         for (Coord coord : coords) {

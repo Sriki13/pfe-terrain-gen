@@ -2,10 +2,9 @@ package pfe.terrain.gen.algo.biome;
 
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.Biome;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
@@ -20,10 +19,11 @@ import java.util.HashSet;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES;
 
 public class HeightBiomesTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private HeightBiomes biomes;
 
     private Face highFace;
@@ -35,7 +35,7 @@ public class HeightBiomesTest {
     @Before
     public void setUp() throws Exception {
         biomes = new HeightBiomes();
-        islandMap = new IslandMap();
+        terrainMap = new TerrainMap();
         FaceSet allFaces = new FaceSet(new HashSet<>());
         highFace = new Face(new Coord(1, 2), new HashSet<>(Collections.singleton(
                 new Edge(generateCoord(10, 0), generateCoord(10, 1))
@@ -53,7 +53,7 @@ public class HeightBiomesTest {
         oceanFace = generateWaterFace(5, WaterKind.OCEAN);
         lakeFace = generateWaterFace(6, WaterKind.LAKE);
         allFaces.addAll(Arrays.asList(highFace, lowFace, lowFaceOnAverage, oceanFace, lakeFace));
-        islandMap.putProperty(Contract.FACES, allFaces);
+        terrainMap.putProperty(FACES, allFaces);
     }
 
     private Coord generateCoord(int z, int seed) throws Exception {
@@ -78,8 +78,8 @@ public class HeightBiomesTest {
 
     @Test
     public void biomeRepartitionTest() throws Exception {
-        biomes.execute(islandMap, new Context());
-        for (Face face : islandMap.getFaces()) {
+        biomes.execute(terrainMap, new Context());
+        for (Face face : terrainMap.getProperty(FACES)) {
             assertThat(getBiome(face), is(notNullValue()));
         }
         assertThat(getBiome(highFace), is(not(getBiome(lowFace))));

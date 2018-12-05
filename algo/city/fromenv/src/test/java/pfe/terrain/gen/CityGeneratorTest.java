@@ -3,7 +3,7 @@ package pfe.terrain.gen;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -41,8 +41,8 @@ public class CityGeneratorTest {
         bestCandidate = generateFace(1, 10);
         secondBest = generateFace(3, 10);
         thirdBest = generateFace(2, 5);
-        IslandMap islandMap = new IslandMap();
-        islandMap.putProperty(FACES, new FaceSet(new HashSet<>(Arrays.asList(
+        TerrainMap terrainMap = new TerrainMap();
+        terrainMap.putProperty(FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 secondBest, thirdBest, bestCandidate
         ))));
     }

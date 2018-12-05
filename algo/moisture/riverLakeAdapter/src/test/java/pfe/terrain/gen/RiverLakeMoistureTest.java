@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 public class RiverLakeMoistureTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private RiverLakeMoisture riverLakeMoisture;
 
     private Face farFromRiver;
@@ -37,7 +37,7 @@ public class RiverLakeMoistureTest {
 
     @Before
     public void setUp() {
-        islandMap = new IslandMap();
+        terrainMap = new TerrainMap();
         riverLakeMoisture = new RiverLakeMoisture();
         EdgeSet allEdges = new EdgeSet(new HashSet<>());
         farFromRiver = generateFace(0, false, allEdges);
@@ -60,10 +60,10 @@ public class RiverLakeMoistureTest {
         lake.addNeighbor(closeToRiverAndLake);
         closeToRiverAndLake.addNeighbor(lake);
 
-        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
+        terrainMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 farFromRiver, closeToRiver, oneTileFromRiver, farFromLake, closeToLake, oneTileFromLake, lake
         ))));
-        islandMap.putProperty(Contract.EDGES, allEdges);
+        terrainMap.putProperty(Contract.EDGES, allEdges);
     }
 
     public static Face generateFace(int seed, boolean hasRiver, Set<Edge> allEdges) {
@@ -93,7 +93,7 @@ public class RiverLakeMoistureTest {
     public void addMoistureTest() {
         Context context = new Context();
         context.putParam(RiverLakeMoisture.moistureParam, 0.2);
-        riverLakeMoisture.execute(islandMap, new Context());
+        riverLakeMoisture.execute(terrainMap, new Context());
         assertThat(getMoisture(farFromRiver), closeTo(0.0, 0.001));
         for (Face face : Arrays.asList(closeToRiver, oneTileFromRiver)) {
             assertThat(getMoisture(face), greaterThan(0.0));

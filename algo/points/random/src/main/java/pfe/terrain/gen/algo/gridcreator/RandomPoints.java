@@ -5,7 +5,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 
@@ -28,14 +28,14 @@ public class RandomPoints extends Contract {
     }
 
     @Override
-    public void execute(IslandMap islandMap, Context context) {
+    public void execute(TerrainMap terrainMap, Context context) {
         int numberOfPoints = context.getParamOrDefault(NB_POINTS);
         CoordSet points = new CoordSet();
-        Random random = new Random(islandMap.getSeed());
+        Random random = new Random(terrainMap.getProperty(SEED));
         for (int i = 0; i < numberOfPoints; i++) {
-            points.add(new Coord(random.nextDouble() * islandMap.getSize(), random.nextDouble() * islandMap.getSize()));
+            points.add(new Coord(random.nextDouble() * terrainMap.getProperty(SIZE), random.nextDouble() * terrainMap.getProperty(SIZE)));
         }
-        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
+        terrainMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
 
 }

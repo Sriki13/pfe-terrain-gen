@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -54,7 +54,7 @@ public class LakesFromRivers extends Contract {
         );
     }
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private Random random;
     private RiverGenerator riverGenerator;
     private Set<Coord> newRiverStarts;
@@ -63,10 +63,10 @@ public class LakesFromRivers extends Contract {
     private double maxLakeSize;
 
     @Override
-    public void execute(IslandMap map, Context context) {
-        this.islandMap = map;
-        this.random = new Random(map.getSeed());
-        this.riverGenerator = new RiverGenerator(islandMap);
+    public void execute(TerrainMap map, Context context) {
+        this.terrainMap = map;
+        this.random = new Random(map.getProperty(SEED));
+        this.riverGenerator = new RiverGenerator(terrainMap);
         this.maxLakeSize = context.getParamOrDefault(LAKE_SIZE_PARAM);
         this.newRiverStarts = new HashSet<>();
         this.newLakeStarts = new HashSet<>();
@@ -76,9 +76,9 @@ public class LakesFromRivers extends Contract {
             generateLake(lakeStart);
             lakeStart = getRiverEndInHole();
         }
-        islandMap.putProperty(HAS_LAKES_KEY, new MarkerType());
+        terrainMap.putProperty(HAS_LAKES_KEY, new MarkerType());
         newRiverStarts.forEach(start -> start.putProperty(VERTEX_WATER_KEY, new BooleanType(true)));
-        removeRiversInLakeEdges(map.getFaces().stream().filter(
+        removeRiversInLakeEdges(map.getProperty(FACES).stream().filter(
                 face -> face.getProperty(WATER_KIND_KEY) == WaterKind.LAKE
         ).collect(Collectors.toSet()));
     }
@@ -124,7 +124,9 @@ public class LakesFromRivers extends Contract {
     }
 
     private Coord getRiverEndInHole() {
-        for (Coord vertex : islandMap.getEdgeVertices()) {
+        Set<Coord> edgeVertices = new HashSet<>(terrainMap.getProperty(VERTICES));
+        terrainMap.getProperty(FACES).forEach(face -> edgeVertices.remove(face.getCenter()));
+        for (Coord vertex : edgeVertices) {
             if (vertex.hasProperty(IS_RIVER_END_KEY) && !vertex.getProperty(VERTEX_WATER_KEY).value && !newLakeStarts.contains(vertex)) {
                 return vertex;
             }
@@ -173,7 +175,7 @@ public class LakesFromRivers extends Contract {
         Set<Coord> result = new HashSet<>();
         for (Face face : lake) {
             for (Coord vertex : face.getBorderVertices()) {
-                Set<Coord> connected = islandMap.getConnectedVertices(vertex);
+                Set<Coord> connected = terrainMap.getProperty(EDGES).getConnectedVertices(vertex);
                 for (Coord neighbour : connected) {
                     if (neighbour.getProperty(HEIGHT_KEY).value < vertex.getProperty(HEIGHT_KEY).value) {
                         result.add(vertex);
@@ -198,7 +200,7 @@ public class LakesFromRivers extends Contract {
 
     private Face findLowestFace(Coord start) {
         List<Face> candidates = new ArrayList<>();
-        for (Face face : islandMap.getFaces()) {
+        for (Face face : terrainMap.getProperty(FACES)) {
             Set<Coord> borders = face.getBorderVertices();
             if (borders.contains(start)) {
                 candidates.add(face);
