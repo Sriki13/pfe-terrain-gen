@@ -6,6 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
+import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.WaterKind;
@@ -15,7 +16,6 @@ import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class CustomShapeWaterGeneration extends Contract {
 
@@ -58,8 +58,7 @@ public class CustomShapeWaterGeneration extends Contract {
             try {
                 matrix = new ShapeMatrix(islandShape);
             } catch (Exception e) {
-                Logger.getLogger(this.getName()).warning("Shape format is invalid, defaulting to default value");
-                matrix = new ShapeMatrix(DefaultShape.CIRCLE.getMatrix());
+                throw new InvalidAlgorithmParameters("Shape format " + islandShape + " is invalid, must be in " + Arrays.toString(DefaultShape.values()));
             }
         }
         int size = map.getSize();

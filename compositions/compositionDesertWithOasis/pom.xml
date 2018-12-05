@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>compositionNoiseRidgedRiver</artifactId>
+    <artifactId>compositionDesertWithOasis</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.points.relaxed</artifactId>
+            <artifactId>algo.points.random</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
