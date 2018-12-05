@@ -2,6 +2,7 @@ package pfe.terrain.gen;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -23,10 +24,10 @@ public class CityGeneratorTest {
     private static final Coord center = new Coord(0, 0);
 
     private Criterion distanceCenterCriterion =
-            scores -> scores.forEach((key, value) -> scores.put(key, value + 1 / center.distance(key.getCenter())));
+            (context, scores) -> scores.forEach((key, value) -> scores.put(key, value + 1 / center.distance(key.getCenter())));
 
     private Criterion heightCriterion =
-            scores -> scores.forEach((key, value) -> scores.put(key, value + key.getCenter().getProperty(HEIGHT_KEY).value));
+            (context, scores) -> scores.forEach((key, value) -> scores.put(key, value + key.getCenter().getProperty(HEIGHT_KEY).value));
 
     private CityGenerator cityGenerator;
 
@@ -54,7 +55,9 @@ public class CityGeneratorTest {
 
     @Test
     public void placeCitiesCorrectly() {
-        cityGenerator.generateCities(2, new HashSet<>(Arrays.asList(
+        Context context = new Context();
+        context.putParam(CityGenerator.NB_CITIES, 2);
+        cityGenerator.generateCities(context, new HashSet<>(Arrays.asList(
                 secondBest, thirdBest, bestCandidate
         )));
         assertTrue(bestCandidate.hasProperty(CITY_KEY));

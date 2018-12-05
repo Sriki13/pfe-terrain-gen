@@ -2,6 +2,7 @@ package pfe.terrain.gen.criteria;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -26,8 +27,8 @@ public class HeightLevelTest {
     @Before
     public void setUp() {
         tooLow = generateFace(0, 0);
-        perfect = generateFace(1, 10 * HeightLevel.RANGE_START);
-        okay = generateFace(2, 10 * (HeightLevel.RANGE_START + 0.2));
+        perfect = generateFace(1, 10 * HeightLevel.CITY_MIN_HEIGHT.getDefaultValue());
+        okay = generateFace(2, 10 * (HeightLevel.CITY_MIN_HEIGHT.getDefaultValue() + 0.2));
         tooHigh = generateFace(3, 10);
         List<Face> allFaces = Arrays.asList(
                 tooLow, perfect, okay, tooHigh
@@ -45,7 +46,7 @@ public class HeightLevelTest {
 
     @Test
     public void assignBonusFromHeight() {
-        heightLevel.assignScores(scores);
+        heightLevel.assignScores(new Context(), scores);
         assertThat(scores.get(tooHigh), closeTo(0.0, 0.001));
         assertThat(scores.get(tooLow), closeTo(0.0, 0.001));
         assertThat(scores.get(perfect), greaterThan(0.0));
