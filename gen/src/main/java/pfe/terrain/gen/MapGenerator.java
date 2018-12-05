@@ -6,6 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.IslandMap;
 import pfe.terrain.gen.export.JSONExporter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 public class MapGenerator implements Generator {
 
     private List<Contract> contracts;
+    private List<Contract> diffContracts;
     private IslandMap islandMap;
     private Context context;
 
@@ -21,6 +23,7 @@ public class MapGenerator implements Generator {
         this.contracts = contracts;
         this.islandMap = new IslandMap();
         this.context = new Context();
+        this.diffContracts = new ArrayList<>();
     }
 
 
