@@ -19,11 +19,10 @@ import pfe.terrain.gen.algo.types.BooleanType;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class NoiseWaterGeneration extends Contract {
 
-    static final Param<String> NOISE_PARAM = new Param<>("NoiseType", String.class,
+    private static final Param<String> NOISE_PARAM = new Param<>("noiseType", String.class,
             Arrays.toString(Noise.values()),
             "Choose the noise algorithm to use : Perlin : classic island, Billow : small and round islands, " +
                     "Ridged : aggressive geology with big island in the middle and a lot of reef",
@@ -61,13 +60,7 @@ public class NoiseWaterGeneration extends Contract {
         double archipelagoTendency = context.getParamOrDefault(ARCHIPELAGO_TENDENCY_PARAM);
         double coastRoughness = context.getParamOrDefault(COAST_ROUGHNESS_PARAM);
         Noise algorithm;
-        try {
-            algorithm = Noise.valueOf(context.getParamOrDefault(NOISE_PARAM).toUpperCase());
-        } catch (IllegalArgumentException e) {
-            Logger.getLogger(this.getName()).warning("No Style marching argument " + context.getParamOrDefault(NOISE_PARAM)
-                    + ", defaulting to classic style");
-            algorithm = Noise.PERLIN;
-        }
+        algorithm = Noise.valueOf(context.getParamOrDefault(NOISE_PARAM).toUpperCase());
         int size = map.getSize();
         double borderSmoothingFactor;
         Module noise;

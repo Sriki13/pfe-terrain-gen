@@ -22,7 +22,7 @@ public class HeightRedistribution extends Contract {
 
     static final Key<BooleanType> VERTEX_WATER_KEY = new Key<>(VERTICES_PREFIX + "IS_WATER", BooleanType.class);
 
-    private Param<Double> REDISTRIBUTION_FACTOR_KEY = Param.generateDefaultDoubleParam("Height factor",
+    private Param<Double> REDISTRIBUTION_FACTOR_KEY = Param.generateDefaultDoubleParam("heightFactor",
             "How the height is distributed, for very low value there will be more high altitude points than low level one " +
             "and for medium to high value there will be a tendency to have more low level altitude points than high one", 0.5,
             "Redistribution factor");
