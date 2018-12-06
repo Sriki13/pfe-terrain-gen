@@ -1,9 +1,6 @@
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pfe.terrain.gen.FinalContract;
-import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.generatorService.reflection.ContractReflection;
+import pfe.terrain.gen.algo.reflection.ContractReflection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

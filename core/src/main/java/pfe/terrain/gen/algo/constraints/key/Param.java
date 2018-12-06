@@ -7,6 +7,7 @@ public class Param<T> extends Key<T> {
     private String description;
     private String label;
     private T defaultValue;
+    private String range;
 
     private Comparable min;
     private Comparable max;
@@ -37,6 +38,7 @@ public class Param<T> extends Key<T> {
 
     private void init(Class<T> type, String range, String description,
                       T defaultValue, String label) {
+        this.range = range;
         this.description = type.getSimpleName() + " in " + range + " : " + description
                 + " -- Default value : " + defaultValue.toString();
         this.defaultValue = defaultValue;
@@ -51,6 +53,10 @@ public class Param<T> extends Key<T> {
                 throw new InvalidAlgorithmParameters(getId(), val.toString(), min.toString(), max.toString());
             }
         }
+    }
+
+    public String getRange() {
+        return range;
     }
 
     public String getDescription() {

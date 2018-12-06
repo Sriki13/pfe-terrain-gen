@@ -84,15 +84,6 @@
             </releases>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>snapshots</id>
-            <url>${repo.addr}</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 
     <distributionManagement>
         <repository>

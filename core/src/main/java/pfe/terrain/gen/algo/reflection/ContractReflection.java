@@ -1,4 +1,4 @@
-package pfe.terrain.generatorService.reflection;
+package pfe.terrain.gen.algo.reflection;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;

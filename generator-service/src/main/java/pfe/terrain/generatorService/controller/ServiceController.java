@@ -18,7 +18,7 @@ import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.initializer.ContextInitializer;
-import pfe.terrain.generatorService.reflection.ContractReflection;
+import pfe.terrain.gen.algo.reflection.ContractReflection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
