@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.island.geometry.EdgeSet;
@@ -45,8 +45,8 @@ public class HeightSmoothing extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
-        EdgeSet edges = map.getEdges();
+    public void execute(TerrainMap map, Context context) {
+        EdgeSet edges = map.getProperty(EDGES);
         verticesHeight = new HashMap<>();
 
 
@@ -87,7 +87,7 @@ public class HeightSmoothing extends Contract {
         // Adjusting faces center
         double sum;
         int total;
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             sum = 0;
             total = 0;
             for (Coord border : face.getBorderVertices()) {

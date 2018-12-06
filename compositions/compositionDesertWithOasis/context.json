@@ -9,7 +9,7 @@
     "biomeStyle": "classic",
     "coastRoughness":0.9,
     "archipelagoTendency":0.2,
-    "noiseType": "ridged",
+    "NoiseType": "ridged",
     "treeDensity": 0.3,
     "maxMoisture": 0.3,
     "minMoisture": 0,
@@ -17,7 +17,7 @@
     "pitchImportance": 0.3,
     "nbCities": 3,
     "heightFactor": 0.9,
-    "smoothingLevel": 0.9
+    "SmoothingLevel": 0.9
   },
   "constraint": [
     {

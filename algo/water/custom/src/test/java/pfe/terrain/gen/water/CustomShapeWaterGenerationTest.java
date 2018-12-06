@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -23,17 +23,18 @@ import java.util.HashSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AnyOf.anyOf;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES;
 
 public class CustomShapeWaterGenerationTest {
 
-    private IslandMap map;
+    private TerrainMap map;
     private FaceSet faces;
     private int mapSize;
 
     @Before
     public void setUp() throws Exception {
         CustomShapeWaterGeneration waterGen = new CustomShapeWaterGeneration();
-        map = new IslandMap();
+        map = new TerrainMap();
         faces = new FaceSet();
         mapSize = 256;
         for (float i = 0; i < mapSize; i += 1) {
@@ -52,7 +53,7 @@ public class CustomShapeWaterGenerationTest {
 
     @Test
     public void testPropertyIsthere() throws NoSuchKeyException, KeyTypeMismatch {
-        faces = map.getFaces();
+        faces = map.getProperty(FACES);
         for (Face face : faces) {
             assertThat(face.getProperty(CustomShapeWaterGeneration.FACE_WATER_KEY).value, anyOf(is(true), is(false)));
             if (face.getProperty(CustomShapeWaterGeneration.FACE_WATER_KEY).value) {
@@ -66,7 +67,7 @@ public class CustomShapeWaterGenerationTest {
     @Test
     @Ignore
     public void printIslandOutline() throws NoSuchKeyException, KeyTypeMismatch {
-        faces = map.getFaces();
+        faces = map.getProperty(FACES);
         final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);
         short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
         for (Face face : faces) {

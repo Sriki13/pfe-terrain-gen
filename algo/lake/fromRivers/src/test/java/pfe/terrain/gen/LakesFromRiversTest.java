@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -25,7 +25,7 @@ import static pfe.terrain.gen.RiverGenerator.*;
 public class LakesFromRiversTest {
 
     private LakesFromRivers lakeGenerator;
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
 
     private Face AOB;
     private Face OBC;
@@ -42,7 +42,7 @@ public class LakesFromRiversTest {
 
     @Before
     public void setUp() {
-        islandMap = new IslandMap();
+        terrainMap = new TerrainMap();
         lakeGenerator = new LakesFromRivers();
         CoordSet allCoords = new CoordSet(new HashSet<>());
         EdgeSet allEdges = new EdgeSet(new HashSet<>());
@@ -74,9 +74,10 @@ public class LakesFromRiversTest {
         OBC.addNeighbor(asList(AOB, BCD));
         BCD.addNeighbor(asList(OBC, CDE));
         CDE.addNeighbor(Collections.singleton(BCD));
-        islandMap.putProperty(Contract.VERTICES, allCoords);
-        islandMap.putProperty(Contract.EDGES, allEdges);
-        islandMap.putProperty(Contract.FACES, allFaces);
+        terrainMap.putProperty(Contract.SEED,0);
+        terrainMap.putProperty(Contract.VERTICES, allCoords);
+        terrainMap.putProperty(Contract.EDGES, allEdges);
+        terrainMap.putProperty(Contract.FACES, allFaces);
     }
 
     private Coord generateCoord(CoordSet allCoords, int seed, double height, boolean isRiverEnd, boolean isWater) {
@@ -124,7 +125,7 @@ public class LakesFromRiversTest {
     public void createLakeTest() {
         Context context = new Context();
         context.putParam(LakesFromRivers.LAKE_SIZE_PARAM, 1);
-        lakeGenerator.execute(islandMap, context);
+        lakeGenerator.execute(terrainMap, context);
         assertKind(AOB, WaterKind.NONE);
         assertKind(OBC, WaterKind.LAKE);
         assertKind(BCD, WaterKind.NONE);
@@ -136,7 +137,7 @@ public class LakesFromRiversTest {
     public void mergeLakeIntoOceanTest() {
         Context context = new Context();
         context.putParam(LakesFromRivers.LAKE_SIZE_PARAM, 2);
-        lakeGenerator.execute(islandMap, context);
+        lakeGenerator.execute(terrainMap, context);
         assertKind(AOB, WaterKind.NONE);
         assertKind(OBC, WaterKind.OCEAN);
         assertKind(BCD, WaterKind.OCEAN);

@@ -2,7 +2,7 @@ package pfe.terrain.gen.algo.constraints;
 
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Set;
 
@@ -33,7 +33,7 @@ public class NotExecutableContract extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
 
     }
 }

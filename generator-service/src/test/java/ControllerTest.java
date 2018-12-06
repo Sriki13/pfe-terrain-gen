@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
 
@@ -37,7 +37,7 @@ public class ControllerTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) {
+        public void execute(TerrainMap map, Context context) {
         }
 
         @Override

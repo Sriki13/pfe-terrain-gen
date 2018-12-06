@@ -7,7 +7,11 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.exception.*;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.exception.DuplicateKeyException;
+import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
+import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
+import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,7 +30,7 @@ public class ContractTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        public void execute(TerrainMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
 
         }
     }
@@ -39,7 +43,7 @@ public class ContractTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
+        public void execute(TerrainMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
 
         }
     }
@@ -68,6 +72,11 @@ public class ContractTest {
         }
 
         @Override
+        public void execute(TerrainMap map, Context context) {
+            
+        }
+
+        @Override
         public Set<Param> getRequestedParameters() {
             Set<Param> params = new HashSet<>();
 
@@ -76,10 +85,6 @@ public class ContractTest {
             return params;
         }
 
-        @Override
-        public void execute(IslandMap map, Context context) {
-
-        }
     }
 
     @Test

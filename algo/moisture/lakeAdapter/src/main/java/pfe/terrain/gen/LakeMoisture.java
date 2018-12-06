@@ -5,7 +5,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.MarkerType;
 
@@ -37,9 +37,9 @@ public class LakeMoisture extends Contract {
     private AdapterUtils utils = new AdapterUtils();
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(LAKE_MOISTURE_PARAM)) + MIN_ADD;
-        Set<Face> nextToLake = utils.getTilesNextToLakes(map.getFaces());
+        Set<Face> nextToLake = utils.getTilesNextToLakes(map.getProperty(FACES));
         Set<Face> seen = new HashSet<>(nextToLake);
         for (Face face : nextToLake) {
             utils.addMoisture(face, moistureBonus);

@@ -11,7 +11,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -56,26 +56,26 @@ public class NoiseWaterGeneration extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double archipelagoTendency = context.getParamOrDefault(ARCHIPELAGO_TENDENCY_PARAM);
         double coastRoughness = context.getParamOrDefault(COAST_ROUGHNESS_PARAM);
         Noise algorithm;
         algorithm = Noise.valueOf(context.getParamOrDefault(NOISE_PARAM).toUpperCase());
-        int size = map.getSize();
+        int size = map.getProperty(SIZE);
         double borderSmoothingFactor;
         Module noise;
         switch (algorithm) {
             case BILLOW:
                 borderSmoothingFactor = 0.15;
                 noise = new Billow();
-                ((Billow) noise).setSeed(map.getSeed());
+                ((Billow) noise).setSeed(map.getProperty(SEED));
                 ((Billow) noise).setFrequency(1.0 + archipelagoTendency * 2);
                 ((Billow) noise).setLacunarity(1.5 + coastRoughness);
                 break;
             case RIDGED:
                 borderSmoothingFactor = 0.8;
                 noise = new RidgedMulti();
-                ((RidgedMulti) noise).setSeed(map.getSeed());
+                ((RidgedMulti) noise).setSeed(map.getProperty(SEED));
                 ((RidgedMulti) noise).setFrequency(0.5 + archipelagoTendency * 2.5);
                 ((RidgedMulti) noise).setLacunarity(1.0 + coastRoughness);
                 break;
@@ -83,12 +83,12 @@ public class NoiseWaterGeneration extends Contract {
             default:
                 borderSmoothingFactor = 0.3;
                 noise = new Perlin();
-                ((Perlin) noise).setSeed(map.getSeed());
+                ((Perlin) noise).setSeed(map.getProperty(SEED));
                 ((Perlin) noise).setFrequency(0.75 + archipelagoTendency * 3);
                 ((Perlin) noise).setLacunarity(1.5 + coastRoughness);
                 break;
         }
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             BooleanType isWater = new BooleanType(isWater(noise, 2 * (face.getCenter().x / size - 0.5), 2 * (face.getCenter().y / size - 0.5), borderSmoothingFactor));
             face.putProperty(FACE_WATER_KEY, isWater);
             if (isWater.value) {

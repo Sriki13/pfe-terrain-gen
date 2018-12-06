@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.*;
@@ -15,10 +15,12 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static pfe.terrain.gen.algo.constraints.Contract.FACES;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
 
 public class BasicBordersTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private BasicBorders basicBorders;
 
     private List<Coord> validCoords = Arrays.asList(
@@ -58,23 +60,23 @@ public class BasicBordersTest {
     @Before
     public void setUp() throws DuplicateKeyException {
         basicBorders = new BasicBorders();
-        islandMap = new IslandMap();
-        islandMap.putProperty(Contract.SIZE, 100);
+        terrainMap = new TerrainMap();
+        terrainMap.putProperty(Contract.SIZE, 100);
         List<Coord> allCoords = new ArrayList<>();
         allCoords.addAll(validCoords);
         allCoords.addAll(invalidCoords);
-        islandMap.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(allCoords));
+        terrainMap.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(allCoords));
         List<Face> allFaces = new ArrayList<>();
         allFaces.add(validFace);
         allFaces.addAll(invalidFaces);
-        islandMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(allFaces));
+        terrainMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(allFaces));
     }
 
     @Test
     public void generateBordersTest() {
-        basicBorders.execute(islandMap, new Context());
+        basicBorders.execute(terrainMap, new Context());
         Set<Coord> borderVertices = new HashSet<>();
-        for (Coord vertice : islandMap.getVertices()) {
+        for (Coord vertice : terrainMap.getProperty(VERTICES)) {
             if (vertice.hasProperty(basicBorders.VERTICE_BORDER_KEY)) {
                 borderVertices.add(vertice);
             }
@@ -82,7 +84,7 @@ public class BasicBordersTest {
         validCoords.forEach(coord -> assertFalse(borderVertices.contains(coord)));
         invalidCoords.forEach(coord -> assertTrue(borderVertices.contains(coord)));
         Set<Face> borderFaces = new HashSet<>();
-        for (Face face : islandMap.getFaces()) {
+        for (Face face : terrainMap.getProperty(FACES)) {
             if (face.hasProperty(basicBorders.FACE_BORDER_KEY)) {
                 borderFaces.add(face);
             }

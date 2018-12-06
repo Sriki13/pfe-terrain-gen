@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.OptionalKey;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.MarkerType;
@@ -31,13 +31,13 @@ public class BasicBorders extends Contract {
     }
 
     @Override
-    public void execute(IslandMap islandMap, Context context) {
-        double offset = islandMap.getSize() * 0.1;
-        Set<Coord> borderVertices = islandMap.getVertices().stream()
-                .filter(c -> isBorder(c, islandMap.getSize(), offset))
+    public void execute(TerrainMap terrainMap, Context context) {
+        double offset = terrainMap.getProperty(SIZE) * 0.1;
+        Set<Coord> borderVertices = terrainMap.getProperty(VERTICES).stream()
+                .filter(c -> isBorder(c, terrainMap.getProperty(SIZE), offset))
                 .collect(Collectors.toSet());
-        Set<Face> borderFaces = islandMap.getFaces().stream()
-                .filter(f -> isBorder(f, islandMap.getSize(), offset))
+        Set<Face> borderFaces = terrainMap.getProperty(FACES).stream()
+                .filter(f -> isBorder(f, terrainMap.getProperty(SIZE), offset))
                 .collect(Collectors.toSet());
         for (Coord coord : borderVertices) {
             coord.putProperty(VERTICE_BORDER_KEY, new MarkerType());

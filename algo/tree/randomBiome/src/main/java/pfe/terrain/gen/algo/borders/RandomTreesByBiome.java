@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.Biome;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -53,12 +53,12 @@ public class RandomTreesByBiome extends Contract {
     }
 
     @Override
-    public void execute(IslandMap islandMap, Context context) {
-        FaceSet faces = islandMap.getFaces();
+    public void execute(TerrainMap terrainMap, Context context) {
+        FaceSet faces = terrainMap.getProperty(FACES);
         double treeDensity = 3 + 3 * context.getParamOrDefault(TREE_DENSITY);
         double pitchImportance = 500 - (320 * context.getParamOrDefault(PITCH_IMPORTANCE));
         List<Coord3D> coords = new ArrayList<>();
-        Random random = new Random(islandMap.getSeed());
+        Random random = new Random(terrainMap.getProperty(SEED));
         Biome faceBiome;
         double pitch, z1, z2, z3, l1, l2, det;
         for (Face face : faces) {
@@ -86,6 +86,6 @@ public class RandomTreesByBiome extends Contract {
                 }
             }
         }
-        islandMap.putProperty(TREES_KEY, new TreeType(coords));
+        terrainMap.putProperty(TREES_KEY, new TreeType(coords));
     }
 }

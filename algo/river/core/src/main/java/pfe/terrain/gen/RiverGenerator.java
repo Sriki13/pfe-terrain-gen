@@ -3,13 +3,14 @@ package pfe.terrain.gen;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.OptionalKey;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.types.*;
 
 import java.util.Set;
 
+import static pfe.terrain.gen.algo.constraints.Contract.EDGES;
 import static pfe.terrain.gen.algo.constraints.Contract.EDGES_PREFIX;
 import static pfe.terrain.gen.algo.constraints.Contract.VERTICES_PREFIX;
 
@@ -35,11 +36,11 @@ public class RiverGenerator {
             new OptionalKey<>(VERTICES_PREFIX + "RIVER_END", MarkerType.class);
 
 
-    public RiverGenerator(IslandMap islandMap) {
-        this.islandMap = islandMap;
+    public RiverGenerator(TerrainMap terrainMap) {
+        this.terrainMap = terrainMap;
     }
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
 
     public void generateRiverFrom(Coord start, Set<Coord> seen) {
         start.putProperty(IS_SOURCE_KEY, new MarkerType());
@@ -49,7 +50,7 @@ public class RiverGenerator {
                 break;
             }
             seen.add(flowTowards);
-            Edge edge = islandMap.findEdge(start, flowTowards);
+            Edge edge = findEdge(start, flowTowards);
             edge.putProperty(RIVER_FLOW_KEY, new OptionalIntegerType(1));
             start = flowTowards;
         }
@@ -57,7 +58,7 @@ public class RiverGenerator {
     }
 
     public Coord getLowestNeighbour(Coord coord, Set<Coord> seen, boolean includeStart) {
-        Set<Coord> neighbours = islandMap.getConnectedVertices(coord);
+        Set<Coord> neighbours = terrainMap.getProperty(EDGES).getConnectedVertices(coord);
         Coord min = includeStart ? coord : null;
         for (Coord current : neighbours) {
             if (min == null ||
@@ -67,6 +68,17 @@ public class RiverGenerator {
             }
         }
         return min;
+    }
+
+    private Edge findEdge(Coord a, Coord b) {
+        Edge searched = new Edge(a, b);
+        for (Edge edge : terrainMap.getProperty(EDGES)) {
+            if (edge.equals(searched)) {
+                return edge;
+            }
+        }
+        throw new IllegalArgumentException("Could not find edge corresponding " +
+                "to the Coordinates " + a + " and " + b);
     }
 
 }

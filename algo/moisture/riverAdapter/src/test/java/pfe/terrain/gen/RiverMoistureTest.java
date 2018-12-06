@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.OptionalIntegerType;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 
 public class RiverMoistureTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private RiverMoisture riverMoisture;
 
     private Face farFromRiver;
@@ -28,17 +28,17 @@ public class RiverMoistureTest {
 
     @Before
     public void setUp() {
-        islandMap = new IslandMap();
+        terrainMap = new TerrainMap();
         riverMoisture = new RiverMoisture();
         EdgeSet allEdges = new EdgeSet(new HashSet<>());
         farFromRiver = generateFace(0, false, allEdges);
         closeToRiver = generateFace(1, true, allEdges);
         oneTileAway = generateFace(2, false, allEdges);
         closeToRiver.addNeighbor(oneTileAway);
-        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
+        terrainMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 farFromRiver, closeToRiver, oneTileAway
         ))));
-        islandMap.putProperty(Contract.EDGES, allEdges);
+        terrainMap.putProperty(Contract.EDGES, allEdges);
     }
 
     public static Face generateFace(int seed, boolean hasRiver, Set<Edge> allEdges) {
@@ -54,7 +54,7 @@ public class RiverMoistureTest {
 
     @Test
     public void addMoistureTest() {
-        riverMoisture.execute(islandMap, new Context());
+        riverMoisture.execute(terrainMap, new Context());
         assertThat(getMoisture(farFromRiver), closeTo(0.0, 0.001));
         for (Face face : Arrays.asList(closeToRiver, oneTileAway)) {
             assertThat(getMoisture(face), greaterThan(0.0));

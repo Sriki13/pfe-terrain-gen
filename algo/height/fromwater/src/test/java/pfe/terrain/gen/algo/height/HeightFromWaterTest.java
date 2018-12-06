@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 
@@ -24,22 +24,24 @@ import java.util.Random;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
+import static pfe.terrain.gen.algo.constraints.Contract.SEED;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
 import static pfe.terrain.gen.algo.height.HeightFromWater.VERTEX_HEIGHT_KEY;
 import static pfe.terrain.gen.algo.height.HeightFromWater.VERTEX_WATER_KEY;
 
 public class HeightFromWaterTest {
 
-    private IslandMap map;
+    private TerrainMap map;
     private CoordSet coords;
     private int mapSize;
 
     @Before
     public void setUp() {
         HeightFromWater heightGen = new HeightFromWater();
-        map = new IslandMap();
+        map = new TerrainMap();
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 3);
-        Random random = new Random(map.getSeed());
+        Random random = new Random(map.getProperty(SEED));
         coords = new CoordSet();
         EdgeSet edges = new EdgeSet();
         mapSize = 64;
@@ -72,7 +74,7 @@ public class HeightFromWaterTest {
 
     @Test
     public void valuesAreOk() throws NoSuchKeyException, KeyTypeMismatch {
-        coords = map.getVertices();
+        coords = map.getProperty(VERTICES);
         for (Coord coord : coords) {
             assertThat(coord.getProperty(VERTEX_HEIGHT_KEY).value, is(greaterThanOrEqualTo(0.0)));
             if (coord.getProperty(VERTEX_HEIGHT_KEY).value < 0.0) {
@@ -86,7 +88,7 @@ public class HeightFromWaterTest {
     @Ignore
     @Test
     public void testVisualizeFinal() throws NoSuchKeyException, KeyTypeMismatch {
-        coords = map.getVertices();
+        coords = map.getProperty(VERTICES);
         final BufferedImage image = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_USHORT_GRAY);
         short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
         for (Coord coord : coords) {

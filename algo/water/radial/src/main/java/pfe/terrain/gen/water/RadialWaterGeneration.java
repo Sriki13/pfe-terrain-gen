@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -48,12 +48,12 @@ public class RadialWaterGeneration extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double islandSize = context.getParamOrDefault(ISLAND_SIZE_PARAM);
         double factor = context.getParamOrDefault(ISLAND_SCATTER_PARAM);
-        RadialShape shape = new RadialShape(islandSize, (factor * 4) + 1, new Random(map.getSeed()));
-        int size = map.getSize();
-        for (Face face : map.getFaces()) {
+        RadialShape shape = new RadialShape(islandSize, (factor * 4) + 1, new Random(map.getProperty(SEED)));
+        int size = map.getProperty(SIZE);
+        for (Face face : map.getProperty(FACES)) {
             BooleanType isWater = new BooleanType(shape.isWater(2 * (face.getCenter().x / size - 0.5), 2 * (face.getCenter().y / size - 0.5)));
             face.putProperty(FACE_WATER_KEY, isWater);
             if (isWater.value) {
