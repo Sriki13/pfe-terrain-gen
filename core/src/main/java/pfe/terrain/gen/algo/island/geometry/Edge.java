@@ -23,6 +23,12 @@ public class Edge extends Mappable {
         return end;
     }
 
+    public void switchWay() {
+        Coord tmp = end;
+        this.end = start;
+        this.start = tmp;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

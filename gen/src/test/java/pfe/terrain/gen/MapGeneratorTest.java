@@ -10,6 +10,7 @@ import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
 import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MapGeneratorTest {
@@ -18,7 +19,7 @@ public class MapGeneratorTest {
 
     @Before
     public void init() {
-        this.map = new MapGenerator(Arrays.asList(new Contract() {
+        this.map = new MapGenerator(Collections.singletonList(new Contract() {
             @Override
             public Constraints getContract() {
                 return null;
@@ -100,7 +101,7 @@ public class MapGeneratorTest {
 
     @Test(expected = RuntimeException.class)
     public void failTest() {
-        this.map = new MapGenerator(Arrays.asList(new Contract() {
+        this.map = new MapGenerator(Collections.singletonList(new Contract() {
             @Override
             public Constraints getContract() {
                 return null;
@@ -112,6 +113,6 @@ public class MapGeneratorTest {
             }
         }));
 
-         this.map.generate();
+        this.map.generate(false);
     }
 }

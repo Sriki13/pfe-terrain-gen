@@ -7,6 +7,9 @@ import pfe.terrain.gen.algo.Mappable;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.types.SerializableType;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 public class PropertyExporter<T extends Mappable> {
@@ -19,7 +22,9 @@ public class PropertyExporter<T extends Mappable> {
 
     public JsonArray getPropsArray() {
         JsonArray propertiesArray = new JsonArray();
-        for (Map.Entry<T, Integer> entry : indexes.entrySet()) {
+        List<Map.Entry<T, Integer>> orderedEntries = new ArrayList<>(indexes.entrySet());
+        orderedEntries.sort(Comparator.comparingInt(Map.Entry::getValue));
+        for (Map.Entry<T, Integer> entry : orderedEntries) {
             Map<Key<?>, Object> properties = entry.getKey().getProperties();
             if (properties.isEmpty()) {
                 continue;

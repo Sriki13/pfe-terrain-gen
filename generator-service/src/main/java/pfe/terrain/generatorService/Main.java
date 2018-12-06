@@ -29,7 +29,19 @@ public class Main {
 
             response.type("application/json");
             try {
-                return controller.execute();
+                return controller.execute(false);
+            } catch (Exception e) {
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        get("/execute/diff", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+
+            response.type("application/json");
+            try {
+                return controller.execute(true);
             } catch (Exception e){
                 response.status(500);
                 return parser.exceptionToJson(e);

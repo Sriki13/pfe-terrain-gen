@@ -48,7 +48,20 @@ public class MeshBuilder extends Contract {
         verticesSet.addAll(new CoordSet(allCoordsA.keySet()));
         verticesSet.addAll(new CoordSet(allCoordsB.keySet()));
         map.putProperty(VERTICES, verticesSet);
-        map.putProperty(EDGES, new EdgeSet(allEdgesMap.keySet()));
+        EdgeSet edges = new EdgeSet(allEdgesMap.keySet());
+        makeEdgesDeterministic(edges);
+        map.putProperty(EDGES, edges);
+    }
+
+    private void makeEdgesDeterministic(EdgeSet edges) {
+        Coord start, end;
+        for (Edge edge : edges) {
+            start = edge.getStart();
+            end = edge.getEnd();
+            if (start.x + start.y > end.x + end.y) {
+                edge.switchWay();
+            }
+        }
     }
 
     private List<Polygon> genPolygons(TerrainMap map, int size) throws NoSuchKeyException, KeyTypeMismatch {
@@ -111,7 +124,6 @@ public class MeshBuilder extends Contract {
                         coords[i] = tmp;
                     }
                 }
-
             }
             List<Edge> borders = new ArrayList<>(coords.length);
             for (int i = 0; i < coords.length; i++) {

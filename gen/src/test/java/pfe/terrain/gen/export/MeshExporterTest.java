@@ -46,11 +46,11 @@ public class MeshExporterTest {
 
     private List<Coord> vertices = Arrays.asList(
             commonInFaces.getStart(), commonInFaces.getEnd(), firstFaceLastPoint, secondFaceLastPoint,
-            loneEdge.getStart(), loneEdge.getEnd()
+            loneEdge.getStart(), loneEdge.getEnd(), firstFaceCenter, secondFaceCenter
     );
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         terrainMap = new TerrainMap();
         terrainMap.putProperty(new Key<>("SIZE", Integer.class), 100);
         terrainMap.putProperty(new Key<>("VERTICES", CoordSet.class), new CoordSet(vertices));
@@ -79,7 +79,7 @@ public class MeshExporterTest {
 
     private void checkVertices(JsonObject json) throws Exception {
         JsonArray verticesArray = json.getAsJsonArray("vertices");
-        assertThat(verticesArray.size(), is(vertices.size() + 2));
+        assertThat(verticesArray.size(), is(vertices.size()));
         for (Coord coord : vertices) {
             checkCoordInJsonArray(coord, verticesArray);
         }
