@@ -27,6 +27,13 @@ public class MeshExporter {
     private Map<Edge, Integer> edgesMap;
     private Map<Coord, Integer> verticesMap;
 
+    private static final Comparator<Coord> COORD_COMPARATOR =
+            (a, b) -> (int) ((a.x + a.y) - (b.x + b.y));
+
+    private static final Comparator<Edge> EDGE_COMPARATOR =
+            (a, b) -> (int) ((a.getStart().x + a.getStart().y + a.getEnd().x + a.getEnd().y)
+                    - (b.getStart().x + b.getStart().y + b.getEnd().x + b.getEnd().y));
+
     public MeshExporter(TerrainMap terrainMap) {
         this.size = terrainMap.getProperty(sizeKey);
         this.uuid = UUID.nameUUIDFromBytes(Integer.toString(terrainMap.getProperty(seedKey)).getBytes());
@@ -34,10 +41,14 @@ public class MeshExporter {
         this.faces = new ArrayList<>(terrainMap.getProperty(facesKey));
         this.edges = new ArrayList<>(terrainMap.getProperty(edgesKey));
 
+        // Necessary to get deterministic indexes
+        vertices.sort(COORD_COMPARATOR);
+        faces.sort((a, b) -> COORD_COMPARATOR.compare(a.getCenter(), b.getCenter()));
+        edges.sort(EDGE_COMPARATOR);
+
         this.facesMap = new HashMap<>();
         for (int i = 0; i < faces.size(); i++) {
             facesMap.put(faces.get(i), i);
-            this.vertices.add(faces.get(i).getCenter());
         }
 
         this.verticesMap = new HashMap<>();
@@ -114,4 +125,10 @@ public class MeshExporter {
     public Map<Coord, Integer> getVerticesMap() {
         return verticesMap;
     }
+
+    public boolean sameMesh(MeshExporter other) {
+        return facesMap.equals(other.facesMap) && edgesMap.equals(other.edgesMap)
+                && verticesMap.equals(other.verticesMap);
+    }
+
 }

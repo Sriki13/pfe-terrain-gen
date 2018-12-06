@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.context.MapContext;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.algo.reflection.ContractReflection;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
@@ -18,7 +19,6 @@ import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
 import pfe.terrain.generatorService.initializer.ContextInitializer;
-import pfe.terrain.gen.algo.reflection.ContractReflection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +55,8 @@ public class ServiceController {
         this.generator = generator;
     }
 
-    public String execute() {
-        return this.generator.generate();
+    public String execute(boolean diffOnly) {
+        return this.generator.generate(diffOnly);
     }
 
     public Map<String, Object> setContext(String contextString) {
