@@ -42,15 +42,21 @@ public class SteinerGraph {
         // Step 2 : get the minimum spanning tree of the subgraph
         PrimMinimumSpanningTree<Coord, Edge> prim = new PrimMinimumSpanningTree<>(subGraph);
         SpanningTreeAlgorithm.SpanningTree<Edge> spanningTree = prim.getSpanningTree();
+
+        // Step 3 : get a big or small subset of the complete city subgraph paths
         List<Edge> edgesByWeight = new ArrayList<>(subGraph.edgeSet());
         edgesByWeight.sort(Comparator.comparingDouble(subGraph::getEdgeWeight));
-        for (int i = (int) Math.floor(edgesByWeight.size() / (1 + roadConnections / 2)) - 1; i > 0; i--) {
+
+        roadConnections = 1 - (roadConnections / 4);
+        for (int i = (int) (Math.floor((edgesByWeight.size() - 1) * roadConnections)); i > 0; i--) {
             subGraph.removeEdge(edgesByWeight.get(i));
         }
+
+        // Step 4 : merge the subset and the spanningtree to have at least all cities connected
         Set<Edge> subEdges = new HashSet<>(subGraph.edgeSet());
         subEdges.addAll(spanningTree.getEdges());
 
-        // Step 3 : replace the edges of the spanning tree by the corresponding path
+        // Step 5 : replace the edges of the spanning tree by the corresponding path
         for (Edge e : subEdges) {
             if (paths.get(e) != null) {
                 for (Coord c : paths.get(e).getVertexList()) {

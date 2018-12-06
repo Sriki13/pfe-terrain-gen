@@ -13,10 +13,7 @@ import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.types.DoubleType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class RandomTreesByBiome extends Contract {
 
@@ -54,13 +51,14 @@ public class RandomTreesByBiome extends Contract {
 
     @Override
     public void execute(TerrainMap terrainMap, Context context) {
-        FaceSet faces = terrainMap.getProperty(FACES);
         double treeDensity = 3 + 3 * context.getParamOrDefault(TREE_DENSITY);
         double pitchImportance = 500 - (320 * context.getParamOrDefault(PITCH_IMPORTANCE));
         List<Coord3D> coords = new ArrayList<>();
         Random random = new Random(terrainMap.getProperty(SEED));
         Biome faceBiome;
         double pitch, z1, z2, z3, l1, l2, det;
+        List<Face> faces = new ArrayList<>(terrainMap.getProperty(FACES));
+        faces.sort(((o1, o2) -> (int) (1000 * (o2.getCenter().x - o1.getCenter().x))));
         for (Face face : faces) {
             faceBiome = face.getProperty(FACE_BIOME_KEY);
             // pitch influence, high pitch means less trees

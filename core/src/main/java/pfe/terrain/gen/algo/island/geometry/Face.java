@@ -148,9 +148,11 @@ public class Face extends Mappable {
         return ((hits & 1) != 0);
     }
 
-    public Set<Coord[]> getTriangles() {
-        Set<Coord[]> triangles = new HashSet<>();
-        for (Edge e : edges) {
+    public List<Coord[]> getTriangles() {
+        List<Coord[]> triangles = new ArrayList<>();
+        List<Edge> edgeList = new ArrayList<>(edges);
+        edgeList.sort(((o1, o2) -> (int) (1000 * (o1.getStart().x - o2.getStart().x))));
+        for (Edge e : edgeList) {
             triangles.add(new Coord[]{e.getStart(), e.getEnd(), center});
         }
         return triangles;
