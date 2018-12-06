@@ -13,7 +13,7 @@ import java.util.*;
 public class SteinerGraph {
 
     public Set<Edge> getSteinerGraph(DefaultUndirectedWeightedGraph<Coord, Edge> graph,
-                                     List<Coord> cities) {
+                                     List<Coord> cities, double roadConnections) {
 
         DefaultUndirectedWeightedGraph<Coord, Edge> subGraph = new DefaultUndirectedWeightedGraph<>(Edge.class);
         DefaultUndirectedWeightedGraph<Coord, Edge> finalGraph = new DefaultUndirectedWeightedGraph<>(Edge.class);
@@ -24,86 +24,49 @@ public class SteinerGraph {
         }
 
         DijkstraShortestPath<Coord, Edge> shortestPath = new DijkstraShortestPath<>(graph);
-        Map<Coord, GraphPath<Coord, Edge>> paths = new HashMap<>();
+        Map<Edge, GraphPath<Coord, Edge>> paths = new HashMap<>();
 
         // Step 1 : create a subgraph
         for (int i = 0; i < cities.size(); i++) {
             for (int j = i + 1; j < cities.size(); j++) {
-                Edge e = new Edge(cities.get(i), cities.get(j));
-                subGraph.addEdge(cities.get(i), cities.get(j), e);
                 GraphPath<Coord, Edge> path = shortestPath.getPath(cities.get(i), cities.get(j));
-                paths.put(cities.get(i), path);
-                subGraph.setEdgeWeight(e, path.getWeight());
+                if (path != null) {
+                    Edge e = new Edge(cities.get(i), cities.get(j));
+                    paths.put(e, path);
+                    subGraph.addEdge(cities.get(i), cities.get(j), e);
+                    subGraph.setEdgeWeight(e, path.getWeight());
+                }
             }
         }
 
         // Step 2 : get the minimum spanning tree of the subgraph
-
-//        List<Edge> edgesByWeight = new ArrayList<>(subGraph.edgeSet());
-//        edgesByWeight.sort((o1, o2) -> (int) (1000 * (subGraph.getEdgeWeight(o1) - subGraph.getEdgeWeight(o2))));
-//        for (int i = 0; i < edgesByWeight.size()/2; i++) {
-//            subGraph.removeEdge(edgesByWeight.get(i));
-//        }
         PrimMinimumSpanningTree<Coord, Edge> prim = new PrimMinimumSpanningTree<>(subGraph);
         SpanningTreeAlgorithm.SpanningTree<Edge> spanningTree = prim.getSpanningTree();
+        List<Edge> edgesByWeight = new ArrayList<>(subGraph.edgeSet());
+        edgesByWeight.sort(Comparator.comparingDouble(subGraph::getEdgeWeight));
+        for (int i = (int) Math.floor(edgesByWeight.size() / (1 + roadConnections / 2)) - 1; i > 0; i--) {
+            subGraph.removeEdge(edgesByWeight.get(i));
+        }
+        Set<Edge> subEdges = new HashSet<>(subGraph.edgeSet());
+        subEdges.addAll(spanningTree.getEdges());
 
         // Step 3 : replace the edges of the spanning tree by the corresponding path
-        Set<Coord> found = new HashSet<>(paths.keySet());
-        for (Edge e : spanningTree) {
-            if (found.contains(e.getStart())) {
-                for (Coord c : paths.get(e.getStart()).getVertexList()) {
+        for (Edge e : subEdges) {
+            if (paths.get(e) != null) {
+                for (Coord c : paths.get(e).getVertexList()) {
                     finalGraph.addVertex(c);
                 }
-                found.remove(e.getStart());
             }
-            if (found.contains(e.getEnd())) {
-                for (Coord c : paths.get(e.getEnd()).getVertexList()) {
-                    finalGraph.addVertex(c);
-                }
-                found.remove(e.getEnd());
-            }
+
         }
-        found = new HashSet<>(paths.keySet());
-        for (Edge e : spanningTree) {
-            if (found.contains(e.getStart())) {
-                for (Edge edge : paths.get(e.getStart()).getEdgeList()) {
+        for (Edge e : subEdges) {
+            if (paths.get(e) != null) {
+                for (Edge edge : paths.get(e).getEdgeList()) {
                     finalGraph.addEdge(edge.getStart(), edge.getEnd(), edge);
-                    finalGraph.setEdgeWeight(edge, paths.get(e.getStart()).getWeight());
-                }
-            }
-            if (found.contains(e.getEnd())) {
-                for (Edge edge : paths.get(e.getEnd()).getEdgeList()) {
-                    finalGraph.addEdge(edge.getStart(), edge.getEnd(), edge);
-                    finalGraph.setEdgeWeight(edge, paths.get(e.getEnd()).getWeight());
+                    finalGraph.setEdgeWeight(edge, paths.get(e).getWeight());
                 }
             }
         }
-
-        // Step 4 : get the minmum spanning tree of the finalGraph
-        PrimMinimumSpanningTree<Coord, Edge> finalPrim = new PrimMinimumSpanningTree<>(finalGraph);
-        SpanningTreeAlgorithm.SpanningTree<Edge> finalSpanningTree = finalPrim.getSpanningTree();
-
-        for (Edge e : finalGraph.edgeSet()) {
-            if (!finalSpanningTree.getEdges().contains(e)) {
-                finalGraph.removeEdge(e);
-            }
-        }
-
-        // Step 5 : remove leaves who are not cities
-        while (true) {
-            int i = 0;
-            for (Coord c : finalGraph.vertexSet()) {
-                if (finalGraph.degreeOf(c) == 1 && !cities.contains(c)) {
-                    finalGraph.removeVertex(c);
-                    i++;
-                }
-            }
-            if (i == 0) {
-                break;
-            }
-        }
-
-        // add some of the missing paths
 
         return finalGraph.edgeSet();
     }

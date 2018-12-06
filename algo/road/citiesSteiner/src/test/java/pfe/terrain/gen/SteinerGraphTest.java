@@ -10,6 +10,9 @@ import pfe.terrain.gen.algo.road.SteinerGraph;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+
 public class SteinerGraphTest {
 
     private DefaultUndirectedWeightedGraph<Coord, Edge> g;
@@ -60,6 +63,6 @@ public class SteinerGraphTest {
         g.setEdgeWeight(e7, 6.0);
         g.setEdgeWeight(e8, 3.0);
         List<Coord> cities = Arrays.asList(c1, c6,c2);
-        System.out.println(steinerGraph.getSteinerGraph(g, cities));
+        assertThat(steinerGraph.getSteinerGraph(g, cities,0), containsInAnyOrder(e8,e2,e7));
     }
 }
