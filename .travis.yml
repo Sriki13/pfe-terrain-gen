@@ -18,7 +18,7 @@ jobs:
   - stage: Deploy
     name: deploy
     if: branch = master
-    script: "./deploy.sh"
+    script: "./travisScripts/deploy.sh"
   - stage: DockerPush
     name: docker push
     if: branch = master
