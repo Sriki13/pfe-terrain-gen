@@ -9,11 +9,22 @@ import pfe.terrain.gen.algo.types.SerializableType;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class JSONExporter {
+public class JsonExporter {
 
     private Key<Integer> seedKey = new Key<>("SEED", Integer.class);
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
+
+    private MeshExporter meshExporter;
+    private JsonObject lastProduction;
+
+    public MeshExporter getMeshExporter() {
+        return meshExporter;
+    }
+
+    public JsonObject getLastProduction() {
+        return lastProduction;
+    }
 
     public JsonObject export(TerrainMap terrainMap) {
         long start;
@@ -24,7 +35,7 @@ public class JSONExporter {
 
         logger.info("Exporting mesh...");
         start = System.nanoTime();
-        MeshExporter meshExporter = new MeshExporter(terrainMap);
+        meshExporter = new MeshExporter(terrainMap);
         result.add("mesh", meshExporter.export());
         end = System.nanoTime();
         printTime(start, end, "Mesh exporter");
@@ -66,6 +77,7 @@ public class JSONExporter {
 
         result.addProperty("uuid", terrainMap.getProperty(seedKey));
         logger.info(delimiter + " Done building JSON " + delimiter);
+        lastProduction = result;
         return result;
     }
 

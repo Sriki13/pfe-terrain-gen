@@ -15,14 +15,14 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class JSONExporterTest {
+public class JsonExporterTest {
 
-    private JSONExporter jsonExporter;
+    private JsonExporter jsonExporter;
     private TerrainMap terrainMap;
 
     @Before
     public void setUp() throws Exception {
-        jsonExporter = new JSONExporter();
+        jsonExporter = new JsonExporter();
         terrainMap = new TerrainMap();
         terrainMap.putProperty(Contract.EDGES, new EdgeSet(new HashSet<>()));
         terrainMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
