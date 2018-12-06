@@ -53,7 +53,10 @@ public class JsonDiffExporter {
                                      String propName) {
         PropertyDiffExporter exporter = new PropertyDiffExporter(original.getAsJsonArray(propName + "_props"),
                 latest.getAsJsonArray(propName + "_props"));
-        result.add(propName + "_props", exporter.getDiffArray());
+        JsonArray propDiff = exporter.getDiffArray();
+        if (propDiff.size() > 0) {
+            result.add(propName + "_props", propDiff);
+        }
     }
 
 
