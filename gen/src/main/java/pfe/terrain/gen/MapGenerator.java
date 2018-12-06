@@ -44,6 +44,7 @@ public class MapGenerator implements Generator {
                     sb.append(formatExecution(ctr.getName(), "SUCCESS", execTime));
                 }
             } catch (RuntimeException e) {
+                e.printStackTrace();
                 Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
                 errored = true;
                 sb.append(formatExecution(ctr.getName(), "FAILURE", 0));
@@ -61,8 +62,9 @@ public class MapGenerator implements Generator {
                 long endTime = System.nanoTime();
                 sb.append(formatExecution("JSONExportation", "SUCCESS", endTime - startTime));
             } catch (RuntimeException e) {
-                errored = true;
+                e.printStackTrace();
                 Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
+                errored = true;
                 sb.append(formatExecution("JSONExportation", "FAILURE", 0));
                 rte = e;
             }

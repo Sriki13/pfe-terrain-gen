@@ -23,6 +23,12 @@
             <groupId>org.choco-solver</groupId>
             <artifactId>choco-solver</artifactId>
             <version>4.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.javabits.jgrapht</groupId>
+                    <artifactId>jgrapht-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

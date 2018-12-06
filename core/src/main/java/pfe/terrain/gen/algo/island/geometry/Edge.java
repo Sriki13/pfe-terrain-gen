@@ -33,6 +33,12 @@ public class Edge extends Mappable {
     }
 
     @Override
+    public String toString() {
+        return "(" + start +
+                " - " + end + ')';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash((int) start.x + (int) end.x);
     }
