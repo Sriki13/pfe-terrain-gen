@@ -30,9 +30,9 @@ public abstract class Contract implements Parameters {
         return Stream.of(params).collect(Collectors.toSet());
     }
 
-    public static final String VERTICES_PREFIX = Prefixes.VERTICES_P.getPrefix();
-    public static final String EDGES_PREFIX = Prefixes.EDGES_P.getPrefix();
-    public static final String FACES_PREFIX = Prefixes.FACES_P.getPrefix();
+    public static final String VERTICES_PREFIX = "VERTICES_";
+    public static final String EDGES_PREFIX = "EDGES_";
+    public static final String FACES_PREFIX = "FACES_";
 
     public static final Key<CoordSet> VERTICES = new Key<>("VERTICES", CoordSet.class);
     public static final Key<EdgeSet> EDGES = new Key<>("EDGES", EdgeSet.class);

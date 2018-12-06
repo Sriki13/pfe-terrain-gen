@@ -6,9 +6,9 @@ import static pfe.terrain.gen.algo.constraints.Contract.*;
 
 public enum Prefixes {
 
-    VERTICES_P("VERTICES_", VERTICES),
-    EDGES_P("EDGES_", EDGES),
-    FACES_P("FACES_", FACES);
+    VERTICES_P(VERTICES_PREFIX, VERTICES),
+    EDGES_P(EDGES_PREFIX, EDGES),
+    FACES_P(FACES_PREFIX, FACES);
 
     private String prefix;
     private Key<?> key;
