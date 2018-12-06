@@ -45,10 +45,6 @@ public enum Biome implements SerializableType {
         return treeDensity;
     }
 
-    public String getCode() {
-        return code;
-    }
-
     @Override
     public JsonElement serialize() {
         return new JsonPrimitive(code);

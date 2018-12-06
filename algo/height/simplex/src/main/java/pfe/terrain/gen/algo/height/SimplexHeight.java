@@ -40,7 +40,7 @@ public class SimplexHeight extends Contract {
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(FACES, VERTICES, VERTEX_BORDER_KEY, FACE_BORDER_KEY, SIZE, SEED),
-                asKeySet(VERTEX_HEIGHT_KEY)
+                asKeySet(VERTEX_HEIGHT_KEY, OCEAN_FLOOR_KEY)
         );
     }
 
