@@ -28,7 +28,7 @@ public class Coord extends Mappable {
 
     @Override
     public String toString() {
-        return "Coord{x=" + x + ", y=" + y + '}';
+        return "{" + x + "," + y + '}';
     }
 
     @Override
@@ -42,6 +42,6 @@ public class Coord extends Mappable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x,y);
+        return Objects.hash(x, y);
     }
 }

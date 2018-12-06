@@ -14,15 +14,6 @@ public class TerrainMap extends Mappable {
         super();
     }
 
-    private Key<?> getPropertyById(String id) {
-        for (Key<?> k : properties.keySet()) {
-            if (k.getId().equals(id)) {
-                return k;
-            }
-        }
-        throw new NoSuchKeyException("No such prefix : " + id);
-    }
-
     public <T> boolean assertContaining(Key<T> key) {
         try {
             for (Prefixes pref : Prefixes.values()) {
