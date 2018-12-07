@@ -58,6 +58,11 @@ public class TestContract extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "test contract description";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
 
     }
