@@ -7,10 +7,19 @@ import pfe.terrain.factory.exception.NoSuchCompoException;
 import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
+import pfe.terrain.factory.pom.Dependency;
 import pfe.terrain.factory.storage.AlgoStorage;
 import pfe.terrain.factory.storage.CompoStorage;
+import pfe.terrain.gen.DependencySolver;
+import pfe.terrain.gen.FinalContract;
+import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.exception.DuplicatedProductionException;
+import pfe.terrain.gen.exception.InvalidContractException;
+import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,6 +66,7 @@ public class ServiceController {
         }
 
         Composition composition  = new Composition(name,this.algoStorage.algosFromStrings(algoList),context);
+        this.check(composition);
         this.compoStorage.addComposition(composition);
         return composition;
     }
@@ -98,5 +108,19 @@ public class ServiceController {
             }
         }
         throw new NoSuchCompoException();
+    }
+
+    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException {
+        List<Contract> contracts = new ArrayList<>();
+
+        for(Algorithm algorithm : composition.getAlgorithms()){
+            contracts.add(algorithm.getContract());
+        }
+
+        DependencySolver solver = new DependencySolver(contracts,contracts,new FinalContract());
+
+        solver.orderContracts();
+
+        return true;
     }
 }

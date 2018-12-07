@@ -86,7 +86,7 @@ public class DependencySolver {
      * @return the ordered list
      * @throws UnsolvableException if the element can't be ordered
      */
-    public List<Contract> order(List<Contract> contracts, AdditionalConstraint... dependencies) throws UnsolvableException {
+    private List<Contract> order(List<Contract> contracts, AdditionalConstraint... dependencies) throws UnsolvableException {
         Contract[] orderedContracts = new Contract[contracts.size()];
 
         Model model = new Model("constraints");

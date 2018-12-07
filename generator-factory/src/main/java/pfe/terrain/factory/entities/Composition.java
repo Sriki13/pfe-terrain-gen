@@ -42,6 +42,10 @@ public class Composition {
         return context;
     }
 
+    public List<Algorithm> getAlgorithms() {
+        return algorithms;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,7 +1,11 @@
 package pfe.terrain.factory.entities;
 
 import pfe.terrain.factory.pom.Dependency;
+import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.constraints.NotExecutableContract;
+
+import java.util.HashSet;
 
 public class Algorithm {
 
@@ -10,6 +14,7 @@ public class Algorithm {
 
     public Algorithm(String name) {
         this.name = name;
+        this.contract = new NotExecutableContract("default",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
     }
 
     public Algorithm(String name, Contract contract) {

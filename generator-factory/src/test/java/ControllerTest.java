@@ -12,24 +12,36 @@ import pfe.terrain.factory.pom.BasePom;
 import pfe.terrain.factory.pom.Dependency;
 import pfe.terrain.factory.storage.AlgoStorage;
 import pfe.terrain.factory.storage.CompoStorage;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.NotExecutableContract;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.island.geometry.EdgeSet;
+import pfe.terrain.gen.algo.island.geometry.FaceSet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static pfe.terrain.gen.algo.constraints.Contract.asKeySet;
 
 public class ControllerTest {
 
+    private CompoStorage compoStorage;
     private ServiceController controller = new ServiceController(new Lister());
 
     private class Lister extends AlgoStorage {
-
+        Set<Key> required = asKeySet(
+                new Key<>("VERTICES", CoordSet.class),
+                new Key<>("EDGES", EdgeSet.class),
+                new Key<>("FACES", FaceSet.class));
         @Override
         public List<Algorithm> getAlgoList() throws Exception {
-            return Arrays.asList(new Algorithm("salut"),new Algorithm("test"));
+            return Arrays.asList(
+                    new Algorithm("salut",
+                            new NotExecutableContract("salut",new HashSet<>(),new Constraints(new HashSet<>(),required))),
+                    new Algorithm("test"));
         }
 
         @Override
@@ -48,7 +60,9 @@ public class ControllerTest {
 
     @Before
     public void init(){
-        new CompoStorage().clear();
+        this.controller = new ServiceController(new Lister());
+        this.compoStorage = new CompoStorage();
+        this.compoStorage.clear();
     }
 
     @Test
@@ -82,7 +96,7 @@ public class ControllerTest {
 
         Composition compo = new Composition();
 
-        new CompoStorage().addComposition(compo);
+        this.compoStorage.addComposition(compo);
 
         assertEquals(1,this.controller.getCompositions().size());
 
@@ -93,11 +107,9 @@ public class ControllerTest {
     public void addCompoTest() throws Exception{
         Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
 
-        CompoStorage storage = new CompoStorage();
+        assertEquals(1,this.compoStorage.getCompositions().size());
 
-        assertEquals(1,storage.getCompositions().size());
-
-        assertEquals(compo,storage.getCompositions().get(0));
+        assertEquals(compo,this.compoStorage.getCompositions().get(0));
 
         assertTrue(this.controller.getCompositions().contains(compo));
     }
@@ -117,8 +129,8 @@ public class ControllerTest {
 
     @Test
     public void getPomTest() throws Exception{
-        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
-
+        Composition compo =new Composition("test",Arrays.asList(new Algorithm("salut")),"context");
+        this.compoStorage.addComposition(compo);
         BasePom pom = this.controller.getCompositionPom(compo.getName());
 
         assertEquals(compo.getPom(),pom);
@@ -126,8 +138,8 @@ public class ControllerTest {
 
     @Test
     public void getContextTest() throws Exception{
-        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
-
+        Composition compo =new Composition("test",Arrays.asList(new Algorithm("salut")),"context");
+        this.compoStorage.addComposition(compo);
         String context = this.controller.getCompositionContext(compo.getName());
 
         assertEquals(compo.getContext(),context);
@@ -140,13 +152,14 @@ public class ControllerTest {
 
     @Test
     public void removeTest() throws Exception{
-        Composition composition = this.controller.addComposition("sa", new ArrayList<>(),"test");
 
-        assertEquals(1,new CompoStorage().getCompositions().size());
+        Composition composition = new Composition("test",new ArrayList<>(),"{}");
+        this.compoStorage.addComposition(composition);
+        assertEquals(1,this.compoStorage.getCompositions().size());
 
         this.controller.deleteComposition(composition.getName());
 
-        assertEquals(0,new CompoStorage().getCompositions().size());
+        assertEquals(0,this.compoStorage.getCompositions().size());
 
 
     }
