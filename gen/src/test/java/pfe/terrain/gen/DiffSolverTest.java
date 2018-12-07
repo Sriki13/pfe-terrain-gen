@@ -21,7 +21,6 @@ public class DiffSolverTest {
 
     private Contract first;
     private Contract modifiedParamContract;
-    private Contract unaffectedParamContract;
     private Contract usesCreatedKeyContract;
     private Contract modifiesCreatedKeyContract;
 
@@ -37,8 +36,6 @@ public class DiffSolverTest {
         first = new TestContract("first", new ArrayList<>(), new ArrayList<>());
         modifiedParamContract = new TestContract("modified", Collections.singletonList(createdKey),
                 new ArrayList<>(), Contract.asParamSet(modified));
-        unaffectedParamContract = new TestContract("unaffected", new ArrayList<>(),
-                new ArrayList<>(), Contract.asParamSet(unaffected));
         usesCreatedKeyContract = new TestContract("usesCreatedKey", new ArrayList<>(),
                 Collections.singletonList(createdKey), new ArrayList<>());
         modifiesCreatedKeyContract = new TestContract("modifiesCreated", new ArrayList<>(),
@@ -55,8 +52,7 @@ public class DiffSolverTest {
     @Test
     public void diffTest() {
         List<Contract> got = diffSolver.getContractsToExecute(
-                Arrays.asList(first, modifiedParamContract, unaffectedParamContract,
-                        usesCreatedKeyContract, modifiesCreatedKeyContract));
+                Arrays.asList(first, modifiedParamContract, usesCreatedKeyContract, modifiesCreatedKeyContract));
         assertThat(got.size(), is(3));
         assertThat(got.get(0), is(modifiedParamContract));
         assertThat(got.get(1), is(usesCreatedKeyContract));

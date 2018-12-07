@@ -16,14 +16,15 @@ public class DiffSolver {
         Map<Param<?>, Object> originalProps = original.getProperties();
         Map<Param<?>, Object> newestProps = latest.getProperties();
         for (Param<?> param : newestProps.keySet()) {
-            if (!originalProps.containsKey(param) || originalProps.get(param) != newestProps.get(param)) {
+            if (!originalProps.containsKey(param) || !originalProps.get(param).equals(newestProps.get(param))) {
                 modifiedParams.add(param);
             }
         }
     }
 
     public List<Contract> getContractsToExecute(List<Contract> contracts) {
-        List<Contract> impacted = new ArrayList<>();
+        int min = contracts.size();
+        Set<Key> modifiedKeys = new HashSet<>();
         for (Contract contract : contracts) {
             Set<Param> requested = contract.getRequestedParameters();
             if (requested == null) {
@@ -31,31 +32,24 @@ public class DiffSolver {
             }
             for (Param<?> param : modifiedParams) {
                 if (requested.contains(param)) {
-                    impacted.add(contract);
+                    if (contracts.indexOf(contract) < min) {
+                        min = contracts.indexOf(contract);
+                    }
+                    modifiedKeys.addAll(contract.getContract().getModified());
                 }
             }
         }
-        if (impacted.isEmpty()) {
-            return impacted;
-        }
-        Set<Key> impactedKeys = new HashSet<>();
-        for (int i = contracts.indexOf(impacted.get(0)); i < contracts.size(); i++) {
-            Contract current = contracts.get(i);
-            if (impacted.contains(current)) {
-                impactedKeys.addAll(current.getContract().getCreated());
-                impactedKeys.addAll(current.getContract().getModified());
-            } else {
-                for (Key key : impactedKeys) {
-                    if (current.getContract().getRequired().contains(key) ||
-                            current.getContract().getModified().contains(key)) {
-                        impacted.add(current);
-                        impactedKeys.addAll(current.getContract().getCreated());
-                        impactedKeys.addAll(current.getContract().getModified());
+        for (Key key : modifiedKeys) {
+            for (int i = 0; i < contracts.size(); i++) {
+                Contract current = contracts.get(i);
+                if (current.getContract().getCreated().contains(key)) {
+                    if (contracts.indexOf(current) < min) {
+                        min = contracts.indexOf(current);
                     }
                 }
             }
         }
-        return impacted;
+        return contracts.subList(min, contracts.size());
     }
 
 

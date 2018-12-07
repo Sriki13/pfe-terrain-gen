@@ -4,7 +4,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 
 import static pfe.terrain.gen.algo.constraints.Contract.*;
 
-public enum Prefixes {
+public enum Prefix {
 
     VERTICES_P(VERTICES_PREFIX, VERTICES),
     EDGES_P(EDGES_PREFIX, EDGES),
@@ -13,7 +13,7 @@ public enum Prefixes {
     private String prefix;
     private Key<?> key;
 
-    Prefixes(String prefix, Key<?> key) {
+    Prefix(String prefix, Key<?> key) {
         this.prefix = prefix;
         this.key = key;
     }
@@ -25,4 +25,10 @@ public enum Prefixes {
     public Key getKey() {
         return key;
     }
+
+    @Override
+    public String toString() {
+        return prefix;
+    }
+
 }
