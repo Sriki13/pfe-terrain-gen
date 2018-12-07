@@ -18,7 +18,6 @@ public class MapGenerator implements Generator {
     private List<Contract> contracts;
     private TerrainMap terrainMap;
     private List<Contract> diffContracts;
-    private IslandMap islandMap;
     private Context context;
     private JsonExporter exporter;
 
