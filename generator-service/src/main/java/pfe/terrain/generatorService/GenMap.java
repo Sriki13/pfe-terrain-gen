@@ -27,7 +27,7 @@ public class GenMap {
                     System.out.println("Unsupported arg: " + args[i]);
             }
         }
-        String map = controller.execute();
+        String map = controller.execute(false);
         if (filename == null) {
             System.out.println(map);
         } else {

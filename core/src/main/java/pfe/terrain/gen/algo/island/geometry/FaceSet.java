@@ -10,4 +10,5 @@ public class FaceSet extends HashSet<Face> {
     public FaceSet(Collection<Face> c) {
         super(c);
     }
+
 }

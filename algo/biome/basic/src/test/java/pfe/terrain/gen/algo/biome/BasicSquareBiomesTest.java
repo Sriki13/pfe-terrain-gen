@@ -5,7 +5,7 @@ import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.island.Biome;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 public class BasicSquareBiomesTest {
 
     private BasicSquareBiomes biomeMapper;
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
 
     private Face land = buildTestFace(0);
     private Face ocean = buildTestFace(1);
@@ -37,14 +37,14 @@ public class BasicSquareBiomesTest {
     @Before
     public void setUp() {
         biomeMapper = new BasicSquareBiomes();
-        islandMap = new IslandMap();
-        islandMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(Arrays.asList(land, ocean)));
+        terrainMap = new TerrainMap();
+        terrainMap.putProperty(new Key<>("FACES", FaceSet.class), new FaceSet(Arrays.asList(land, ocean)));
         ocean.putProperty(biomeMapper.FACE_BORDER_KEY, new MarkerType());
     }
 
     @Test
     public void dumbSquareBiomesTest() {
-        biomeMapper.execute(islandMap, new Context());
+        biomeMapper.execute(terrainMap, new Context());
         assertThat(land.getProperty(biomeMapper.FACE_BIOME_KEY), is(Biome.SUB_TROPICAL_DESERT));
         assertThat(ocean.getProperty(biomeMapper.FACE_BIOME_KEY), is(Biome.OCEAN));
     }

@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
 
 public class LakeMoistureTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private LakeMoisture lakeMoisture;
 
     private Face farFromLake;
@@ -29,7 +29,7 @@ public class LakeMoistureTest {
 
     @Before
     public void setUp() {
-        islandMap = new IslandMap();
+        terrainMap = new TerrainMap();
         lakeMoisture = new LakeMoisture();
         farFromLake = generateFace(0, false);
         closeToLake = generateFace(1, false);
@@ -39,7 +39,7 @@ public class LakeMoistureTest {
         oneTileAway.addNeighbor(closeToLake);
         lake.addNeighbor(closeToLake);
         closeToLake.addNeighbor(lake);
-        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
+        terrainMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 farFromLake, closeToLake, oneTileAway, lake
         ))));
     }
@@ -55,7 +55,7 @@ public class LakeMoistureTest {
 
     @Test
     public void addMoistureTest() {
-        lakeMoisture.execute(islandMap, new Context());
+        lakeMoisture.execute(terrainMap, new Context());
         assertThat(getMoisture(farFromLake), closeTo(0.0, 0.001));
         for (Face face : Arrays.asList(closeToLake, oneTileAway)) {
             assertThat(getMoisture(face), greaterThan(0.0));

@@ -36,6 +36,7 @@
         <module>pitch</module>
         <module>tree</module>
         <module>city</module>
+        <module>road</module>
     </modules>
 
 </project>

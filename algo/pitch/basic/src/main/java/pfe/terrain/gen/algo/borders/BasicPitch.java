@@ -5,7 +5,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -25,7 +25,7 @@ public class BasicPitch extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(FACES, VERTEX_HEIGHT_KEY),
+                asKeySet(FACES, VERTEX_HEIGHT_KEY,SIZE),
                 asKeySet(FACE_PITCH_KEY)
         );
     }
@@ -36,9 +36,9 @@ public class BasicPitch extends Contract {
                     (int) (1000 * (o1.getProperty(VERTEX_HEIGHT_KEY).value - o2.getProperty(VERTEX_HEIGHT_KEY).value));
 
     @Override
-    public void execute(IslandMap islandMap, Context context) {
-        FaceSet faces = islandMap.getFaces();
-        double factor = 1 - islandMap.getSize() / 1600.0;
+    public void execute(TerrainMap terrainMap, Context context) {
+        FaceSet faces = terrainMap.getProperty(FACES);
+        double factor = 1 - terrainMap.getProperty(SIZE) / 1600.0;
         for (Face face : faces) {
             face.putProperty(FACE_PITCH_KEY, new DoubleType(computePitch(face, factor)));
         }

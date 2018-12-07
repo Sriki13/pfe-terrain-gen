@@ -2,6 +2,7 @@ package pfe.terrain.gen.criteria;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -36,7 +37,7 @@ public class RiverProximityTest {
 
     @Test
     public void bonusFromRivers() {
-        riverProximity.assignScores(scores);
+        riverProximity.assignScores(new Context(), scores);
         assertThat(scores.get(closeFromRiver), greaterThan(0.0));
         assertThat(scores.get(farFromRiver), greaterThan(0.0));
         assertThat(scores.get(closeFromRiver), greaterThan(scores.get(farFromRiver)));

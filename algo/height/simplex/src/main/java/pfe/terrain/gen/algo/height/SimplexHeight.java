@@ -9,7 +9,7 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -40,7 +40,7 @@ public class SimplexHeight extends Contract {
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(FACES, VERTICES, VERTEX_BORDER_KEY, FACE_BORDER_KEY, SIZE, SEED),
-                asKeySet(VERTEX_HEIGHT_KEY)
+                asKeySet(VERTEX_HEIGHT_KEY, OCEAN_FLOOR_KEY)
         );
     }
 
@@ -83,9 +83,9 @@ public class SimplexHeight extends Contract {
     private static final double MAX_NB = 10;
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
 
-        SimplexNoiseMap elevation = new SimplexNoiseMap(map.getVertices(), map.getSize(), map.getSeed());
+        SimplexNoiseMap elevation = new SimplexNoiseMap(map.getProperty(VERTICES), map.getProperty(SIZE), map.getProperty(SEED));
         double passes = (MAX_PASSES - MIN_PASSES) * (context.getParamOrDefault(NB_SIMPLEX_PASSES)) + MIN_PASSES;
         double islandSize = (MAX_SIZE - MIN_SIZE) * (context.getParamOrDefault(SIMPLEX_ISLAND_SIZE)) + MIN_SIZE;
         double seaLevel = (MAX_SEA - MIN_SEA) * (context.getParamOrDefault(SEA_LEVEL_PARAM)) + MIN_SEA;
@@ -107,7 +107,7 @@ public class SimplexHeight extends Contract {
         elevation.ensureBordersAreLow();
         elevation.putHeightProperty();
 
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             face.getCenter().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(getAverageHeight(face)));
         }
         map.putProperty(OCEAN_FLOOR_KEY, new MarkerType());

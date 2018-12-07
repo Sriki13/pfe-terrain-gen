@@ -7,11 +7,11 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +37,7 @@ public class ControllerTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) {
+        public void execute(TerrainMap map, Context context) {
         }
 
         @Override
@@ -49,7 +49,7 @@ public class ControllerTest {
 
     private class TestGenerator implements Generator{
         @Override
-        public String generate() {
+        public String generate(boolean diffOnly) {
             return "salut";
         }
 
@@ -60,17 +60,17 @@ public class ControllerTest {
 
         @Override
         public List<Contract> getContracts() {
-            return Arrays.asList(new TestContract());
+            return Collections.singletonList(new TestContract());
         }
     }
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         controller = new ServiceController(new TestGenerator());
     }
 
     @Test
-    public void setContextTest() throws Exception {
+    public void setContextTest() {
         controller.setContext("{\"salut\" : 12}");
 
         Context context = controller.getContext();
@@ -79,7 +79,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void setContextWithUnknownKeyTest() throws Exception{
+    public void setContextWithUnknownKeyTest() {
         controller.setContext("{\"eeeee\" : 12}");
 
         Context context = controller.getContext();
@@ -91,7 +91,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void runWithContext() throws Exception {
+    public void runWithContext() {
 
         controller.setContext("{\"salut\" : 12}");
 
@@ -99,14 +99,14 @@ public class ControllerTest {
 
         assertEquals(new Integer(12), context.getParamOrDefault(salut));
 
-        String map = controller.execute();
+        String map = controller.execute(false);
 
         Assert.assertNotEquals("", map);
     }
 
     @Test
-    public void execTest() throws Exception {
-        assertEquals("salut", controller.execute());
+    public void execTest() {
+        assertEquals("salut", controller.execute(false));
     }
 
     @Test

@@ -10,7 +10,7 @@ import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -48,9 +48,9 @@ public class PerlinMoisture extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
-        FaceSet faces = map.getFaces();
-        int mapSize = map.getSize();
+    public void execute(TerrainMap map, Context context) {
+        FaceSet faces = map.getProperty(FACES);
+        int mapSize = map.getProperty(SIZE);
         double frequency = context.getParamOrDefault(BIOME_QUANTITY);
         double min = context.getParamOrDefault(MIN_MOISTURE);
         double max = context.getParamOrDefault(MAX_MOISTURE);
@@ -59,7 +59,7 @@ public class PerlinMoisture extends Contract {
             min = 0.0;
             max = 1.0;
         }
-        Map<Face, Double> noiseValues = computeNoise(map.getSeed(), faces, mapSize, frequency, min, max);
+        Map<Face, Double> noiseValues = computeNoise(map.getProperty(SEED), faces, mapSize, frequency, min, max);
         for (Face face : faces) {
             if (!face.getProperty(FACE_WATER_KEY).value) {
                 face.putProperty(FACE_MOISTURE, new DoubleType(noiseValues.get(face)));

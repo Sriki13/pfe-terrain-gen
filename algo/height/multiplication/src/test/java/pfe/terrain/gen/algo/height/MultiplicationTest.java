@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -17,17 +17,18 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
 import static pfe.terrain.gen.algo.height.HeightMultiplication.VERTEX_HEIGHT_KEY;
 
 public class MultiplicationTest {
 
-    private IslandMap map;
+    private TerrainMap map;
     private CoordSet coords;
     private int mapSize;
 
     @Before
     public void setUp() {
-        map = new IslandMap();
+        map = new TerrainMap();
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 3);
         coords = new CoordSet();
@@ -47,7 +48,7 @@ public class MultiplicationTest {
     public void valuesAreOk() throws NoSuchKeyException, KeyTypeMismatch , DuplicateKeyException {
         Map<Coord,Double> heightMap = new HashMap<>();
 
-        coords = map.getVertices();
+        coords = map.getProperty(VERTICES);
         for (Coord coord : coords) {
             heightMap.put(coord, coord.getProperty(VERTEX_HEIGHT_KEY).value);
         }
@@ -56,7 +57,7 @@ public class MultiplicationTest {
 
         multiplier.execute(map, new Context());
 
-        coords = map.getVertices();
+        coords = map.getProperty(VERTICES);
         for (Coord coord : coords) {
             Double oldHeight = heightMap.get(coord);
 

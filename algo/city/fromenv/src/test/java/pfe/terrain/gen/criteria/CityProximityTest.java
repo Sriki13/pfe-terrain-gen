@@ -2,6 +2,7 @@ package pfe.terrain.gen.criteria;
 
 import org.junit.Before;
 import org.junit.Test;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.MarkerType;
@@ -46,14 +47,14 @@ public class CityProximityTest {
 
     @Test
     public void noInfluenceWithoutCities() {
-        cityProximity.assignScores(scores);
+        cityProximity.assignScores(new Context(), scores);
         scores.forEach((key, value) -> assertThat(value, closeTo(0, 0.001)));
     }
 
     @Test
     public void penalizeIfCloseToCity() {
         cityProximity.addCity(city);
-        cityProximity.assignScores(scores);
+        cityProximity.assignScores(new Context(), scores);
         assertThat(scores.get(closeToCity), lessThan(scores.get(farFromCity)));
     }
 

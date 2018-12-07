@@ -7,7 +7,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -27,12 +27,12 @@ import static pfe.terrain.gen.algo.height.HeightRedistribution.VERTEX_WATER_KEY;
 
 public class HeightRedistributionTest {
 
-    private IslandMap map;
+    private TerrainMap map;
     private int mapSize;
 
     @Before
     public void setUp() throws Exception {
-        map = new IslandMap();
+        map = new TerrainMap();
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), 3);
         CoordSet coords = new CoordSet();
@@ -70,11 +70,11 @@ public class HeightRedistributionTest {
     @Test
     public void checkRepartition() throws DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
         HeightRedistribution heightGen = new HeightRedistribution();
-        List<Coord> coordList = new ArrayList<>(map.getVertices());
+        List<Coord> coordList = new ArrayList<>(map.getProperty(VERTICES));
         coordList.sort(compare());
         double median = coordList.get(coordList.size() / 2).getProperty(VERTEX_HEIGHT_KEY).value;
         heightGen.execute(map, new Context());
-        coordList = new ArrayList<>(map.getVertices());
+        coordList = new ArrayList<>(map.getProperty(VERTICES));
         coordList.sort(compare());
         double medianAfter = coordList.get(coordList.size() / 2).getProperty(VERTEX_HEIGHT_KEY).value;
 

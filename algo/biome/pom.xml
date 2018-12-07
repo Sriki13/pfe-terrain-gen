@@ -18,6 +18,7 @@
         <module>basic</module>
         <module>height</module>
         <module>heightmoisture</module>
+        <module>aquatic</module>
     </modules>
 
 </project>

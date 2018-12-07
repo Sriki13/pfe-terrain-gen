@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Generator {
 
-    String generate();
+    String generate(boolean diffOnly);
 
     void setParams(Context map);
 

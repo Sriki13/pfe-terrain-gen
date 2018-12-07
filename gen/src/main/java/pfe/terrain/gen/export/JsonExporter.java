@@ -3,17 +3,30 @@ package pfe.terrain.gen.export;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pfe.terrain.gen.algo.constraints.key.Key;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.types.SerializableType;
 
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class JSONExporter {
+public class JsonExporter {
+
+    private Key<Integer> seedKey = new Key<>("SEED", Integer.class);
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
 
-    public JsonObject export(IslandMap islandMap) {
+    private MeshExporter meshExporter;
+    private JsonObject lastProduction;
+
+    public MeshExporter getMeshExporter() {
+        return meshExporter;
+    }
+
+    public JsonObject getLastProduction() {
+        return lastProduction;
+    }
+
+    public JsonObject export(TerrainMap terrainMap) {
         long start;
         long end;
         String delimiter = "-------------------------";
@@ -22,7 +35,7 @@ public class JSONExporter {
 
         logger.info("Exporting mesh...");
         start = System.nanoTime();
-        MeshExporter meshExporter = new MeshExporter(islandMap);
+        meshExporter = new MeshExporter(terrainMap);
         result.add("mesh", meshExporter.export());
         end = System.nanoTime();
         printTime(start, end, "Mesh exporter");
@@ -50,7 +63,7 @@ public class JSONExporter {
 
         logger.info("Exporting map props...");
         start = System.nanoTime();
-        Map<Key<?>, Object> properties = islandMap.getProperties();
+        Map<Key<?>, Object> properties = terrainMap.getProperties();
         for (Key key : properties.keySet()) {
             if (key.isSerialized() && properties.get(key) instanceof SerializableType) {
                 JsonElement serialized = ((SerializableType) properties.get(key)).serialize();
@@ -62,8 +75,9 @@ public class JSONExporter {
         end = System.nanoTime();
         printTime(start, end, "Map props export");
 
-        result.addProperty("uuid", islandMap.getSeed());
+        result.addProperty("uuid", terrainMap.getProperty(seedKey));
         logger.info(delimiter + " Done building JSON " + delimiter);
+        lastProduction = result;
         return result;
     }
 

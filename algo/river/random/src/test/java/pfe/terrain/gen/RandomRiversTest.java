@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -16,17 +16,19 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 import static pfe.terrain.gen.RiverGenerator.*;
+import static pfe.terrain.gen.algo.constraints.Contract.EDGES;
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
 
 public class RandomRiversTest {
 
     private RandomRivers riverGenerator;
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
 
     @Before
     public void setUp() {
-        islandMap = new IslandMap();
+        terrainMap = new TerrainMap();
         riverGenerator = new RandomRivers();
-        islandMap.putProperty(Contract.SEED, 0);
+        terrainMap.putProperty(Contract.SEED, 0);
         int mapSize = 40;
         Random random = new Random(0);
         CoordSet coords = new CoordSet(new HashSet<>());
@@ -53,9 +55,9 @@ public class RandomRiversTest {
                 edges.add(new Edge(coordsMatrix.get(j * mapSize + i), coordsMatrix.get((j + 1) * mapSize + i)));
             }
         }
-        islandMap.putProperty(Contract.VERTICES, coords);
-        islandMap.putProperty(Contract.EDGES, edges);
-        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
+        terrainMap.putProperty(VERTICES, coords);
+        terrainMap.putProperty(Contract.EDGES, edges);
+        terrainMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
     }
 
     @Test
@@ -63,9 +65,9 @@ public class RandomRiversTest {
         Context context = new Context();
         int nbRivers = 10;
         context.putParam(RandomRivers.NB_RIVERS_PARAM, nbRivers);
-        riverGenerator.execute(islandMap, context);
+        riverGenerator.execute(terrainMap, context);
         Set<Coord> sources = new HashSet<>();
-        for (Coord coord : islandMap.getVertices()) {
+        for (Coord coord : terrainMap.getProperty(VERTICES)) {
             if (coord.hasProperty(IS_SOURCE_KEY)) {
                 sources.add(coord);
             }
@@ -87,7 +89,7 @@ public class RandomRiversTest {
 
     private List<Edge> findRiverEdge(Coord coord, Edge ignore) {
         List<Edge> result = new ArrayList<>();
-        for (Edge edge : islandMap.getEdges()) {
+        for (Edge edge : terrainMap.getProperty(EDGES)) {
             if (edge.hasProperty(RIVER_FLOW_KEY) && edge.getProperty(RIVER_FLOW_KEY).value > 0
                     && (edge.getStart() == coord || edge.getEnd() == coord)
                     && edge != ignore) {

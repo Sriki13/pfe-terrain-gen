@@ -8,7 +8,7 @@ import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.DuplicateKeyException;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -46,22 +46,22 @@ public class WaterFromHeight extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         identifyWaterVertices(map);
         identifyWaterFaces(map);
         identifyOcean(map);
     }
 
-    private void identifyWaterVertices(IslandMap map)
+    private void identifyWaterVertices(TerrainMap map)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
-        for (Coord vertex : map.getVertices()) {
+        for (Coord vertex : map.getProperty(VERTICES)) {
             vertex.putProperty(VERTEX_WATER_KEY, new BooleanType(vertex.getProperty(HEIGHT_KEY).value <= 0));
         }
     }
 
-    private void identifyWaterFaces(IslandMap map)
+    private void identifyWaterFaces(TerrainMap map)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             boolean isWater = true;
             for (Coord vertex : face.getBorderVertices()) {
                 if (!vertex.getProperty(VERTEX_WATER_KEY).value) {
@@ -82,11 +82,11 @@ public class WaterFromHeight extends Contract {
         }
     }
 
-    private void identifyOcean(IslandMap map)
+    private void identifyOcean(TerrainMap map)
             throws NoSuchKeyException, KeyTypeMismatch, DuplicateKeyException {
         Set<Face> oceanFaces = new HashSet<>();
         Set<Face> borders = new HashSet<>();
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             if (face.hasProperty(FACE_BORDER_KEY)) {
                 borders.add(face);
             }

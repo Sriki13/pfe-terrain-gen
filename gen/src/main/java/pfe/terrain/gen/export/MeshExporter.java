@@ -2,14 +2,19 @@ package pfe.terrain.gen.export;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import pfe.terrain.gen.algo.island.IslandMap;
-import pfe.terrain.gen.algo.island.geometry.Coord;
-import pfe.terrain.gen.algo.island.geometry.Edge;
-import pfe.terrain.gen.algo.island.geometry.Face;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.island.TerrainMap;
+import pfe.terrain.gen.algo.island.geometry.*;
 
 import java.util.*;
 
 public class MeshExporter {
+
+    static final Key<CoordSet> verticesKey = new Key<>("VERTICES", CoordSet.class);
+    static final Key<EdgeSet> edgesKey = new Key<>("EDGES", EdgeSet.class);
+    static final Key<FaceSet> facesKey = new Key<>("FACES", FaceSet.class);
+    static final Key<Integer> sizeKey = new Key<>("SIZE", Integer.class);
+    static final Key<Integer> seedKey = new Key<>("SEED", Integer.class);
 
     private int size;
     private UUID uuid;
@@ -22,17 +27,28 @@ public class MeshExporter {
     private Map<Edge, Integer> edgesMap;
     private Map<Coord, Integer> verticesMap;
 
-    public MeshExporter(IslandMap islandMap) {
-        this.size = islandMap.getSize();
-        this.uuid = UUID.nameUUIDFromBytes(Integer.toString(islandMap.getSeed()).getBytes());
-        this.vertices = new ArrayList<>(islandMap.getVertices());
-        this.faces = new ArrayList<>(islandMap.getFaces());
-        this.edges = new ArrayList<>(islandMap.getEdges());
+    private static final Comparator<Coord> COORD_COMPARATOR =
+            (a, b) -> (int) ((a.x + a.y) - (b.x + b.y));
+
+    private static final Comparator<Edge> EDGE_COMPARATOR =
+            (a, b) -> (int) ((a.getStart().x + a.getStart().y + a.getEnd().x + a.getEnd().y)
+                    - (b.getStart().x + b.getStart().y + b.getEnd().x + b.getEnd().y));
+
+    public MeshExporter(TerrainMap terrainMap) {
+        this.size = terrainMap.getProperty(sizeKey);
+        this.uuid = UUID.nameUUIDFromBytes(Integer.toString(terrainMap.getProperty(seedKey)).getBytes());
+        this.vertices = new ArrayList<>(terrainMap.getProperty(verticesKey));
+        this.faces = new ArrayList<>(terrainMap.getProperty(facesKey));
+        this.edges = new ArrayList<>(terrainMap.getProperty(edgesKey));
+
+        // Necessary to get deterministic indexes
+        vertices.sort(COORD_COMPARATOR);
+        faces.sort((a, b) -> COORD_COMPARATOR.compare(a.getCenter(), b.getCenter()));
+        edges.sort(EDGE_COMPARATOR);
 
         this.facesMap = new HashMap<>();
         for (int i = 0; i < faces.size(); i++) {
             facesMap.put(faces.get(i), i);
-            this.vertices.add(faces.get(i).getCenter());
         }
 
         this.verticesMap = new HashMap<>();
@@ -109,4 +125,10 @@ public class MeshExporter {
     public Map<Coord, Integer> getVerticesMap() {
         return verticesMap;
     }
+
+    public boolean sameMesh(MeshExporter other) {
+        return facesMap.equals(other.facesMap) && edgesMap.equals(other.edgesMap)
+                && verticesMap.equals(other.verticesMap);
+    }
+
 }

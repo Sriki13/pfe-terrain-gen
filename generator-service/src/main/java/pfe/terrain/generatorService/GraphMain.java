@@ -2,7 +2,7 @@ package pfe.terrain.generatorService;
 
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.generatorService.graph.GraphGenerator;
-import pfe.terrain.generatorService.reflection.ContractReflection;
+import pfe.terrain.gen.algo.reflection.ContractReflection;
 
 import java.util.List;
 

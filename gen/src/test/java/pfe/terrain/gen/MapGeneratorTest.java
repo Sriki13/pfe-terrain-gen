@@ -7,9 +7,10 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MapGeneratorTest {
@@ -18,14 +19,14 @@ public class MapGeneratorTest {
 
     @Before
     public void init() {
-        this.map = new MapGenerator(Arrays.asList(new Contract() {
+        this.map = new MapGenerator(Collections.singletonList(new Contract() {
             @Override
             public Constraints getContract() {
                 return null;
             }
 
             @Override
-            public void execute(IslandMap map, Context context) {
+            public void execute(TerrainMap map, Context context) {
 
             }
 
@@ -46,7 +47,7 @@ public class MapGeneratorTest {
                     }
 
                     @Override
-                    public void execute(IslandMap map, Context context) {
+                    public void execute(TerrainMap map, Context context) {
 
                     }
 
@@ -62,7 +63,7 @@ public class MapGeneratorTest {
                     }
 
                     @Override
-                    public void execute(IslandMap map, Context context) {
+                    public void execute(TerrainMap map, Context context) {
 
                     }
 
@@ -78,7 +79,7 @@ public class MapGeneratorTest {
                     }
 
                     @Override
-                    public void execute(IslandMap map, Context context) {
+                    public void execute(TerrainMap map, Context context) {
 
                     }
 
@@ -100,18 +101,18 @@ public class MapGeneratorTest {
 
     @Test(expected = RuntimeException.class)
     public void failTest() {
-        this.map = new MapGenerator(Arrays.asList(new Contract() {
+        this.map = new MapGenerator(Collections.singletonList(new Contract() {
             @Override
             public Constraints getContract() {
                 return null;
             }
 
             @Override
-            public void execute(IslandMap map, Context context) {
+            public void execute(TerrainMap map, Context context) {
                 throw new InvalidAlgorithmParameters("salut");
             }
         }));
 
-         this.map.generate();
+        this.map.generate(false);
     }
 }
