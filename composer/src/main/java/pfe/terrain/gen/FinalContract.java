@@ -28,6 +28,11 @@ public class FinalContract extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Contains minimum elements to create a map";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
 
     }
