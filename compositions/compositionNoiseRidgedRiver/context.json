@@ -31,6 +31,11 @@
       "name": "order",
       "before": "RiverMoisture",
       "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "BridgedBuilder",
+      "after": "RoadsToCitiesSteiner"
     }
   ]
 }

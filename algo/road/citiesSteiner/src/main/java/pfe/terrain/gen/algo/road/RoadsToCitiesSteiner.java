@@ -53,7 +53,7 @@ public class RoadsToCitiesSteiner extends Contract {
 
     @Override
     public String getDescription() {
-        return "Creates road between cities based on a fast steiner graph with added edges";
+        return "Creates road between cities based on a fast steiner graph with added edges, Complexity : O(T²(E+VlogV))";
     }
 
     @Override
