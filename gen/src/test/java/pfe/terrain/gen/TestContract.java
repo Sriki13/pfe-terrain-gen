@@ -5,7 +5,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +58,7 @@ public class TestContract extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
 
     }
 
