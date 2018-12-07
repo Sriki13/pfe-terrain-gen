@@ -173,8 +173,8 @@ public class BridgesBuilder extends Contract {
             bridgeEdges.addAll(shortestPath.getPath(e.getStart(), e.getEnd()).getEdgeList());
         }
         for (Edge e : bridgeEdges) {
-            e.getStart().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(9.0));
-            e.getEnd().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(9.0));
+            e.getStart().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(10.0));
+            e.getEnd().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(10.0));
         }
     }
 }

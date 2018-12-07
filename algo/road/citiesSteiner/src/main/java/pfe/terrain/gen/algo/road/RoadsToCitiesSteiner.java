@@ -56,6 +56,7 @@ public class RoadsToCitiesSteiner extends Contract {
         return "Creates road between cities based on a fast steiner graph with added edges, Complexity : O(T²(E+VlogV))";
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void execute(TerrainMap terrainMap, Context context) {
         EdgeSet edges = terrainMap.getProperty(EDGES);
