@@ -15,21 +15,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ArtifactoryAlgoLister {
-    public static String artifUrl = "http://35.189.252.97/artifactory/";
+    public final static String artifUrl = "http://35.189.252.97/artifactory/";
     private String path = "api/search/artifact?repos=pfe&name=algo";
     private String requestMethod = "GET";
     private String resultKey = "results";
     private String uriKey = "uri";
     private String filterExtension = ".jar";
     private String artifactPattern = "(algo\\.[^\\.]*\\.[^\\/]*\\/)";
+    private String url;
 
     private Logger logger = Logger.getLogger("AlgoLister");
 
     public ArtifactoryAlgoLister() {
+        this.url = artifUrl;
     }
 
     public ArtifactoryAlgoLister(String url){
-        this.artifUrl = url;
+        this.url= url;
     }
 
     public List<Algorithm> getAlgo() throws CannotReachRepoException, IOException{
@@ -58,7 +60,7 @@ public class ArtifactoryAlgoLister {
 
     private String getList() throws CannotReachRepoException {
         try {
-            URL url = new URL(this.artifUrl + this.path);
+            URL url = new URL(this.url + this.path);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod(this.requestMethod);
 
