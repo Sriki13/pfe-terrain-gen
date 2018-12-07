@@ -3,6 +3,7 @@ package pfe.terrain.factory.extern;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import pfe.terrain.factory.exception.CannotReachRepoException;
+import pfe.terrain.factory.utils.Fetcher;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.NotExecutableContract;
 import pfe.terrain.gen.algo.exception.NotParsableContractException;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class AlgoDataFetcher {
+public class AlgoDataFetcher  implements Fetcher<Contract> {
     private String requestMethod = "GET";
     private String algoId;
 
@@ -61,5 +62,10 @@ public class AlgoDataFetcher {
         } catch (Exception e){
             throw new CannotReachRepoException();
         }
+    }
+
+    @Override
+    public Contract fetch() throws Exception {
+        return this.getContract();
     }
 }
