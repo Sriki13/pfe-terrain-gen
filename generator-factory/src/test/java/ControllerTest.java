@@ -10,6 +10,7 @@ import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
 import pfe.terrain.factory.pom.Dependency;
+import pfe.terrain.factory.storage.AlgoStorage;
 import pfe.terrain.factory.storage.CompoStorage;
 
 import java.io.IOException;
@@ -22,18 +23,25 @@ import static org.junit.Assert.assertTrue;
 
 public class ControllerTest {
 
-    private ServiceController controller;
+    private ServiceController controller = new ServiceController(new Lister());
 
-    private class Lister extends ArtifactoryAlgoLister{
+    private class Lister extends AlgoStorage {
+
         @Override
-        public List<Algorithm> getAlgo() throws CannotReachRepoException, IOException {
+        public List<Algorithm> getAlgoList() throws Exception {
             return Arrays.asList(new Algorithm("salut"),new Algorithm("test"));
+        }
+
+        @Override
+        public List<Algorithm> algosFromStrings(List<String> algoIds) throws Exception {
+            return super.algosFromStrings(algoIds);
         }
     }
 
-    private class FailLister extends ArtifactoryAlgoLister{
+    private class FailLister extends AlgoStorage{
+
         @Override
-        public List<Algorithm> getAlgo() throws CannotReachRepoException, IOException {
+        public List<Algorithm> getAlgoList() throws Exception {
             throw new CannotReachRepoException();
         }
     }
@@ -41,7 +49,6 @@ public class ControllerTest {
     @Before
     public void init(){
         new CompoStorage().clear();
-        this.controller = new ServiceController(new Lister());
     }
 
     @Test

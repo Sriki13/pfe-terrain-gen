@@ -6,6 +6,7 @@ import pfe.terrain.factory.utils.Fetcher;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class CacheTest {
 
@@ -37,6 +38,33 @@ public class CacheTest {
 
         assertEquals(3,cache.get().intValue());
         assertEquals(2,fetcher.fetchCount);
+
+    }
+
+    @Test
+    public void equalityWithSameFetcherTest(){
+        IntFetcher fetcher = new IntFetcher();
+        Cache<Integer> cache = new Cache<>(fetcher,30);
+        Cache<Integer> cacheB = new Cache<>(fetcher,30);
+
+        assertEquals(cache,cacheB);
+        assertEquals(cache.hashCode(),cacheB.hashCode());
+
+        assertNotEquals(cache,new Cache(fetcher,40));
+    }
+
+    @Test
+    public void equalityWithDifferentFetcher(){
+        IntFetcher fetcher = new IntFetcher();
+        Cache<Integer> cache = new Cache<>(fetcher,30);
+        Cache<String> cache1 = new Cache<>(new Fetcher<String>() {
+            @Override
+            public String fetch() throws Exception {
+                return "salut";
+            }
+        },30);
+
+        assertNotEquals(cache,cache1);
 
     }
 

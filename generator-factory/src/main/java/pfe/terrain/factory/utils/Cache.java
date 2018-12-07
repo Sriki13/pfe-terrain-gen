@@ -1,5 +1,7 @@
 package pfe.terrain.factory.utils;
 
+import java.util.Objects;
+
 public class Cache<T> {
 
     private boolean isPresent;
@@ -34,5 +36,18 @@ public class Cache<T> {
         return this.val;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cache<?> cache = (Cache<?>) o;
+        return timeout == cache.timeout &&
+                Objects.equals(fetcher, cache.fetcher);
+    }
 
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(timeout, fetcher);
+    }
 }

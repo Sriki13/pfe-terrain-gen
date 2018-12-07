@@ -12,12 +12,21 @@ public class Algorithm {
         this.name = name;
     }
 
+    public Algorithm(String name, Contract contract) {
+        this.name = name;
+        this.contract = contract;
+    }
+
     public String getName() {
         return name;
     }
 
     public Dependency toDependency(){
         return new Dependency(this.getName());
+    }
+
+    public Contract getContract(){
+        return this.contract;
     }
 
     @Override
