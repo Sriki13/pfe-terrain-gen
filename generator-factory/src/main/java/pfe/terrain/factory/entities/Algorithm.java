@@ -1,10 +1,12 @@
 package pfe.terrain.factory.entities;
 
 import pfe.terrain.factory.pom.Dependency;
+import pfe.terrain.gen.algo.constraints.Contract;
 
 public class Algorithm {
 
     private String name;
+    private Contract contract;
 
     public Algorithm(String name) {
         this.name = name;

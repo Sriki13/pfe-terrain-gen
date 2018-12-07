@@ -15,8 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ArtifactoryAlgoLister {
-    private String artifUrl = "http://35.189.252.97/artifactory/";
-    private String path = "api/search/gavc?a=algo.*&repos=pfe";
+    public static String artifUrl = "http://35.189.252.97/artifactory/";
+    private String path = "api/search/artifact?repos=pfe&name=algo";
     private String requestMethod = "GET";
     private String resultKey = "results";
     private String uriKey = "uri";

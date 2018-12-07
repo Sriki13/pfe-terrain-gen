@@ -10,6 +10,7 @@ public class Composition {
     private String name;
     private BasePom pom;
     private String context;
+    private List<Algorithm> algorithms;
 
     public Composition(){
         this.name = "default";
@@ -21,7 +22,7 @@ public class Composition {
     public Composition(String name, List<Algorithm> algorithms, String context){
         this();
         this.name = name;
-
+        this.algorithms = algorithms;
         for(Algorithm algo : algorithms){
             this.pom.addDependency(new Dependency(algo.getName()));
         }
