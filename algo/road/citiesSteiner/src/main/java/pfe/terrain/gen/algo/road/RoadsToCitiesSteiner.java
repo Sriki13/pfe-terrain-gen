@@ -52,6 +52,11 @@ public class RoadsToCitiesSteiner extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Creates road between cities based on a fast steiner graph with added edges";
+    }
+
+    @Override
     public void execute(TerrainMap terrainMap, Context context) {
         EdgeSet edges = terrainMap.getProperty(EDGES);
         CoordSet coords = terrainMap.getProperty(VERTICES);

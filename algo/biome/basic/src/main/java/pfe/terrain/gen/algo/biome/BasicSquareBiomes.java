@@ -30,6 +30,11 @@ public class BasicSquareBiomes extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Puts desert everywhere possible (so until the borders are reached), it's basically a test algorithm";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         Set<Face> borderFaces = new HashSet<>();
         for (Face face : map.getProperty(FACES)) {

@@ -36,6 +36,11 @@ public class PerlinMoisture extends Contract {
         return new Constraints(asKeySet(FACES, SEED, FACE_WATER_KEY), asKeySet(FACE_MOISTURE));
     }
 
+    @Override
+    public String getDescription() {
+        return "Adds moisture between 0 and 1 on land based on a perlin noise function, water has a moisture of 1";
+    }
+
     private final Param<Double> MIN_MOISTURE = Param.generateDefaultDoubleParam("minMoisture",
             "Minimal Moisture (0.5 means a humid island, 1.0 means all map will have max moisture", 0.0, "Minimum moisture");
     private final Param<Double> MAX_MOISTURE = Param.generateDefaultDoubleParam("maxMoisture",

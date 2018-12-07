@@ -44,6 +44,11 @@ public class SimplexHeight extends Contract {
         );
     }
 
+    @Override
+    public String getDescription() {
+        return "Creates a height map with water floor based on the simplex noise, should be used over opensimplex";
+    }
+
     public static final Param<Double> SIMPLEX_ISLAND_SIZE = Param.generateDefaultDoubleParam(
             "simplexIslandSize", "The size of ths islands that will be generated. Higher values mean bigger islands.",
             0.333333, "Island size");

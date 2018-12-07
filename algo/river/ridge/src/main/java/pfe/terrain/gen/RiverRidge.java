@@ -59,6 +59,11 @@ public class RiverRidge extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Some rivers will dig down the ground to form ridges with a varying amount";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         double canyonDepth = context.getParamOrDefault(CANYON_DEPTH_PARAM);
         double canyonTendency = context.getParamOrDefault(CANYON_TENDENCY_PARAM);

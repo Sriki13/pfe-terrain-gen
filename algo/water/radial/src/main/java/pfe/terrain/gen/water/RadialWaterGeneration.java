@@ -43,6 +43,11 @@ public class RadialWaterGeneration extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Creates an island shape based on a sum and multiplication of sine and cosine waves";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(ISLAND_SCATTER_PARAM, ISLAND_SIZE_PARAM);
     }

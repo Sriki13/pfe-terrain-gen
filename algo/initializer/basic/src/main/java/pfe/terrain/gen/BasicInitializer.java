@@ -24,6 +24,11 @@ public class BasicInitializer extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Initialize the map with given seed and size";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(SEED_PARAM, SIZE_PARAM);
     }

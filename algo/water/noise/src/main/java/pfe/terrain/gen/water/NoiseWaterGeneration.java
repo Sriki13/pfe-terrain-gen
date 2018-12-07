@@ -51,6 +51,11 @@ public class NoiseWaterGeneration extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Creates an island shape based on three different parametrizables noise functions";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(ARCHIPELAGO_TENDENCY_PARAM, COAST_ROUGHNESS_PARAM, NOISE_PARAM);
     }

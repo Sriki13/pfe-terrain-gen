@@ -60,6 +60,11 @@ public class AquaticBiomesGenerator extends Contract {
         );
     }
 
+    @Override
+    public String getDescription() {
+        return "Generates aquatic biomes if a map has a sea floor. Can also generate coral reefs";
+    }
+
     public static final double SHALLOW_MIN = 0.8;
     public static final double DEEP_MAX = 0.3;
 

@@ -50,6 +50,11 @@ public class RandomTreesByBiome extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Add trees with their exact coordinates to the map based on biome and face pitch";
+    }
+
+    @Override
     public void execute(TerrainMap terrainMap, Context context) {
         double treeDensity = 3 + 3 * context.getParamOrDefault(TREE_DENSITY);
         double pitchImportance = 500 - (320 * context.getParamOrDefault(PITCH_IMPORTANCE));

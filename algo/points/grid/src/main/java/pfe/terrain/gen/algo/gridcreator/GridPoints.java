@@ -28,6 +28,12 @@ public class GridPoints extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Adds points to the map to generate mesh, these points are arranged in a square grid," +
+                "as such, number of points has to be a square";
+    }
+
+    @Override
     public void execute(TerrainMap terrainMap, Context context) {
         int numberOfPoints = context.getParamOrDefault(NB_POINTS);
         double pointsByLineDouble = Math.sqrt(numberOfPoints);
