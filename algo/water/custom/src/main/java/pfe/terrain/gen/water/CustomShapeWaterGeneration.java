@@ -44,6 +44,12 @@ public class CustomShapeWaterGeneration extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Create the shape of the island based on either a preset shape or one that is passed as parameter as a " +
+                "matrix of 0(water) and 1(land)";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(CUSTOM_SHAPE, PRE_MADE_SHAPE);
     }

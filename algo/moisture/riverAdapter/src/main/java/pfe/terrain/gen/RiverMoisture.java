@@ -20,6 +20,11 @@ public class RiverMoisture extends Contract {
                 asKeySet(AdapterUtils.FACE_MOISTURE));
     }
 
+    @Override
+    public String getDescription() {
+        return "Adds moisture of varying intensity around rivers";
+    }
+
     private final Param<Double> riverMoistureParam = Param.generateDefaultDoubleParam("riverMoisture",
             "The amount of moisture added around the rivers.", 0.5, "River extra moisture");
 

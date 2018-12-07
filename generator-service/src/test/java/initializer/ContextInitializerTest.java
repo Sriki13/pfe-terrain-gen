@@ -44,6 +44,11 @@ public class ContextInitializerTest {
         }
 
         @Override
+        public String getDescription() {
+            return null;
+        }
+
+        @Override
         public void execute(TerrainMap map, Context context) {
 
         }

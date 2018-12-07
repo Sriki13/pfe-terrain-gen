@@ -46,9 +46,14 @@ public class RoadsToCitiesSteiner extends Contract {
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(EDGES, VERTICES, FACES, FACE_PITCH_KEY, SEED, VERTEX_HEIGHT_KEY, CITY_KEY),
+                asKeySet(SIZE, EDGES, VERTICES, FACES, FACE_PITCH_KEY, SEED, VERTEX_HEIGHT_KEY, CITY_KEY),
                 asKeySet(EDGE_IS_ROAD)
         );
+    }
+
+    @Override
+    public String getDescription() {
+        return "Creates road between cities based on a fast steiner graph with added edges";
     }
 
     @Override
@@ -79,6 +84,7 @@ public class RoadsToCitiesSteiner extends Contract {
         }
 
         double h1, h2, dist, hdif, weight;
+        double distNormalization = terrainMap.getProperty(SIZE) / 1600.0;
         for (Edge edge : edges) {
             h1 = edge.getStart().getProperty(VERTEX_HEIGHT_KEY).value;
             h2 = edge.getEnd().getProperty(VERTEX_HEIGHT_KEY).value;
@@ -87,7 +93,12 @@ public class RoadsToCitiesSteiner extends Contract {
             }
             dist = Math.sqrt(Math.pow(edge.getStart().x - edge.getEnd().x, 2) + Math.pow(edge.getStart().y - edge.getEnd().y, 2));
             hdif = Math.abs(h1 - h2);
-            weight = dist * (hdif / 2);
+            if (hdif < 1) {
+                hdif = 0;
+            } else if (hdif < 2) {
+                hdif -= 0.5;
+            }
+            weight = dist * distNormalization + (hdif * 4);
             graph.addEdge(edge.getStart(), edge.getEnd(), edge);
             graph.setEdgeWeight(edge, weight);
         }

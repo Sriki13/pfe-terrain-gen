@@ -42,6 +42,10 @@ public class HeightBiomes extends Contract {
     public static final Key<Biome> FACE_BIOME_KEY =
             new SerializableKey<>(FACES_PREFIX + "BIOME", "biome", Biome.class);
 
+    @Override
+    public String getDescription() {
+        return "Creates biomes based solely on the height of the faces, height step is parametrable";
+    }
 
     @Override
     public Constraints getContract() {

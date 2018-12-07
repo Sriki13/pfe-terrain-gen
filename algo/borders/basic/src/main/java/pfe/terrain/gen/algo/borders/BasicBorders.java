@@ -31,6 +31,11 @@ public class BasicBorders extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Annotate tiles as borders if they are less than 10% of the edge of the map";
+    }
+
+    @Override
     public void execute(TerrainMap terrainMap, Context context) {
         double offset = terrainMap.getProperty(SIZE) * 0.1;
         Set<Coord> borderVertices = terrainMap.getProperty(VERTICES).stream()

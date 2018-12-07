@@ -31,6 +31,12 @@ public class RelaxedPoints extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Add random points to the map that are relaxed a varying amount of time using voronoi polygon to create" +
+                "a more harmonious set of points";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(NB_ITER, NB_POINTS);
     }

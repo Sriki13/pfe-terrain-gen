@@ -24,6 +24,11 @@ public class LakeMoisture extends Contract {
                 asKeySet(AdapterUtils.FACE_MOISTURE));
     }
 
+    @Override
+    public String getDescription() {
+        return "Adds moisture of variable intensity around lakes";
+    }
+
     private final Param<Double> LAKE_MOISTURE_PARAM = Param.generateDefaultDoubleParam("lakeMoisture",
             "The amount of moisture added around the lakes.", 0.5, "Lake extra moisture");
 

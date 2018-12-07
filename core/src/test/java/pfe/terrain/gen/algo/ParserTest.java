@@ -26,6 +26,11 @@ public class ParserTest {
             }
 
             @Override
+            public String getDescription() {
+                return null;
+            }
+
+            @Override
             public void execute(TerrainMap map, Context context) {
 
             }
@@ -39,6 +44,11 @@ public class ParserTest {
         Contract second = new Contract() {
             @Override
             public Constraints getContract() {
+                return null;
+            }
+
+            @Override
+            public String getDescription() {
                 return null;
             }
 

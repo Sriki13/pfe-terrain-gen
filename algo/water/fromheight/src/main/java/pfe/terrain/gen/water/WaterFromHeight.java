@@ -46,6 +46,11 @@ public class WaterFromHeight extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Adds water properties to vertices and faces based on height, requires a heightmap";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         identifyWaterVertices(map);
         identifyWaterFaces(map);

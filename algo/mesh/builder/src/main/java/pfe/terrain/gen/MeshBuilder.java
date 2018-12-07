@@ -34,6 +34,11 @@ public class MeshBuilder extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Create a mesh for the island, containing vertices, edges and faces";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         int size = map.getProperty(SIZE);
         List<Polygon> polygons = genPolygons(map, size);

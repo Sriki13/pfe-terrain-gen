@@ -8,13 +8,20 @@ import java.util.Set;
 
 public class NotExecutableContract extends Contract {
     private String name;
+    private String description;
     private Set<Param> parameters;
     private Constraints constraints;
 
-    public NotExecutableContract(String name, Set<Param> parameters, Constraints constraints) {
+    public NotExecutableContract(String name, String description, Set<Param> parameters, Constraints constraints) {
         this.name = name;
+        this.description = description;
         this.parameters = parameters;
         this.constraints = constraints;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
     }
 
     @Override

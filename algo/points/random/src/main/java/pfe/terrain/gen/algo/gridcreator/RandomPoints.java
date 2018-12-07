@@ -28,6 +28,11 @@ public class RandomPoints extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Adds a totally random amount of points to the map for mesh generation";
+    }
+
+    @Override
     public void execute(TerrainMap terrainMap, Context context) {
         int numberOfPoints = context.getParamOrDefault(NB_POINTS);
         CoordSet points = new CoordSet();
