@@ -54,6 +54,12 @@ public class LakesFromRivers extends Contract {
         );
     }
 
+    @Override
+    public String getDescription() {
+        return "Creates lake of given size where river cannot flow to the ocean until the lake are to big or the rivers" +
+                "reach the ocean";
+    }
+
     private TerrainMap terrainMap;
     private Random random;
     private RiverGenerator riverGenerator;

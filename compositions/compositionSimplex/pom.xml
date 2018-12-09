@@ -93,11 +93,6 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.river.ridge</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
             <artifactId>algo.road.citiesSteiner</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

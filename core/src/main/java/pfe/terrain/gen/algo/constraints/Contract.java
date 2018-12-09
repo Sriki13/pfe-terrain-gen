@@ -42,6 +42,8 @@ public abstract class Contract implements Parameters {
 
     public abstract Constraints getContract();
 
+    public abstract String getDescription();
+
     public long debugExecute(TerrainMap map, Context context) {
         String algorithmName = this.getClass().getSimpleName();
         Logger logger = Logger.getLogger(algorithmName);
@@ -74,18 +76,6 @@ public abstract class Contract implements Parameters {
         return getClass().getSimpleName();
     }
 
-    @Override
-    public int hashCode() {
-        return this.getName().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Contract)) return false;
-        return this.getName().equals(((Contract) obj).getName());
-    }
-
     public static NotExecutableContract fromJson(String json) throws NotParsableContractException {
         Gson gson = new Gson();
         JsonElement rootElement;
@@ -112,6 +102,17 @@ public abstract class Contract implements Parameters {
             throw new NotParsableContractException("missing name");
         }
 
+        String description;
+        if(root.has("description")){
+            try {
+                description = root.get("description").getAsString();
+            } catch (Exception e){
+                throw new NotParsableContractException("description value is wrong");
+            }
+        }else {
+            throw new NotParsableContractException("missing description");
+        }
+
         Set<Param> parameters = new HashSet<>();
         if(root.has("parameters") && root.get("parameters").isJsonArray()){
             JsonArray paramArray = root.get("parameters").getAsJsonArray();
@@ -121,13 +122,13 @@ public abstract class Contract implements Parameters {
                     JsonObject paramObj = paramElement.getAsJsonObject();
 
                     String label = paramObj.get("label").getAsString();
-                    String description = paramObj.get("description").getAsString();
+                    String paramDescription = paramObj.get("description").getAsString();
                     Class type = Class.forName(paramObj.get("type").getAsString());
                     String def = paramObj.get("default").getAsString();
                     String id = paramObj.get("id").getAsString();
                     String range = paramObj.get("range").getAsString();
 
-                    parameters.add(new Param<>(id,type,range,description,def,label));
+                    parameters.add(new Param<>(id,type,range,paramDescription,def,label));
                 } catch (Exception e){
                     throw new NotParsableContractException("param object is wrong");
                 }
@@ -152,16 +153,15 @@ public abstract class Contract implements Parameters {
             throw new NotParsableContractException("missing constraints");
         }
 
-
-
-
-
-        return new NotExecutableContract(name,parameters,constraints);
+        return new NotExecutableContract(name,description,parameters,constraints);
     }
 
     public String toJson(){
         Map<String,Object> obj = new HashMap<>();
+
         obj.put("name",this.getName());
+
+        obj.put("description",this.getDescription());
 
         Map<String,Object> constraints = new HashMap<>();
 
@@ -213,5 +213,17 @@ public abstract class Contract implements Parameters {
         }
 
         return keys;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Contract)) return false;
+        return this.getName().equals(((Contract) obj).getName());
     }
 }

@@ -1,7 +1,7 @@
 package pfe.terrain.gen.algo.island;
 
 import pfe.terrain.gen.algo.Mappable;
-import pfe.terrain.gen.algo.constraints.Prefixes;
+import pfe.terrain.gen.algo.constraints.Prefix;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
@@ -16,7 +16,7 @@ public class TerrainMap extends Mappable {
 
     public <T> boolean assertContaining(Key<T> key) {
         try {
-            for (Prefixes pref : Prefixes.values()) {
+            for (Prefix pref : Prefix.values()) {
                 if (key.getId().startsWith(pref.getPrefix())) {
                     //noinspection unchecked
                     for (Mappable mappable : (Collection<Mappable>) getProperty(pref.getKey())) {

@@ -31,6 +31,11 @@ public class RandomRivers extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Adds a number of sources randomly on emerged land, river will flow down from the sources";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         RiverGenerator generator = new RiverGenerator(map);
         Random random = new Random(map.getProperty(SEED));

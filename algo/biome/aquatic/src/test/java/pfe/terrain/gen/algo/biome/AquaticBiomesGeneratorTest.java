@@ -41,8 +41,8 @@ public class AquaticBiomesGeneratorTest {
         land = generateFace(0, 10, WaterKind.NONE);
         lake = generateFace(1, 5, WaterKind.LAKE);
         deepFace = generateFace(2, -1, WaterKind.OCEAN);
-        shallowFace = generateFace(3, -0.1, WaterKind.OCEAN);
-        middleFace = generateFace(4, -0.5, WaterKind.OCEAN);
+        shallowFace = generateFace(3, -0.05, WaterKind.OCEAN);
+        middleFace = generateFace(4, -0.4, WaterKind.OCEAN);
         terrainMap.putProperty(SEED, 0);
         terrainMap.putProperty(FACES, new FaceSet(new HashSet<>(Arrays.asList(
                 land, lake, deepFace, shallowFace, middleFace

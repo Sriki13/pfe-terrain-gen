@@ -30,6 +30,10 @@ public class BasicPitch extends Contract {
         );
     }
 
+    @Override
+    public String getDescription() {
+        return "Add pitch to all faces based on the overall height difference and distance of the face";
+    }
 
     private final static Comparator<Coord> BY_HEIGHT =
             (o1, o2) ->

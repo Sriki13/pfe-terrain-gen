@@ -26,6 +26,11 @@ public class MapGeneratorTest {
             }
 
             @Override
+            public String getDescription() {
+                return null;
+            }
+
+            @Override
             public void execute(TerrainMap map, Context context) {
 
             }
@@ -47,6 +52,11 @@ public class MapGeneratorTest {
                     }
 
                     @Override
+                    public String getDescription() {
+                        return null;
+                    }
+
+                    @Override
                     public void execute(TerrainMap map, Context context) {
 
                     }
@@ -63,6 +73,11 @@ public class MapGeneratorTest {
                     }
 
                     @Override
+                    public String getDescription() {
+                        return null;
+                    }
+
+                    @Override
                     public void execute(TerrainMap map, Context context) {
 
                     }
@@ -75,6 +90,11 @@ public class MapGeneratorTest {
                 new Contract() {
                     @Override
                     public Constraints getContract() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getDescription() {
                         return null;
                     }
 
@@ -104,6 +124,11 @@ public class MapGeneratorTest {
         this.map = new MapGenerator(Collections.singletonList(new Contract() {
             @Override
             public Constraints getContract() {
+                return null;
+            }
+
+            @Override
+            public String getDescription() {
                 return null;
             }
 

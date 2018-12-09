@@ -39,6 +39,12 @@ public class HeightFromWater extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Creates height from the shape of the island, the more further from water the heighest a point will be." +
+                "Guarantees that water will flow down towards the ocean";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         double hardness = context.getParamOrDefault(HARDNESS_PARAM);
         Set<Coord> coordsToProcess = new HashSet<>();

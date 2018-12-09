@@ -43,6 +43,11 @@ public class OpenSimplexHeight extends Contract {
         );
     }
 
+    @Override
+    public String getDescription() {
+        return "Create an elevation map with sea floor, a bit bugged, should avoid";
+    }
+
     public static final Param<Double> nbIsland = Param.generateDefaultDoubleParam("nbIsland",
             "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0, "Number of islands");
 

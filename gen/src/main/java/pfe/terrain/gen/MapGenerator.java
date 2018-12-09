@@ -14,12 +14,16 @@ import java.util.logging.Logger;
 
 public class MapGenerator implements Generator {
 
+    private List<Contract> original;
     private List<Contract> contracts;
     private TerrainMap terrainMap;
     private Context context;
     private JsonExporter exporter;
 
+    private boolean hasRunOnce = false;
+
     public MapGenerator(List<Contract> contracts) {
+        this.original = contracts;
         this.contracts = contracts;
         this.terrainMap = new TerrainMap();
         this.context = new Context();
@@ -27,6 +31,7 @@ public class MapGenerator implements Generator {
 
     @Override
     public String generate(boolean diffOnly) {
+        hasRunOnce = true;
         boolean errored = false;
         long start = System.nanoTime();
         StringBuilder sb = new StringBuilder("\n\n");
@@ -36,6 +41,11 @@ public class MapGenerator implements Generator {
         sb.append(separator);
         sb.append('\n');
         RuntimeException rte = null;
+        if (original.size() > contracts.size()) {
+            for (int i = 0; i < original.size() - contracts.size(); i++) {
+                sb.append(formatExecution(original.get(i).getName(), "SKIPPED", 0));
+            }
+        }
         for (Contract ctr : contracts) {
             try {
                 if (errored) {
@@ -95,12 +105,20 @@ public class MapGenerator implements Generator {
 
     @Override
     public void setParams(Context map) {
+        if (!hasRunOnce) {
+            this.context = map;
+            return;
+        }
+        DiffSolver solver = new DiffSolver(this.context, map);
+        this.contracts = solver.getContractsToExecute(this.original);
+        MapReverser reverser = new MapReverser(this.terrainMap, this.contracts);
+        reverser.reverseContracts();
         this.context = map;
     }
 
     @Override
     public List<Contract> getContracts() {
-        return this.contracts;
+        return this.original;
     }
 
     private String formatExecution(String contractName, String execCode, long execTime) {

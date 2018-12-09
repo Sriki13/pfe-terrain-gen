@@ -40,6 +40,11 @@ public class HeightSmoothing extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Smooths all heights based on a factor on the neighbors";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(SMOOTHING_FACTOR);
     }

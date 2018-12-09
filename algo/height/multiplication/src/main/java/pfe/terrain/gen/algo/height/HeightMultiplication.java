@@ -37,6 +37,11 @@ public class HeightMultiplication extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Multiplies all heights of the map by a given factor";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         Integer factor = context.getParamOrDefault(FACTOR_KEY);
         CoordSet vertices = map.getProperty(VERTICES);

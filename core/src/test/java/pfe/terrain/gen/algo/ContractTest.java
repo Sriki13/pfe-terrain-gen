@@ -30,6 +30,11 @@ public class ContractTest {
         }
 
         @Override
+        public String getDescription() {
+            return null;
+        }
+
+        @Override
         public void execute(TerrainMap map, Context context) throws InvalidAlgorithmParameters, DuplicateKeyException, NoSuchKeyException, KeyTypeMismatch {
 
         }
@@ -39,6 +44,11 @@ public class ContractTest {
 
         @Override
         public Constraints getContract() {
+            return null;
+        }
+
+        @Override
+        public String getDescription() {
             return null;
         }
 
@@ -69,6 +79,11 @@ public class ContractTest {
 
 
             return new Constraints(required,create,modif);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Wesh";
         }
 
         @Override
@@ -113,6 +128,7 @@ public class ContractTest {
         assertEquals(contract.getContract().getRequired(),serialContract.getContract().getRequired());
 
         assertEquals(contract.getName(),serialContract.getName());
+        assertEquals(contract.getDescription(),serialContract.getDescription());
 
         assertEquals(contract.getRequestedParameters(),serialContract.getRequestedParameters());
     }
