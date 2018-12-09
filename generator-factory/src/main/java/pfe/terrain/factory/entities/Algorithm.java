@@ -14,7 +14,7 @@ public class Algorithm {
 
     public Algorithm(String name) {
         this.name = name;
-        this.contract = new NotExecutableContract(name,new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
+        this.contract = new NotExecutableContract(name,"auto-generated contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
     }
 
     public Algorithm(Contract contract) {

@@ -42,20 +42,20 @@ public class ControllerTest {
         public List<Algorithm> getAlgoList() throws Exception {
             return Arrays.asList(
                     new Algorithm(
-                            new NotExecutableContract("salut",new HashSet<>(),new Constraints(new HashSet<>(), created))),
+                            new NotExecutableContract("salut","test contract",new HashSet<>(),new Constraints(new HashSet<>(), created))),
                     new Algorithm(
-                            new NotExecutableContract("test",new HashSet<>(),new Constraints(
+                            new NotExecutableContract("test","test contract",new HashSet<>(),new Constraints(
                                     asKeySet(new Key<>("EDGES", EdgeSet.class)),
                                     asKeySet(new Key<>("VERTICES", CoordSet.class))))),
                     new Algorithm(
-                            new NotExecutableContract("wow",new HashSet<>(),new Constraints(
+                            new NotExecutableContract("wow","test contract",new HashSet<>(),new Constraints(
                                     asKeySet(new Key<>("VERTICES", CoordSet.class)),
                                     asKeySet(new Key<>("EDGES", EdgeSet.class))))),
                     new Algorithm(
-                            new NotExecutableContract("face",new HashSet<>(),new Constraints(
+                            new NotExecutableContract("face","test contract",new HashSet<>(),new Constraints(
                                     asKeySet(new Key<>("VERTICES", CoordSet.class)),
                                     asKeySet(new Key<>("FACES", FaceSet.class))))),
-                    new Algorithm(new NotExecutableContract("first",new HashSet<>(),new Constraints(new HashSet<>(), created))),
+                    new Algorithm(new NotExecutableContract("first","test contract",new HashSet<>(),new Constraints(new HashSet<>(), created))),
                     new Algorithm("second"));
         }
 

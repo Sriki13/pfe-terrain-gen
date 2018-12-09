@@ -121,7 +121,7 @@ public class ServiceController {
             contracts.add(algorithm.getContract());
         }
 
-        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
+        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final","final contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
 
         solver.orderContracts(composition.getConstraintsArray());
 
