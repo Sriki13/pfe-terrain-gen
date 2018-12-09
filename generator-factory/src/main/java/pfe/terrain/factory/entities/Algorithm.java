@@ -14,11 +14,11 @@ public class Algorithm {
 
     public Algorithm(String name) {
         this.name = name;
-        this.contract = new NotExecutableContract("default",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
+        this.contract = new NotExecutableContract(name,new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
     }
 
-    public Algorithm(String name, Contract contract) {
-        this.name = name;
+    public Algorithm(Contract contract) {
+        this.name = contract.getName();
         this.contract = contract;
     }
 

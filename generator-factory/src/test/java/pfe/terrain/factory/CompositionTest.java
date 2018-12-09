@@ -1,16 +1,17 @@
+package pfe.terrain.factory;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.pom.Dependency;
+import pfe.terrain.gen.algo.constraints.context.MapContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CompositionTest {
     private Composition compo;
@@ -26,13 +27,13 @@ public class CompositionTest {
     }
 
     @Test
-    public void depTest(){
+    public void depTest() throws Exception{
         this.compo = new Composition("salut",
                 Arrays.asList(new Algorithm("wow"),
-                        new Algorithm("test")),"context");
+                        new Algorithm("test")),"{}");
 
         assertEquals("salut",this.compo.getName());
-        assertEquals("context",this.compo.getContext());
+        assertTrue(this.compo.getContext().getProperties().isEmpty());
 
         assertEquals(2,this.compo.getPom().getDependencies().size());
         
@@ -41,19 +42,19 @@ public class CompositionTest {
     }
 
     @Test
-    public void equalTest(){
-        Composition composition = new Composition("salut",new ArrayList<>(),"context");
-        Composition compo2 = new Composition("salut",new ArrayList<>(),"context");
+    public void equalTest() throws Exception{
+        Composition composition = new Composition("salut",new ArrayList<>(),"{}");
+        Composition compo2 = new Composition("salut",new ArrayList<>(),"{}");
 
         assertEquals(composition,compo2);
         assertEquals(composition.hashCode(),compo2.hashCode());
     }
 
     @Test
-    public void notEqual(){
-        Composition composition = new Composition("salut",new ArrayList<>(),"context");
-        Composition compo2 = new Composition("azeaze",new ArrayList<>(),"context");
+    public void notEqual() throws Exception{
+        Composition composition = new Composition("salut",new ArrayList<>(),"{}");
+        Composition compo2 = new Composition("azeaze",new ArrayList<>(),"{}");
 
-        assertNotEquals(composition,compo2);
+        assertNotSame(composition,compo2);
     }
 }

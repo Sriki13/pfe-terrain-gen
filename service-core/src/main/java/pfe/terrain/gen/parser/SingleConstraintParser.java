@@ -1,4 +1,4 @@
-package pfe.terrain.generatorService.parser;
+package pfe.terrain.gen.parser;
 
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;

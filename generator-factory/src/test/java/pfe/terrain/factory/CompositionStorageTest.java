@@ -1,3 +1,5 @@
+package pfe.terrain.factory;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,12 +31,12 @@ public class CompositionStorageTest {
     }
 
     @Test
-    public void removeTest(){
+    public void removeTest() throws Exception{
         Composition composition = new Composition();
         this.storage.addComposition(composition);
         assertEquals(1,this.storage.getCompositions().size());
 
-        this.storage.removeComposition(new Composition("salut",new ArrayList<>(),"salut"));
+        this.storage.removeComposition(new Composition("salut",new ArrayList<>(),"{}"));
         assertEquals(1,this.storage.getCompositions().size());
 
         this.storage.removeComposition(composition);

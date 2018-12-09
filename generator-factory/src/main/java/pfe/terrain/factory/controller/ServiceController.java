@@ -12,7 +12,10 @@ import pfe.terrain.factory.storage.AlgoStorage;
 import pfe.terrain.factory.storage.CompoStorage;
 import pfe.terrain.gen.DependencySolver;
 import pfe.terrain.gen.FinalContract;
+import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.constraints.NotExecutableContract;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.InvalidContractException;
 import pfe.terrain.gen.exception.MissingRequiredException;
@@ -20,6 +23,7 @@ import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,7 +81,7 @@ public class ServiceController {
         return composition.getPom();
     }
 
-    public String getCompositionContext(String compoName) throws NoSuchCompoException{
+    public Context getCompositionContext(String compoName) throws NoSuchCompoException{
         Composition composition = this.getCompoByName(compoName);
 
         return composition.getContext();
@@ -117,9 +121,9 @@ public class ServiceController {
             contracts.add(algorithm.getContract());
         }
 
-        DependencySolver solver = new DependencySolver(contracts,contracts,new FinalContract());
+        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
 
-        solver.orderContracts();
+        solver.orderContracts(composition.getConstraintsArray());
 
         return true;
     }

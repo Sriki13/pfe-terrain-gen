@@ -1,11 +1,10 @@
-package pfe.terrain.generatorService.initializer;
+package pfe.terrain.gen.parser;
 
 import com.google.gson.Gson;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.context.MapContext;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.generatorService.parser.ConstraintParser;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class ContextInitializer {
+public class ParamParser {
     private String contextPath;
 
     private String contextString;
@@ -21,11 +20,11 @@ public class ContextInitializer {
     private String contextKey = "context";
     private String constraintKey = "constraint";
 
-    public ContextInitializer(String path){
+    public ParamParser(String path){
         this.contextPath = path;
     }
 
-    public ContextInitializer(){
+    public ParamParser(){
         this.contextPath = this.getClass().getClassLoader().getResource("context.json").getFile();
     }
 

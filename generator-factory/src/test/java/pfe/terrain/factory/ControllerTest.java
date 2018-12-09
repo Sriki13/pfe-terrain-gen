@@ -1,3 +1,5 @@
+package pfe.terrain.factory;
+
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.factory.controller.ServiceController;
@@ -6,7 +8,6 @@ import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.CompositionAlreadyExistException;
 import pfe.terrain.factory.exception.NoSuchAlgorithmException;
 import pfe.terrain.factory.exception.NoSuchCompoException;
-import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
 import pfe.terrain.factory.pom.Dependency;
@@ -18,8 +19,9 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.island.geometry.EdgeSet;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
+import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.UnsolvableException;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -32,16 +34,29 @@ public class ControllerTest {
     private ServiceController controller = new ServiceController(new Lister());
 
     private class Lister extends AlgoStorage {
-        Set<Key> required = asKeySet(
+        Set<Key> created = asKeySet(
                 new Key<>("VERTICES", CoordSet.class),
                 new Key<>("EDGES", EdgeSet.class),
                 new Key<>("FACES", FaceSet.class));
         @Override
         public List<Algorithm> getAlgoList() throws Exception {
             return Arrays.asList(
-                    new Algorithm("salut",
-                            new NotExecutableContract("salut",new HashSet<>(),new Constraints(new HashSet<>(),required))),
-                    new Algorithm("test"));
+                    new Algorithm(
+                            new NotExecutableContract("salut",new HashSet<>(),new Constraints(new HashSet<>(), created))),
+                    new Algorithm(
+                            new NotExecutableContract("test",new HashSet<>(),new Constraints(
+                                    asKeySet(new Key<>("EDGES", EdgeSet.class)),
+                                    asKeySet(new Key<>("VERTICES", CoordSet.class))))),
+                    new Algorithm(
+                            new NotExecutableContract("wow",new HashSet<>(),new Constraints(
+                                    asKeySet(new Key<>("VERTICES", CoordSet.class)),
+                                    asKeySet(new Key<>("EDGES", EdgeSet.class))))),
+                    new Algorithm(
+                            new NotExecutableContract("face",new HashSet<>(),new Constraints(
+                                    asKeySet(new Key<>("VERTICES", CoordSet.class)),
+                                    asKeySet(new Key<>("FACES", FaceSet.class))))),
+                    new Algorithm(new NotExecutableContract("first",new HashSet<>(),new Constraints(new HashSet<>(), created))),
+                    new Algorithm("second"));
         }
 
         @Override
@@ -105,7 +120,7 @@ public class ControllerTest {
 
     @Test
     public void addCompoTest() throws Exception{
-        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"context");
+        Composition compo = this.controller.addComposition("test",Arrays.asList("salut"),"{}");
 
         assertEquals(1,this.compoStorage.getCompositions().size());
 
@@ -121,15 +136,15 @@ public class ControllerTest {
 
     @Test(expected = CompositionAlreadyExistException.class)
     public void alreadyExistingCompoException() throws Exception{
-        this.controller.addComposition("test",Arrays.asList("salut"),"context");
+        this.controller.addComposition("test",Arrays.asList("salut"),"{}");
 
-        this.controller.addComposition("test",Arrays.asList("salut"),"context");
+        this.controller.addComposition("test",Arrays.asList("salut"),"{}");
 
     }
 
     @Test
     public void getPomTest() throws Exception{
-        Composition compo =new Composition("test",Arrays.asList(new Algorithm("salut")),"context");
+        Composition compo =new Composition("test",Arrays.asList(new Algorithm("salut")),"{}");
         this.compoStorage.addComposition(compo);
         BasePom pom = this.controller.getCompositionPom(compo.getName());
 
@@ -138,16 +153,15 @@ public class ControllerTest {
 
     @Test
     public void getContextTest() throws Exception{
-        Composition compo =new Composition("test",Arrays.asList(new Algorithm("salut")),"context");
+        Composition compo =new Composition("test",Arrays.asList(new Algorithm("salut")),"{}");
         this.compoStorage.addComposition(compo);
-        String context = this.controller.getCompositionContext(compo.getName());
 
-        assertEquals(compo.getContext(),context);
+        assertTrue(compo.getContext().getProperties().isEmpty());
     }
 
     @Test(expected = NoSuchCompoException.class)
     public void noCompoTest() throws Exception{
-        this.controller.getCompositionContext("salut");
+        this.controller.getCompositionContext("{}");
     }
 
     @Test
@@ -167,5 +181,32 @@ public class ControllerTest {
     @Test (expected = NoSuchCompoException.class)
     public void deleteNonExistingCompo() throws Exception{
         this.controller.deleteComposition("wowowowo");
+    }
+
+    @Test (expected = MissingRequiredException.class)
+    public void MissingRequiredException() throws Exception{
+        this.controller.addComposition("test",Arrays.asList("test"),"{}");
+    }
+
+    @Test (expected = UnsolvableException.class)
+    public void cannotComposeException() throws Exception{
+        this.controller.addComposition("test",Arrays.asList("wow","face","test"),"{}");
+    }
+
+    @Test (expected = UnsolvableException.class)
+    public void constraintsHinderResolution() throws Exception{
+        this.controller.addComposition("test",Arrays.asList("first","second"),"{\"constraint\": [\n" +
+                "      {\n" +
+                "        \"name\": \"order\",\n" +
+                "        \"before\": \"first\",\n" +
+                "        \"after\": \"second\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"order\",\n" +
+                "        \"before\": \"second\",\n" +
+                "        \"after\": \"first\"\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }");
     }
 }

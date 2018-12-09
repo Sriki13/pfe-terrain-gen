@@ -1,3 +1,5 @@
+package pfe.terrain.factory;
+
 import org.junit.Assert;
 import org.junit.Test;
 import pfe.terrain.factory.entities.Algorithm;
@@ -9,7 +11,6 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 public class DataFetcherTest {
     private AlgoDataFetcher fetcher;
@@ -39,7 +40,7 @@ public class DataFetcherTest {
         assertEquals(fetcher,fetcherB);
         assertEquals(fetcher.hashCode(),fetcherB.hashCode());
 
-        assertNotEquals(fetcher,new AlgoDataFetcher("azeaze"));
+        Assert.assertNotSame(fetcher,new AlgoDataFetcher("azeaze"));
     }
 
 

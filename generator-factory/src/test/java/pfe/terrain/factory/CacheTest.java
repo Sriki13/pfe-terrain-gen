@@ -1,3 +1,5 @@
+package pfe.terrain.factory;
+
 import org.junit.Assert;
 import org.junit.Test;
 import pfe.terrain.factory.utils.Cache;
@@ -6,7 +8,7 @@ import pfe.terrain.factory.utils.Fetcher;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class CacheTest {
 
@@ -50,7 +52,7 @@ public class CacheTest {
         assertEquals(cache,cacheB);
         assertEquals(cache.hashCode(),cacheB.hashCode());
 
-        assertNotEquals(cache,new Cache(fetcher,40));
+        assertNotSame(cache,new Cache(fetcher,40));
     }
 
     @Test
@@ -64,7 +66,7 @@ public class CacheTest {
             }
         },30);
 
-        assertNotEquals(cache,cache1);
+        assertNotSame(cache,cache1);
 
     }
 

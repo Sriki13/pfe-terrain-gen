@@ -1,4 +1,4 @@
-package pfe.terrain.generatorService.parser;
+package pfe.terrain.gen.parser;
 
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
@@ -7,7 +7,6 @@ import pfe.terrain.gen.exception.NoSuchContractException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class OrderConstraintParser implements SingleConstraintParser{

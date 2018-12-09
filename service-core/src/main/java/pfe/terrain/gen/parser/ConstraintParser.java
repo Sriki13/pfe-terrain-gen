@@ -1,6 +1,5 @@
-package pfe.terrain.generatorService.parser;
+package pfe.terrain.gen.parser;
 
-import org.chocosolver.solver.constraints.Constraint;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 
@@ -32,7 +31,7 @@ public class ConstraintParser {
                 constraints.add(parser.getConstraint(map,contracts));
 
             }catch(Exception e){
-                log.log(Level.WARNING,"could not parse constraint with name : " + map.get(nameKey));
+                log.log(Level.WARNING,"could not parse constraint with name : " + map.get(nameKey) + " reason : " + e.getMessage());
             }
         }
 
