@@ -138,6 +138,6 @@ public class MapGeneratorTest {
             }
         }));
 
-        this.map.generate(false);
+        this.map.generate();
     }
 }

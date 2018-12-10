@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 
 public class JsonDiffExporterTest {
 
-    private JsonExportDiffExporter exporter;
+    private JsonDiffExporter exporter;
 
     private JsonObject result;
     private JsonObject original;
@@ -17,7 +17,7 @@ public class JsonDiffExporterTest {
 
     @Before
     public void setUp() {
-        exporter = new JsonExportDiffExporter();
+        exporter = new JsonDiffExporter();
         result = new JsonObject();
         original = new JsonObject();
         original.addProperty("samePropAndValue", 0);

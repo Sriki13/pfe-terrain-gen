@@ -8,7 +8,8 @@ import org.knowm.xchart.style.Styler;
 import pfe.terrain.gen.algo.Generator;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.constraints.export.ExportDiffProcessor;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.io.IOException;
@@ -25,8 +26,6 @@ public class MapGenerator implements Generator {
     private List<Contract> contracts;
     private TerrainMap terrainMap;
     private Context context;
-    private ExporterReflection exporterReflection;
-    private Exporter exporter;
 
     private boolean hasRunOnce = false;
     private Map<String, Long> mapMillis;
@@ -36,31 +35,29 @@ public class MapGenerator implements Generator {
         this.contracts = contracts;
         this.terrainMap = new TerrainMap();
         this.context = new Context();
-        this.exporterReflection = new ExporterReflection();
     }
 
     @Override
-    public String generate(boolean diffOnly) {
+    public void generate() {
         mapMillis = new HashMap<>();
         hasRunOnce = true;
         long start = System.nanoTime();
         StringBuilder sb = initLogs();
         RuntimeException rte = executeContracts(sb);
-        String result = "";
-        if (rte != null) {
-            sb.append(formatExecution("JSONExportation", "SKIPPED", 0));
-        } else {
-            try {
-                result = exportMap(diffOnly, sb);
-            } catch (RuntimeException e) {
-                rte = e;
-            }
-        }
         finishLogs(rte, sb, start);
         if (rte != null) {
             throw rte;
         }
-        return result;
+    }
+
+    @Override
+    public Object getProperty(String keyId) {
+        for (Map.Entry<Key<?>, Object> entry : terrainMap.getProperties().entrySet()) {
+            if (entry.getKey().getId().equals(keyId)) {
+                return entry.getValue();
+            }
+        }
+        throw new NoSuchKeyException(keyId);
     }
 
     private StringBuilder initLogs() {
@@ -100,110 +97,84 @@ public class MapGenerator implements Generator {
         return rte;
     }
 
-    private String exportMap(boolean diffOnly, StringBuilder sb) {
-        String result;
-        Exporter lastExporter = exporterReflection.getNewExporter();
-        try {
-            long startTime = System.nanoTime();
-            if (diffOnly && exporter != null) {
-                ExportDiffProcessor diff = exporterReflection.getNewDiffProcessor();
-                lastExporter.export(terrainMap);
-                result = diff.processDiff(exporter, lastExporter, this.terrainMap);
-            } else {
-                result = lastExporter.export(this.terrainMap);
-            }
-            exporter = lastExporter;
-            long endTime = System.nanoTime();
-            sb.append(formatExecution("JSONExportation", "SUCCESS", endTime - startTime));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            Logger.getLogger(this.getClass().getName()).warning(e.getMessage());
-            sb.append(formatExecution("JSONExportation", "FAILURE", 0));
-            throw e;
-        }
-        return result;
-    }
-
     private void finishLogs(RuntimeException rte, StringBuilder sb, long start) {
         sb.append('\n');
-        sb.append(separator);
+        sb.append(SEPARATOR);
         long totalTime = System.nanoTime() - start;
-        if (errored) {
+        if (rte != null) {
             sb.append(formatExecution("MapGeneration", "FAILURE", totalTime));
             sb.append(SEPARATOR);
-            if (rte != null) {
-                sb.append(formatExecution("MapGeneration", "FAILURE", System.nanoTime() - start));
-            } else {
-                sb.append(formatExecution("MapGeneration", "SUCCESS", totalTime));
-            }
-            sb.append(SEPARATOR);
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, sb.toString());
+        } else {
+            sb.append(formatExecution("MapGeneration", "SUCCESS", totalTime));
         }
-
-        public byte[] getExecutionChart() {
-            if (hasRunOnce) {
-                AtomicLong totalTime = new AtomicLong();
-                mapMillis.forEach((k, v) -> totalTime.addAndGet(v));
-                PieChart chart = new PieChartBuilder().width(800).height(600).title("Exec Times (total: " + totalTime.get() / 1000000 + "ms)").theme(Styler.ChartTheme.GGPlot2).build();
-
-                chart.getStyler().setLegendVisible(false);
-                chart.getStyler().setAnnotationType(PieStyler.AnnotationType.LabelAndPercentage);
-                chart.getStyler().setAnnotationDistance(1.7);
-                chart.getStyler().setPlotContentSize(.5);
-                chart.getStyler().setDrawAllAnnotations(true);
-                chart.addSeries("Export", mapMillis.get("JSONExport"));
-                for (int i = contracts.size() - 1; i >= 0; i--) {
-                    chart.addSeries(contracts.get(i).getName(), mapMillis.get(contracts.get(i).getName()));
-                }
-                List<String> toRemove = new ArrayList<>();
-                chart.getSeriesMap().forEach((k, v) -> {
-                    if (v.getValue().longValue() < totalTime.get() / 100) {
-                        toRemove.add(k);
-                    }
-                });
-                toRemove.forEach(chart::removeSeries);
-                try {
-                    return BitmapEncoder.getBitmapBytes(chart, BitmapEncoder.BitmapFormat.PNG);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Error with bitmap serialization");
-                }
-            } else {
-                throw new RuntimeException("No executions to base stats upon");
-            }
-        }
-
-
-        @Override
-        public void setParams(Context map) {
-            if (!hasRunOnce) {
-                this.context = map;
-                return;
-            }
-            DiffSolver solver = new DiffSolver(this.context, map);
-            this.contracts = solver.getContractsToExecute(this.original);
-            MapReverser reverser = new MapReverser(this.terrainMap, this.contracts);
-            reverser.reverseContracts();
-            this.context = map;
-        }
-
-        @Override
-        public List<Contract> getContracts() {
-            return this.original;
-        }
-
-        private String formatExecution(String contractName, String execCode, long execTime) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(contractName);
-            char[] chars = new char[50 - contractName.length()];
-            Arrays.fill(chars, '.');
-            sb.append(new String(chars));
-            sb.append(String.format("%1$8s", execCode));
-            sb.append(" [");
-            sb.append(String.format("%1$6.3f", execTime / 1000000000.0));
-            sb.append(" s]\n");
-            return sb.toString();
-        }
-
-
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, sb.toString());
     }
+
+    public byte[] getExecutionChart() {
+        if (hasRunOnce) {
+            AtomicLong totalTime = new AtomicLong();
+            mapMillis.forEach((k, v) -> totalTime.addAndGet(v));
+            PieChart chart = new PieChartBuilder().width(800).height(600)
+                    .title("Exec Times (total: " + totalTime.get() / 1000000 + "ms)")
+                    .theme(Styler.ChartTheme.GGPlot2)
+                    .build();
+
+            chart.getStyler().setLegendVisible(false);
+            chart.getStyler().setAnnotationType(PieStyler.AnnotationType.LabelAndPercentage);
+            chart.getStyler().setAnnotationDistance(1.7);
+            chart.getStyler().setPlotContentSize(.5);
+            chart.getStyler().setDrawAllAnnotations(true);
+            chart.addSeries("Export", mapMillis.get("JSONExport"));
+            for (int i = contracts.size() - 1; i >= 0; i--) {
+                chart.addSeries(contracts.get(i).getName(), mapMillis.get(contracts.get(i).getName()));
+            }
+            List<String> toRemove = new ArrayList<>();
+            chart.getSeriesMap().forEach((k, v) -> {
+                if (v.getValue().longValue() < totalTime.get() / 100) {
+                    toRemove.add(k);
+                }
+            });
+            toRemove.forEach(chart::removeSeries);
+            try {
+                return BitmapEncoder.getBitmapBytes(chart, BitmapEncoder.BitmapFormat.PNG);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error with bitmap serialization");
+            }
+        } else {
+            throw new RuntimeException("No executions to base stats upon");
+        }
+    }
+
+    @Override
+    public void setParams(Context map) {
+        if (!hasRunOnce) {
+            this.context = map;
+            return;
+        }
+        DiffSolver solver = new DiffSolver(this.context, map);
+        this.contracts = solver.getContractsToExecute(this.original);
+        MapReverser reverser = new MapReverser(this.terrainMap, this.contracts);
+        reverser.reverseContracts();
+        this.context = map;
+    }
+
+    @Override
+    public List<Contract> getContracts() {
+        return this.original;
+    }
+
+    private String formatExecution(String contractName, String execCode, long execTime) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(contractName);
+        char[] chars = new char[50 - contractName.length()];
+        Arrays.fill(chars, '.');
+        sb.append(new String(chars));
+        sb.append(String.format("%1$8s", execCode));
+        sb.append(" [");
+        sb.append(String.format("%1$6.3f", execTime / 1000000000.0));
+        sb.append(" s]\n");
+        return sb.toString();
+    }
+
+}

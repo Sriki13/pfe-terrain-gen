@@ -24,12 +24,13 @@ public class Main {
 
         port(8080);
 
-        get("/execute", (request, response) -> {
+        get("/execute/:export", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
 
             response.type("application/json");
             try {
-                return controller.execute(false);
+                controller.execute();
+                return controller.getProperty(request.params("export"));
             } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
@@ -42,18 +43,6 @@ public class Main {
             response.type("application/octet-stream");
             try {
                 return controller.getExecutionChart();
-            } catch (Exception e) {
-                response.status(500);
-                return parser.exceptionToJson(e);
-            }
-        });
-
-        get("/execute/diff", (request, response) -> {
-            response.header("Access-Control-Allow-Origin", "*");
-
-            response.type("application/json");
-            try {
-                return controller.execute(true);
             } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);

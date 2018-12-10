@@ -3,33 +3,31 @@ package pfe.terrain.gen.algo.export.diff;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import pfe.terrain.gen.algo.constraints.Contract;
-import pfe.terrain.gen.algo.constraints.export.ExportDiffProcessor;
 import pfe.terrain.gen.algo.export.JsonExporter;
+import pfe.terrain.gen.algo.export.MeshExporter;
 import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Map;
 
-public class JsonExportDiffExporter implements ExportDiffProcessor {
+public class JsonDiffExporter {
 
-    @Override
-    public String processDiff(Contract old, Contract last, TerrainMap terrainMap) {
-        if (!(old instanceof JsonExporter) || !(last instanceof JsonExporter)) {
-            throw new IllegalArgumentException("Json diff processor can only be used with JsonExporter");
-        }
-        JsonExporter originalExporter = (JsonExporter) old;
-        JsonExporter latestExporter = (JsonExporter) last;
-        if (!originalExporter.getMeshExporter().sameMesh(latestExporter.getMeshExporter())) {
-            return latestExporter.export(terrainMap);
+    private JsonExporter latestExporter = new JsonExporter();
+
+    public JsonObject processDiff(JsonObject oldMap, MeshExporter oldMesh, TerrainMap terrainMap) {
+        JsonObject latestMap = latestExporter.export(terrainMap);
+        if (!latestExporter.getMeshExporter().sameMesh(oldMesh)) {
+            return latestMap;
         }
         JsonObject result = new JsonObject();
-        JsonObject original = originalExporter.getLastProduction();
-        JsonObject latest = latestExporter.getLastProduction();
-        processIslandDiff(result, original, latest);
-        processPropertyDiff(result, original, latest, "face");
-        processPropertyDiff(result, original, latest, "vertex");
-        processPropertyDiff(result, original, latest, "edge");
-        return result.toString();
+        processIslandDiff(result, oldMap, latestMap);
+        processPropertyDiff(result, oldMap, latestMap, "face");
+        processPropertyDiff(result, oldMap, latestMap, "vertex");
+        processPropertyDiff(result, oldMap, latestMap, "edge");
+        return result;
+    }
+
+    public MeshExporter getLatestMesh() {
+        return latestExporter.getMeshExporter();
     }
 
     public void processIslandDiff(JsonObject result, JsonObject original, JsonObject latest) {

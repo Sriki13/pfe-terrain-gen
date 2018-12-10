@@ -37,7 +37,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8080/execute",
+					"raw": "localhost:8080/execute/json",
 					"host": [
 						"localhost"
 					],

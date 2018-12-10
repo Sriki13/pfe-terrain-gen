@@ -36,7 +36,8 @@ public class DependencySolver {
      * @throws UnsolvableException thrown if the problem is not solvable by the system
      * @throws MissingRequiredException thrown if required element cannot be found
      */
-    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
+    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws
+            UnsolvableException, MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
 
         Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element

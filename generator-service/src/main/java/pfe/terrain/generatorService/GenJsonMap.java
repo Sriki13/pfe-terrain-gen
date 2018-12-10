@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class GenMap {
+public class GenJsonMap {
 
     public static void main(String[] args) throws Exception {
         ServiceController controller = new ServiceController();
@@ -27,7 +27,8 @@ public class GenMap {
                     System.out.println("Unsupported arg: " + args[i]);
             }
         }
-        String map = controller.execute(false);
+        controller.execute();
+        String map = controller.getProperty("json").toString();
         if (filename == null) {
             System.out.println(map);
         } else {

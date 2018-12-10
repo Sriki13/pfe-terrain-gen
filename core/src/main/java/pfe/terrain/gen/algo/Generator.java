@@ -7,11 +7,15 @@ import java.util.List;
 
 public interface Generator {
 
-    String generate(boolean diffOnly);
+    void generate();
+
+    Object getProperty(String keyId);
 
     void setParams(Context map);
 
     List<Contract> getContracts();
 
     byte[] getExecutionChart();
+
+
 }

@@ -28,6 +28,10 @@ public class Key<T> {
         return false;
     }
 
+    public boolean isPermanent() {
+        return false;
+    }
+
     public String getSerializedName() {
         throw new UnsupportedOperationException("The key " + identifier + " is not serializable!");
     }
