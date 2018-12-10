@@ -42,20 +42,20 @@ public class ControllerTest {
         public List<Algorithm> getAlgoList() throws Exception {
             return Arrays.asList(
                     new Algorithm(
-                            new NotExecutableContract("salut","test contract",new HashSet<>(),new Constraints(new HashSet<>(), created))),
+                            new NotExecutableContract("salut","test contract",new HashSet<>(),new Constraints(new HashSet<>(), created)),"test"),
                     new Algorithm(
                             new NotExecutableContract("test","test contract",new HashSet<>(),new Constraints(
                                     asKeySet(new Key<>("EDGES", EdgeSet.class)),
-                                    asKeySet(new Key<>("VERTICES", CoordSet.class))))),
+                                    asKeySet(new Key<>("VERTICES", CoordSet.class)))),"test"),
                     new Algorithm(
                             new NotExecutableContract("wow","test contract",new HashSet<>(),new Constraints(
                                     asKeySet(new Key<>("VERTICES", CoordSet.class)),
-                                    asKeySet(new Key<>("EDGES", EdgeSet.class))))),
+                                    asKeySet(new Key<>("EDGES", EdgeSet.class)))),"test"),
                     new Algorithm(
                             new NotExecutableContract("face","test contract",new HashSet<>(),new Constraints(
                                     asKeySet(new Key<>("VERTICES", CoordSet.class)),
-                                    asKeySet(new Key<>("FACES", FaceSet.class))))),
-                    new Algorithm(new NotExecutableContract("first","test contract",new HashSet<>(),new Constraints(new HashSet<>(), created))),
+                                    asKeySet(new Key<>("FACES", FaceSet.class)))),"test"),
+                    new Algorithm(new NotExecutableContract("first","test contract",new HashSet<>(),new Constraints(new HashSet<>(), created)),"test"),
                     new Algorithm("second"));
         }
 
@@ -84,7 +84,7 @@ public class ControllerTest {
     public void pomTest() throws Exception{
         BasePom pom = this.controller.getGenerator(Arrays.asList("salut"));
 
-        assertTrue(pom.contain(new Dependency("salut")));
+        assertTrue(pom.contain(new Dependency("test")));
     }
 
     @Test (expected = NoSuchAlgorithmException.class)

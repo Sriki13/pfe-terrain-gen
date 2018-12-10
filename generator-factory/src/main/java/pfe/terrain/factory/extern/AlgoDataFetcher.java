@@ -37,7 +37,7 @@ public class AlgoDataFetcher  implements Fetcher<Algorithm> {
 
         Contract contract = Contract.fromJson(element.getAsJsonArray().get(0).toString());
 
-        return new Algorithm(contract);
+        return new Algorithm(contract,this.algoId);
     }
 
     private String getData(String id) throws CannotReachRepoException {

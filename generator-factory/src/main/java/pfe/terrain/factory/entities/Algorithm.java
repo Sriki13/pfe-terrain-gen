@@ -9,25 +9,29 @@ import java.util.HashSet;
 
 public class Algorithm {
 
-    private String name;
+    private String id;
     private Contract contract;
 
-    public Algorithm(String name) {
-        this.name = name;
-        this.contract = new NotExecutableContract(name,"auto-generated contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
+    public Algorithm(String id) {
+        this.id = id;
+        this.contract = new NotExecutableContract(id,"auto-generated contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>()));
     }
 
-    public Algorithm(Contract contract) {
-        this.name = contract.getName();
+    public Algorithm(Contract contract, String id) {
+        this.id = id;
         this.contract = contract;
     }
 
+    public String getId(){
+        return this.id;
+    }
+
     public String getName() {
-        return name;
+        return this.contract.getName();
     }
 
     public Dependency toDependency(){
-        return new Dependency(this.getName());
+        return new Dependency(this.getId());
     }
 
     public Contract getContract(){
@@ -36,7 +40,7 @@ public class Algorithm {
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return this.getName().hashCode();
     }
 
     @Override
@@ -44,7 +48,7 @@ public class Algorithm {
         if(this == obj) return true;
 
         if(obj instanceof Algorithm){
-            return this.name.equals(((Algorithm) obj).name);
+            return this.getName().equals(((Algorithm) obj).getName());
         }
         return false;
     }

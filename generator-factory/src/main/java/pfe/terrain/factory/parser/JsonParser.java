@@ -21,7 +21,7 @@ public class JsonParser {
 
         for(Algorithm algorithm : algorithms){
             JsonObject element = new JsonObject();
-            element.add("name",gson.toJsonTree(algorithm.getName()));
+            element.add("id",gson.toJsonTree(algorithm.getId()));
 
             element.add("contracts",
                     gson.toJsonTree(gson.fromJson(algorithm.getContract().toJson(),Map.class),Map.class));
