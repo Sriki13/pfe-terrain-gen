@@ -19,6 +19,7 @@
         <module>random</module>
         <module>ridge</module>
         <module>core</module>
+        <module>delta</module>
     </modules>
 
 </project>

@@ -1,0 +1,54 @@
+{
+  "context": {
+    "size": 400,
+    "nbPoints" : 10000,
+    "nbRidges": 0.8,
+    "ridgeDepth": 0.3,
+    "hardness": 0.45,
+    "biomeQuantity": 0.5,
+    "biomeStyle": "classic",
+    "coastRoughness":0.9,
+    "archipelagoTendency":0.2,
+    "NoiseType": "ridged",
+    "treeDensity": 0.3,
+    "maxMoisture": 0.3,
+    "minMoisture": 0,
+    "riverMoisture": 1,
+    "pitchImportance": 0.3,
+    "nbCities": 3,
+    "heightFactor": 0.9,
+    "SmoothingLevel": 0.9
+  },
+  "constraint": [
+    {
+      "name": "order",
+      "before": "RandomRivers",
+      "after": "HeightRedistribution"
+    },
+    {
+      "name": "order",
+      "before": "RiverRidge",
+      "after": "HeightRedistribution"
+    },
+    {
+      "name": "order",
+      "before": "HeightRedistribution",
+      "after": "HeightSmoothing"
+    },
+    {
+      "name": "order",
+      "before": "HeightSmoothing",
+      "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "RiverMoisture",
+      "after": "HeightMoistureBiome"
+    },
+    {
+      "name": "order",
+      "before": "HeightSmoothing",
+      "after": "BasicPitch"
+    }
+  ]
+}

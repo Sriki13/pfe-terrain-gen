@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.context.MapContext;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,7 +29,12 @@ public class MapContextTest {
         }
 
         @Override
-        public void execute(IslandMap map, Context context) {
+        public String getDescription() {
+            return null;
+        }
+
+        @Override
+        public void execute(TerrainMap map, Context context) {
 
         }
 

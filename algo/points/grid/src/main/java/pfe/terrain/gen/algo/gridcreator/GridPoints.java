@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.exception.InvalidAlgorithmParameters;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 
@@ -28,13 +28,19 @@ public class GridPoints extends Contract {
     }
 
     @Override
-    public void execute(IslandMap islandMap, Context context) {
+    public String getDescription() {
+        return "Adds points to the map to generate mesh, these points are arranged in a square grid," +
+                "as such, number of points has to be a square";
+    }
+
+    @Override
+    public void execute(TerrainMap terrainMap, Context context) {
         int numberOfPoints = context.getParamOrDefault(NB_POINTS);
         double pointsByLineDouble = Math.sqrt(numberOfPoints);
         if (!(pointsByLineDouble - Math.floor(pointsByLineDouble) == 0)) {
             throw new InvalidAlgorithmParameters("numberOfPoints must be a square root");
         }
-        double squareSide = islandMap.getSize() / pointsByLineDouble;
+        double squareSide = terrainMap.getProperty(SIZE) / pointsByLineDouble;
         double halfSide = squareSide / 2;
         CoordSet points = new CoordSet();
 
@@ -43,6 +49,6 @@ public class GridPoints extends Contract {
                 points.add(new Coord(x * squareSide + halfSide, y * squareSide + halfSide));
             }
         }
-        islandMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
+        terrainMap.putProperty(new Key<>("POINTS", CoordSet.class), points);
     }
 }

@@ -1,11 +1,13 @@
 package pfe.terrain.gen.algo;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.island.geometry.Face;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,14 +49,13 @@ public class FaceTest {
     }
 
     @Test
+    @Ignore
     public void testTrianglesContains() {
-        Set<Coord[]> triangles = myFace.getTriangles();
+        List<Coord[]> triangles = myFace.getTriangles();
         for (Coord[] triangle : triangles) {
-            System.out.println(Arrays.toString(triangle));
             for (int i = 0; i < 3; i++) {
-                System.out.println(Face.getRandomPointInsideTriangle(triangle, new Random()));
+                Face.getRandomPointInsideTriangle(triangle, new Random());
             }
-            System.out.println();
         }
     }
 }

@@ -9,7 +9,7 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.DoubleType;
@@ -43,6 +43,11 @@ public class OpenSimplexHeight extends Contract {
         );
     }
 
+    @Override
+    public String getDescription() {
+        return "Create an elevation map with sea floor, a bit bugged, should avoid";
+    }
+
     public static final Param<Double> nbIsland = Param.generateDefaultDoubleParam("nbIsland",
             "The amount of islands that will be generated. Higher values mean the map will be an archipelago.", 0.0, "Number of islands");
 
@@ -66,9 +71,9 @@ public class OpenSimplexHeight extends Contract {
 
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double frequency = (MAX_FREQ - MIN_FREQ) * (context.getParamOrDefault(nbIsland)) + MIN_FREQ;
-        OpenNoiseMap elevation = new OpenNoiseMap(map.getVertices(), map.getSeed(), map.getSize());
+        OpenNoiseMap elevation = new OpenNoiseMap(map.getProperty(VERTICES), map.getProperty(SEED), map.getProperty(SIZE));
 
         double intensity = 3.0;
         elevation.addSimplexNoise(intensity, frequency);
@@ -80,7 +85,7 @@ public class OpenSimplexHeight extends Contract {
         elevation.multiplyHeights(context.getParamOrDefault(heightMultiplier));
         elevation.putHeightProperty();
 
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             if (face.hasProperty(FACE_BORDER_KEY)) {
                 for (Coord coord : face.getBorderVertices()) {
                     if (coord.getProperty(VERTEX_HEIGHT_KEY).value > 0) {
@@ -90,7 +95,7 @@ public class OpenSimplexHeight extends Contract {
             }
         }
 
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             face.getCenter().putProperty(VERTEX_HEIGHT_KEY, new DoubleType(getAverageHeight(face)));
         }
         map.putProperty(OCEAN_FLOOR_KEY, new MarkerType());

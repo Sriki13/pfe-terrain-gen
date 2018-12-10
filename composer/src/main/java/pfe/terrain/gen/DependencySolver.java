@@ -8,10 +8,8 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.exception.DuplicatedProductionException;
-import pfe.terrain.gen.exception.InvalidContractException;
-import pfe.terrain.gen.exception.MissingRequiredException;
-import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.constraints.ContractOrder.EndingContract;
+import pfe.terrain.gen.exception.*;
 
 import java.util.*;
 
@@ -20,6 +18,8 @@ public class DependencySolver {
     private ContractStore toUse;
     private ContractStore available;
     private Contract finalMap;
+
+    public static final Key<Void> allKey = new Key<>("All",Void.class);
 
     private List<Contract> ordered;
 
@@ -36,7 +36,7 @@ public class DependencySolver {
      * @throws UnsolvableException thrown if the problem is not solvable by the system
      * @throws MissingRequiredException thrown if required element cannot be found
      */
-    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException {
+    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
 
         Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element
@@ -86,7 +86,7 @@ public class DependencySolver {
      * @return the ordered list
      * @throws UnsolvableException if the element can't be ordered
      */
-    public List<Contract> order(List<Contract> contracts, AdditionalConstraint... dependencies) throws UnsolvableException {
+    private List<Contract> order(List<Contract> contracts, AdditionalConstraint... dependencies) throws UnsolvableException, MultipleEnderException {
         Contract[] orderedContracts = new Contract[contracts.size()];
 
         Model model = new Model("constraints");
@@ -100,8 +100,10 @@ public class DependencySolver {
 
         for(AdditionalConstraint order : dependencies){
             order.apply(model,contracts,vars);
-
         }
+
+        AdditionalConstraint ender = new EndingContract(contracts);
+        ender.apply(model,contracts,vars);
 
         for (int i = 0; i < vars.length; i++) {
             Constraints a = contracts.get(i).getContract();

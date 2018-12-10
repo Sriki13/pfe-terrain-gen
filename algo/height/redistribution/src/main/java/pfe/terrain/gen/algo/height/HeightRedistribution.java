@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -22,7 +22,7 @@ public class HeightRedistribution extends Contract {
 
     static final Key<BooleanType> VERTEX_WATER_KEY = new Key<>(VERTICES_PREFIX + "IS_WATER", BooleanType.class);
 
-    private Param<Double> REDISTRIBUTION_FACTOR_KEY = Param.generateDefaultDoubleParam("Height factor",
+    private Param<Double> REDISTRIBUTION_FACTOR_KEY = Param.generateDefaultDoubleParam("heightFactor",
             "How the height is distributed, for very low value there will be more high altitude points than low level one " +
             "and for medium to high value there will be a tendency to have more low level altitude points than high one", 0.5,
             "Redistribution factor");
@@ -37,12 +37,17 @@ public class HeightRedistribution extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Redistribute height so that low heights are more common and high heights are less common (unless the height factor is really small)";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(REDISTRIBUTION_FACTOR_KEY);
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
 
         // This code is a mess but it works
 
@@ -50,7 +55,7 @@ public class HeightRedistribution extends Contract {
         scaleFactor = 1 / (0.8 + (scaleFactor * 3.2));
         Map<Coord, Double> verticesHeight = new HashMap<>();
         List<Map.Entry<Coord, Double>> orderedVertices;
-        CoordSet vertices = map.getVertices();
+        CoordSet vertices = map.getProperty(VERTICES);
 
         for (Coord coord : vertices) {
             if (!coord.getProperty(VERTEX_WATER_KEY).value) {
@@ -75,7 +80,7 @@ public class HeightRedistribution extends Contract {
                 coord.putProperty(VERTEX_HEIGHT_KEY, new DoubleType(verticesHeight.get(coord)));
             }
         }
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             double sum = 0;
             int total = 0;
             for (Coord border : face.getBorderVertices()) {

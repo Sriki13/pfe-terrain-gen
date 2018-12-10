@@ -6,7 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.island.geometry.EdgeSet;
@@ -23,7 +23,7 @@ public class HeightSmoothing extends Contract {
 
     static final Key<BooleanType> VERTEX_WATER_KEY = new Key<>(VERTICES_PREFIX + "IS_WATER", BooleanType.class);
 
-    static final Param<Double> SMOOTHING_FACTOR = Param.generateDefaultDoubleParam("SmoothingLevel",
+    static final Param<Double> SMOOTHING_FACTOR = Param.generateDefaultDoubleParam("smoothingLevel",
             "Adjust how much you want to smooth the height of the map", 0.3, "Smoothing factor");
 
 
@@ -40,13 +40,18 @@ public class HeightSmoothing extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Smooths all heights based on a factor on the neighbors";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(SMOOTHING_FACTOR);
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
-        EdgeSet edges = map.getEdges();
+    public void execute(TerrainMap map, Context context) {
+        EdgeSet edges = map.getProperty(EDGES);
         verticesHeight = new HashMap<>();
 
 
@@ -87,7 +92,7 @@ public class HeightSmoothing extends Contract {
         // Adjusting faces center
         double sum;
         int total;
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             sum = 0;
             total = 0;
             for (Coord border : face.getBorderVertices()) {

@@ -4,7 +4,7 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Face;
 
 import java.util.HashSet;
@@ -20,6 +20,11 @@ public class RiverMoisture extends Contract {
                 asKeySet(AdapterUtils.FACE_MOISTURE));
     }
 
+    @Override
+    public String getDescription() {
+        return "Adds moisture of varying intensity around rivers";
+    }
+
     private final Param<Double> riverMoistureParam = Param.generateDefaultDoubleParam("riverMoisture",
             "The amount of moisture added around the rivers.", 0.5, "River extra moisture");
 
@@ -33,9 +38,9 @@ public class RiverMoisture extends Contract {
     private AdapterUtils utils = new AdapterUtils();
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double moistureBonus = (MAX_ADD - MIN_ADD) * (context.getParamOrDefault(riverMoistureParam)) + MIN_ADD;
-        Set<Face> nextToRiver = utils.getTilesNextToRivers(map.getFaces());
+        Set<Face> nextToRiver = utils.getTilesNextToRivers(map.getProperty(FACES));
         Set<Face> seen = new HashSet<>(nextToRiver);
         for (Face face : nextToRiver) {
             utils.addMoisture(face, moistureBonus);

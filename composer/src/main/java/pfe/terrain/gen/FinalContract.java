@@ -4,7 +4,7 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.island.geometry.EdgeSet;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -28,7 +28,12 @@ public class FinalContract extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public String getDescription() {
+        return "Contains minimum elements to create a map";
+    }
+
+    @Override
+    public void execute(TerrainMap map, Context context) {
 
     }
 

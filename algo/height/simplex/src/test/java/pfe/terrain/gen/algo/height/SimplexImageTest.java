@@ -5,7 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.CoordSet;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
+
 public class SimplexImageTest {
 
-    private IslandMap islandMap;
+    private TerrainMap terrainMap;
     private SimplexHeight simplexHeight;
 
     public static final int SIZE = 500;
@@ -40,11 +42,11 @@ public class SimplexImageTest {
                 allCoords.add(c);
             }
         }
-        islandMap = new IslandMap();
-        islandMap.putProperty(Contract.VERTICES, allCoords);
-        islandMap.putProperty(Contract.SIZE, SIZE);
-        islandMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
-        islandMap.putProperty(Contract.SEED, 25);
+        terrainMap = new TerrainMap();
+        terrainMap.putProperty(VERTICES, allCoords);
+        terrainMap.putProperty(Contract.SIZE, SIZE);
+        terrainMap.putProperty(Contract.FACES, new FaceSet(new HashSet<>()));
+        terrainMap.putProperty(Contract.SEED, 25);
         simplexHeight = new SimplexHeight();
     }
 
@@ -56,9 +58,9 @@ public class SimplexImageTest {
     @Test
     @Ignore
     public void printPerlin() {
-        simplexHeight.execute(islandMap, new Context());
+        simplexHeight.execute(terrainMap, new Context());
         Map<Coord, Double> heightMap = new HashMap<>();
-        for (Coord coord : islandMap.getVertices()) {
+        for (Coord coord : terrainMap.getProperty(VERTICES)) {
             heightMap.put(coord, coord.getProperty(SimplexHeight.VERTEX_HEIGHT_KEY).value);
         }
         double max = Collections.max(heightMap.values());

@@ -9,16 +9,13 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.context.MapContext;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.parsing.ContextParser;
+import pfe.terrain.gen.algo.reflection.ContractReflection;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.exception.DuplicatedProductionException;
-import pfe.terrain.gen.exception.InvalidContractException;
-import pfe.terrain.gen.exception.MissingRequiredException;
-import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.exception.*;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
-import pfe.terrain.generatorService.initializer.ContextInitializer;
-import pfe.terrain.generatorService.reflection.ContractReflection;
+import pfe.terrain.gen.parser.ParamParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,18 +31,14 @@ public class ServiceController {
     private List<AdditionalConstraint> constraints;
 
     public ServiceController() throws InvalidContractException, UnsolvableException,
-            MissingRequiredException, DuplicatedProductionException {
+            MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
         this.recessive = new Context();
 
-        ContextInitializer initializer = new ContextInitializer();
+        ParamParser initializer = new ParamParser();
         this.dominant = initializer.getContext(contracts);
-
-        for(Contract contract : contracts){
-            contract.setContext(this.dominant);
-        }
 
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
         this.constraints = initializer.getConstraints(contracts);
@@ -59,26 +52,22 @@ public class ServiceController {
         this.generator = generator;
     }
 
-    public String execute() throws Exception{
-        return this.generator.generate();
+    public String execute(boolean diffOnly) {
+        return this.generator.generate(diffOnly);
     }
 
     public Map<String, Object> setContext(String contextString) {
 
         ContextParser parser = new ContextParser(contextString);
-
         this.recessive = new MapContext(parser.getMap(), this.generator.getContracts());
-
         Context merge = this.dominant.merge(this.recessive);
-
         generator.setParams(merge);
-
         return contextToMap(merge);
     }
 
     public List<Parameter> getParameters() {
         List<Parameter> allParams = new ArrayList<>();
-        Map<String,Object> contexts = this.contextToMap(this.dominant);
+        Map<String, Object> contexts = this.contextToMap(this.dominant);
         for (Contract contract : this.generator.getContracts()) {
             for (Param param : contract.getRequestedParameters()) {
                 if (contexts.containsKey(param.getId())) continue;
@@ -89,7 +78,7 @@ public class ServiceController {
         return allParams;
     }
 
-    public Map<String,Object> getContextMap() {
+    public Map<String, Object> getContextMap() {
         return contextToMap(this.dominant.merge(this.recessive));
     }
 
@@ -115,8 +104,7 @@ public class ServiceController {
     }
 
 
-
-    private Map<String,Object> contextToMap(Context context){
+    private Map<String, Object> contextToMap(Context context) {
         Map<String, Object> map = new HashMap<>();
 
         for (Param key : context.getProperties().keySet()) {
@@ -130,19 +118,19 @@ public class ServiceController {
         return map;
     }
 
-    private AdditionalConstraint[] listToArray(List<AdditionalConstraint> constraints){
+    private AdditionalConstraint[] listToArray(List<AdditionalConstraint> constraints) {
         AdditionalConstraint[] array = new AdditionalConstraint[constraints.size()];
 
-        for(int i = 0 ; i<constraints.size() ; i++){
+        for (int i = 0; i < constraints.size(); i++) {
             array[i] = constraints.get(i);
         }
 
         return array;
     }
 
-    public List<String> getConstraintList(){
+    public List<String> getConstraintList() {
         List<String> consts = new ArrayList<>();
-        for(AdditionalConstraint constraint : this.constraints){
+        for (AdditionalConstraint constraint : this.constraints) {
             consts.add(constraint.getName());
         }
 

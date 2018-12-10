@@ -9,7 +9,7 @@ import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.island.Biome;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -51,21 +51,27 @@ public class HeightMoistureBiome extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public String getDescription() {
+        return "Creates biomes relative to the height and moisture of tiles, " +
+                "there are some presets to create different biomes repartitions";
+    }
+
+    @Override
+    public void execute(TerrainMap map, Context context) {
         Map<Face, Double> facesHeight = new HashMap<>();
         String styleName = context.getParamOrDefault(BIOME_STYLE_PARAM);
         BiomeStyle style;
         style = BiomeStyle.valueOf(styleName.toUpperCase());
         WhittakerDiagram diagram = new WhittakerDiagram(style.getWhit(), 0.9);
         // Normalizing emerged faces between 0 and 1
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             if (!face.getProperty(FACE_WATER_KEY).value) {
                 facesHeight.put(face, face.getCenter().getProperty(HEIGHT_KEY).value);
             }
         }
         if (facesHeight.isEmpty()) {
             // Nice ocean you got there dude
-            for (Face face : map.getFaces()) {
+            for (Face face : map.getProperty(FACES)) {
                 face.putProperty(FACE_BIOME_KEY, Biome.OCEAN);
             }
             return;
@@ -74,7 +80,7 @@ public class HeightMoistureBiome extends Contract {
         double minV = Collections.min(facesHeight.values());
         facesHeight.replaceAll((key, val) -> ((val - minV) / (maxV - minV)));
 
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             Biome biome = getWaterBiomeIfPresent(face);
             if (biome == null) {
                 biome = diagram.getBiome(face.getProperty(faceMoisture).value, facesHeight.get(face));

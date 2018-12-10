@@ -4,7 +4,7 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.Collections;
 import java.util.Set;
@@ -24,12 +24,17 @@ public class BasicInitializer extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Initialize the map with given seed and size";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(SEED_PARAM, SIZE_PARAM);
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         map.putProperty(SIZE, context.getParamOrDefault(SIZE_PARAM));
         map.putProperty(SEED, context.getParamOrDefault(SEED_PARAM));
     }

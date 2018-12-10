@@ -1,5 +1,5 @@
 {
-  "name" : "noiseRiverRidge",
+  "name" : "noise_river_ridge",
   "context" : {
     "context": {
       "size": 400,
@@ -38,17 +38,17 @@
       }
     ]
   },
-  "algorithm" : ["algo.points.relaxed",
-    "algo.mesh.builder",
-    "algo.borders.basic",
-    "algo.height.redistribution",
-    "algo.initializer.basic",
-    "algo.water.noise",
-    "algo.height.fromwater",
-    "algo.moisture.perlin",
-    "algo.biome.heightmoisture",
-    "algo.height.smoothing",
-    "algo.moisture.riverAdapter",
-    "algo.river.random",
-    "algo.river.ridge"]
+  "algorithm" : ["RelaxedPoints",
+    "MeshBuilder",
+    "BasicBorders",
+    "HeightRedistribution",
+    "BasicInitializer",
+    "NoiseWaterGeneration",
+    "HeightFromWater",
+    "PerlinMoisture",
+    "HeightMoistureBiome",
+    "HeightSmoothing",
+    "RiverMoisture",
+    "RandomRivers",
+    "RiverRidge"]
 }

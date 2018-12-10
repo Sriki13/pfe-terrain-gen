@@ -4,7 +4,7 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 
 import java.util.*;
@@ -13,8 +13,8 @@ import static pfe.terrain.gen.RiverGenerator.*;
 
 public class RandomRivers extends Contract {
 
-    public static final Param<Integer> NB_RIVERS_PARAM = new Param<>("nbRivers", Integer.class,
-            1, 100, "Number of rivers in the island.", 10, "Amount of rivers");
+    public static final Param<Integer> NB_RIVERS_PARAM = Param.generatePositiveIntegerParam("nbRivers",
+            100, "Number of rivers in the island.", 10, "Amount of rivers");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -31,11 +31,18 @@ public class RandomRivers extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public String getDescription() {
+        return "Adds a number of sources randomly on emerged land, river will flow down from the sources";
+    }
+
+    @Override
+    public void execute(TerrainMap map, Context context) {
         RiverGenerator generator = new RiverGenerator(map);
-        Random random = new Random(map.getSeed());
+        Random random = new Random(map.getProperty(SEED));
         List<Coord> land = new ArrayList<>();
-        for (Coord vertex : map.getEdgeVertices()) {
+        Set<Coord> edgeVertices = new HashSet<>(map.getProperty(VERTICES));
+        map.getProperty(FACES).forEach(face -> edgeVertices.remove(face.getCenter()));
+        for (Coord vertex : edgeVertices) {
             if (!vertex.getProperty(VERTEX_WATER_KEY).value) {
                 land.add(vertex);
             }

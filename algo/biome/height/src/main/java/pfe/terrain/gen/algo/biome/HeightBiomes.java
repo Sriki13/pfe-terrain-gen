@@ -9,7 +9,7 @@ import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.exception.KeyTypeMismatch;
 import pfe.terrain.gen.algo.exception.NoSuchKeyException;
 import pfe.terrain.gen.algo.island.Biome;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -42,6 +42,10 @@ public class HeightBiomes extends Contract {
     public static final Key<Biome> FACE_BIOME_KEY =
             new SerializableKey<>(FACES_PREFIX + "BIOME", "biome", Biome.class);
 
+    @Override
+    public String getDescription() {
+        return "Creates biomes based solely on the height of the faces, height step is parametrable";
+    }
 
     @Override
     public Constraints getContract() {
@@ -52,9 +56,9 @@ public class HeightBiomes extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
+    public void execute(TerrainMap map, Context context) {
         double step = context.getParamOrDefault(HEIGHT_STEP_KEY);
-        for (Face face : map.getFaces()) {
+        for (Face face : map.getProperty(FACES)) {
             Biome biome = getWaterBiomeIfPresent(face);
             if (biome == null) {
                 biome = getBiomeFromElevation(face, step);
