@@ -29,6 +29,12 @@ public class Edge extends Mappable {
         this.start = tmp;
     }
 
+    public Coord getOtherEnd(Coord coord) {
+        if (coord == start) return end;
+        if (coord == end) return start;
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

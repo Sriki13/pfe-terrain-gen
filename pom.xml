@@ -15,6 +15,7 @@
         <module>composer</module>
         <module>generator-service</module>
         <module>generator-factory</module>
+        <module>service-core</module>
     </modules>
 
     <properties>

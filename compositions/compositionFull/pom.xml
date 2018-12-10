@@ -166,6 +166,16 @@
             <artifactId>algo.biome.aquatic</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.road.bridges</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.river.delta</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

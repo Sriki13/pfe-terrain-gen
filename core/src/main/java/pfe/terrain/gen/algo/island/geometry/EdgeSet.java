@@ -4,9 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static pfe.terrain.gen.algo.constraints.Contract.EDGES;
-
 public class EdgeSet extends HashSet<Edge> {
+
     public EdgeSet() {
     }
 

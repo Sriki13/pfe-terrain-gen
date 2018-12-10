@@ -18,7 +18,7 @@ import pfe.terrain.gen.exception.UnsolvableException;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
-import pfe.terrain.generatorService.initializer.ContextInitializer;
+import pfe.terrain.gen.parser.ParamParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class ServiceController {
 
         this.recessive = new Context();
 
-        ContextInitializer initializer = new ContextInitializer();
+        ParamParser initializer = new ParamParser();
         this.dominant = initializer.getContext(contracts);
 
         DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
@@ -62,13 +62,9 @@ public class ServiceController {
     public Map<String, Object> setContext(String contextString) {
 
         ContextParser parser = new ContextParser(contextString);
-
         this.recessive = new MapContext(parser.getMap(), this.generator.getContracts());
-
         Context merge = this.dominant.merge(this.recessive);
-
         generator.setParams(merge);
-
         return contextToMap(merge);
     }
 

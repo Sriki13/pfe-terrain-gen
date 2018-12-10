@@ -13,8 +13,8 @@ import static pfe.terrain.gen.RiverGenerator.*;
 
 public class RandomRivers extends Contract {
 
-    public static final Param<Integer> NB_RIVERS_PARAM = new Param<>("nbRivers", Integer.class,
-            1, 100, "Number of rivers in the island.", 10, "Amount of rivers");
+    public static final Param<Integer> NB_RIVERS_PARAM = Param.generatePositiveIntegerParam("nbRivers",
+            100, "Number of rivers in the island.", 10, "Amount of rivers");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -28,6 +28,11 @@ public class RandomRivers extends Contract {
                 asKeySet(VERTICES, SEED, EDGES, FACES, VERTEX_WATER_KEY, HEIGHT_KEY),
                 asKeySet(RIVER_FLOW_KEY, IS_SOURCE_KEY, IS_RIVER_END_KEY)
         );
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds a number of sources randomly on emerged land, river will flow down from the sources";
     }
 
     @Override

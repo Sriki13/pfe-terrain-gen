@@ -51,6 +51,12 @@ public class HeightMoistureBiome extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Creates biomes relative to the height and moisture of tiles, " +
+                "there are some presets to create different biomes repartitions";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         Map<Face, Double> facesHeight = new HashMap<>();
         String styleName = context.getParamOrDefault(BIOME_STYLE_PARAM);

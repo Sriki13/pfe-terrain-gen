@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 public class AquaticBiomesGenerator extends Contract {
 
     public static final Param<Integer> NB_REEFS = Param.generatePositiveIntegerParam(
-            "nbCoralReef", 10, "The number of coral reefs that will spawn on the island.",
-            2, "Number of coral reefs"
+            "nbCoralReef", 100, "The number of coral reefs that will spawn on the island.",
+            5, "Number of coral reefs"
     );
 
     public static Param<Integer> MAX_REEF_SIZE = Param.generatePositiveIntegerParam(
-            "reefMaxSize", 10, "The maximum number of faces a coral reef may spread to. Multiple reef may still spawn close" +
+            "reefMaxSize", 100, "The maximum number of faces a coral reef may spread to. Multiple reef may still spawn close" +
                     "to one other and fuse, creating reefs with a size over this limit.",
-            2, "Coral reef maximum size"
+            4, "Coral reef maximum size"
     );
 
     @Override
@@ -60,8 +60,13 @@ public class AquaticBiomesGenerator extends Contract {
         );
     }
 
-    public static final double SHALLOW_MIN = 0.8;
-    public static final double DEEP_MAX = 0.3;
+    @Override
+    public String getDescription() {
+        return "Generates aquatic biomes if a map has a sea floor. Can also generate coral reefs";
+    }
+
+    public static final double SHALLOW_MIN = 0.9;
+    public static final double DEEP_MAX = 0.5;
 
 
     @Override

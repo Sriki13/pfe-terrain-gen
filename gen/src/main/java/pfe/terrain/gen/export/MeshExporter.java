@@ -28,11 +28,11 @@ public class MeshExporter {
     private Map<Coord, Integer> verticesMap;
 
     private static final Comparator<Coord> COORD_COMPARATOR =
-            (a, b) -> (int) ((a.x + a.y) - (b.x + b.y));
+            (a, b) -> (int) (1000* (((a.x + a.y) - (b.x + b.y))));
 
     private static final Comparator<Edge> EDGE_COMPARATOR =
-            (a, b) -> (int) ((a.getStart().x + a.getStart().y + a.getEnd().x + a.getEnd().y)
-                    - (b.getStart().x + b.getStart().y + b.getEnd().x + b.getEnd().y));
+            (a, b) -> (int) (1000*((a.getStart().x + a.getStart().y + a.getEnd().x + a.getEnd().y)
+                    - (b.getStart().x + b.getStart().y + b.getEnd().x + b.getEnd().y)));
 
     public MeshExporter(TerrainMap terrainMap) {
         this.size = terrainMap.getProperty(sizeKey);

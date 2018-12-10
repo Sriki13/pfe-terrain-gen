@@ -1,6 +1,9 @@
 package pfe.terrain.factory.parser;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.entities.Composition;
 
@@ -12,7 +15,21 @@ import java.util.Map;
 public class JsonParser {
 
     public String algoListToJson(List<Algorithm> algorithms){
-        return new Gson().toJson(algorithms);
+        Gson gson = new Gson();
+
+        JsonArray obj = new JsonArray();
+
+        for(Algorithm algorithm : algorithms){
+            JsonObject element = new JsonObject();
+            element.add("id",gson.toJsonTree(algorithm.getId()));
+
+            element.add("contracts",
+                    gson.toJsonTree(gson.fromJson(algorithm.getContract().toJson(),Map.class),Map.class));
+
+            obj.add(element);
+        }
+
+        return gson.toJson(obj);
     }
 
     public String exceptionToJson(Exception e){

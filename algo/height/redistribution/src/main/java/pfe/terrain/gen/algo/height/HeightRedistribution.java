@@ -37,6 +37,11 @@ public class HeightRedistribution extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Redistribute height so that low heights are more common and high heights are less common (unless the height factor is really small)";
+    }
+
+    @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(REDISTRIBUTION_FACTOR_KEY);
     }

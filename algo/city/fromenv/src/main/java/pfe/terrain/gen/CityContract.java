@@ -59,6 +59,12 @@ public class CityContract extends Contract {
     }
 
     @Override
+    public String getDescription() {
+        return "Creates cities based on a large array of criteria, proximity with other cities, to water, ideal height and moisture etc." +
+                "The number of city is also parametrizable";
+    }
+
+    @Override
     public void execute(TerrainMap map, Context context) {
         Set<Face> land = new HashSet<>();
         Set<Face> lakes = new HashSet<>();

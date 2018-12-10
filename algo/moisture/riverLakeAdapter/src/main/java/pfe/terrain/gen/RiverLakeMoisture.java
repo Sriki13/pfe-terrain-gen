@@ -27,6 +27,10 @@ public class RiverLakeMoisture extends Contract {
     public static final Param<Double> moistureParam = Param.generateDefaultDoubleParam("riverMoisture",
             "The amount of moisture added around the rivers and lakes.", 0.5, "River and lake extra moisture");
 
+    @Override
+    public String getDescription() {
+        return "Adds moisture of varying intensity around lake and rivers";
+    }
 
     public Set<Param> getRequestedParameters() {
         return asParamSet(moistureParam);
