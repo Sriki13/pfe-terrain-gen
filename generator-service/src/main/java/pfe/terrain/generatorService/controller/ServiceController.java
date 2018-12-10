@@ -1,7 +1,6 @@
 package pfe.terrain.generatorService.controller;
 
 import pfe.terrain.gen.DependencySolver;
-import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.MapGenerator;
 import pfe.terrain.gen.algo.Generator;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -11,11 +10,14 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.algo.reflection.ContractReflection;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.exception.*;
+import pfe.terrain.gen.exception.DuplicatedProductionException;
+import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.MultipleEnderException;
+import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.parser.ParamParser;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
-import pfe.terrain.gen.parser.ParamParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class ServiceController {
     private Context dominant;
     private List<AdditionalConstraint> constraints;
 
-    public ServiceController() throws InvalidContractException, UnsolvableException,
+    public ServiceController() throws UnsolvableException,
             MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
@@ -39,7 +41,7 @@ public class ServiceController {
         ParamParser initializer = new ParamParser();
         this.dominant = initializer.getContext(contracts);
 
-        DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
+        DependencySolver solver = new DependencySolver(contracts, contracts);
         this.constraints = initializer.getConstraints(contracts);
 
         this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));

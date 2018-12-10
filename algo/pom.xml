@@ -37,6 +37,7 @@
         <module>tree</module>
         <module>city</module>
         <module>road</module>
+        <module>export</module>
     </modules>
 
 </project>

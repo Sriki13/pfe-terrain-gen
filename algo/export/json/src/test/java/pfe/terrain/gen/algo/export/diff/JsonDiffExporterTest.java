@@ -1,4 +1,4 @@
-package pfe.terrain.gen.export.diff;
+package pfe.terrain.gen.algo.export.diff;
 
 import com.google.gson.JsonObject;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 
 public class JsonDiffExporterTest {
 
-    private JsonDiffExporter exporter;
+    private JsonExportDiffExporter exporter;
 
     private JsonObject result;
     private JsonObject original;
@@ -17,7 +17,7 @@ public class JsonDiffExporterTest {
 
     @Before
     public void setUp() {
-        exporter = new JsonDiffExporter(null, null);
+        exporter = new JsonExportDiffExporter();
         result = new JsonObject();
         original = new JsonObject();
         original.addProperty("samePropAndValue", 0);

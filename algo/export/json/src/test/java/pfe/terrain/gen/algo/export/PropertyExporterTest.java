@@ -1,4 +1,4 @@
-package pfe.terrain.gen.export;
+package pfe.terrain.gen.algo.export;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -24,7 +24,7 @@ public class PropertyExporterTest {
     private PropertyExporter<Coord> exporter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Map<Coord, Integer> indexes = new HashMap<>();
         Coord vertexWithProperties = new Coord(0, 0);
         vertexWithProperties.putProperty(new SerializableKey<>("INTERNAL_KEY", "serialized", IntegerType.class), new IntegerType(2));

@@ -1,4 +1,4 @@
-package pfe.terrain.gen.export.diff;
+package pfe.terrain.gen.algo.export.diff;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

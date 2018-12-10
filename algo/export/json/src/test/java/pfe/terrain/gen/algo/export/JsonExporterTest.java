@@ -1,6 +1,7 @@
-package pfe.terrain.gen.export;
+package pfe.terrain.gen.algo.export;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -21,7 +22,7 @@ public class JsonExporterTest {
     private TerrainMap terrainMap;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         jsonExporter = new JsonExporter();
         terrainMap = new TerrainMap();
         terrainMap.putProperty(Contract.EDGES, new EdgeSet(new HashSet<>()));
@@ -33,7 +34,7 @@ public class JsonExporterTest {
 
     @Test
     public void jsonExportTest() {
-        JsonObject result = jsonExporter.export(terrainMap);
+        JsonObject result = new JsonParser().parse(jsonExporter.export(terrainMap)).getAsJsonObject();
         assertThat(result.getAsJsonObject("mesh"), is(notNullValue()));
         assertThat(result.getAsJsonArray("vertex_props"), is(notNullValue()));
         assertThat(result.getAsJsonArray("edge_props"), is(notNullValue()));

@@ -1,7 +1,10 @@
-package pfe.terrain.gen.export;
+package pfe.terrain.gen.algo.export;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import pfe.terrain.gen.algo.constraints.Constraints;
+import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.types.SerializableType;
@@ -9,7 +12,10 @@ import pfe.terrain.gen.algo.types.SerializableType;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class JsonExporter {
+public class JsonExporter extends Contract {
+
+    public static final Key<Void> ALL_KEY = new Key<>("All", Void.class);
+    public static final Key<String> EXPORT_JSON_KEY = new Key<>("JSON", String.class);
 
     private Key<Integer> seedKey = new Key<>("SEED", Integer.class);
 
@@ -26,7 +32,23 @@ public class JsonExporter {
         return lastProduction;
     }
 
-    public JsonObject export(TerrainMap terrainMap) {
+
+    private void printTime(long start, long end, String desc) {
+        logger.info(desc + " was done in " + (end - start) / 1000 + " microseconds");
+    }
+
+    @Override
+    public Constraints getContract() {
+        return new Constraints(asKeySet(ALL_KEY), asKeySet(EXPORT_JSON_KEY));
+    }
+
+    @Override
+    public String getDescription() {
+        return "A Json exporter for island maps.";
+    }
+
+    @Override
+    public void execute(TerrainMap map, Context context) {
         long start;
         long end;
         String delimiter = "-------------------------";
@@ -35,7 +57,7 @@ public class JsonExporter {
 
         logger.info("Exporting mesh...");
         start = System.nanoTime();
-        meshExporter = new MeshExporter(terrainMap);
+        meshExporter = new MeshExporter(map);
         result.add("mesh", meshExporter.export());
         end = System.nanoTime();
         printTime(start, end, "Mesh exporter");
@@ -63,7 +85,7 @@ public class JsonExporter {
 
         logger.info("Exporting map props...");
         start = System.nanoTime();
-        Map<Key<?>, Object> properties = terrainMap.getProperties();
+        Map<Key<?>, Object> properties = map.getProperties();
         for (Key key : properties.keySet()) {
             if (key.isSerialized() && properties.get(key) instanceof SerializableType) {
                 JsonElement serialized = ((SerializableType) properties.get(key)).serialize();
@@ -75,14 +97,10 @@ public class JsonExporter {
         end = System.nanoTime();
         printTime(start, end, "Map props export");
 
-        result.addProperty("uuid", terrainMap.getProperty(seedKey));
+        result.addProperty("uuid", map.getProperty(seedKey));
         logger.info(delimiter + " Done building JSON " + delimiter);
         lastProduction = result;
-        return result;
-    }
-
-    private void printTime(long start, long end, String desc) {
-        logger.info(desc + " was done in " + (end - start) / 1000 + " microseconds");
+        map.putProperty(EXPORT_JSON_KEY, result.toString());
     }
 
 }

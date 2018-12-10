@@ -1,4 +1,4 @@
-package pfe.terrain.gen.export;
+package pfe.terrain.gen.algo.export;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

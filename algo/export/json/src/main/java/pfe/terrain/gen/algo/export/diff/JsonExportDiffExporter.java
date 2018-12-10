@@ -1,24 +1,24 @@
-package pfe.terrain.gen.export.diff;
+package pfe.terrain.gen.algo.export.diff;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import pfe.terrain.gen.algo.constraints.Contract;
+import pfe.terrain.gen.algo.constraints.export.ExportDiffProcessor;
+import pfe.terrain.gen.algo.export.JsonExporter;
 import pfe.terrain.gen.algo.island.TerrainMap;
-import pfe.terrain.gen.export.JsonExporter;
 
 import java.util.Map;
 
-public class JsonDiffExporter {
+public class JsonExportDiffExporter implements ExportDiffProcessor {
 
-    private JsonExporter originalExporter;
-    private JsonExporter latestExporter;
-
-    public JsonDiffExporter(JsonExporter originalExporter, JsonExporter latestExporter) {
-        this.originalExporter = originalExporter;
-        this.latestExporter = latestExporter;
-    }
-
-    public JsonObject getDiff(TerrainMap terrainMap) {
+    @Override
+    public String processDiff(Contract old, Contract last, TerrainMap terrainMap) {
+        if (!(old instanceof JsonExporter) || !(last instanceof JsonExporter)) {
+            throw new IllegalArgumentException("Json diff processor can only be used with JsonExporter");
+        }
+        JsonExporter originalExporter = (JsonExporter) old;
+        JsonExporter latestExporter = (JsonExporter) last;
         if (!originalExporter.getMeshExporter().sameMesh(latestExporter.getMeshExporter())) {
             return latestExporter.export(terrainMap);
         }
@@ -29,7 +29,7 @@ public class JsonDiffExporter {
         processPropertyDiff(result, original, latest, "face");
         processPropertyDiff(result, original, latest, "vertex");
         processPropertyDiff(result, original, latest, "edge");
-        return result;
+        return result.toString();
     }
 
     public void processIslandDiff(JsonObject result, JsonObject original, JsonObject latest) {
@@ -58,6 +58,5 @@ public class JsonDiffExporter {
             result.add(propName + "_props", propDiff);
         }
     }
-
 
 }

@@ -16,7 +16,7 @@ public class EndingContractTest {
     public void multipleEnderTest() throws Exception{
         List<Key> required = new ArrayList<>();
 
-        required.add(DependencySolver.allKey);
+        required.add(DependencySolver.ALL_KEY);
 
         Contract contract = new TestContract("test",new ArrayList<>(),required);
         Contract contractb = new TestContract("test",new ArrayList<>(),required);
