@@ -78,7 +78,7 @@ public class DeltaGenerator extends Contract {
                 .getProperty(HEIGHT_KEY).value;
         Map<Coord, Double> normalized = new HashMap<>();
         for (Coord coord : map.getProperty(VERTICES)) {
-            normalized.put(coord, ((coord.getProperty(HEIGHT_KEY).value - maxHeight) / maxHeight - minHeight));
+            normalized.put(coord, ((coord.getProperty(HEIGHT_KEY).value - minHeight) / maxHeight - minHeight));
         }
         return normalized;
     }
