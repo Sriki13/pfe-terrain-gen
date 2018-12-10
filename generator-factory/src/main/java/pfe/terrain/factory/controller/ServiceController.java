@@ -16,10 +16,7 @@ import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.NotExecutableContract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.exception.DuplicatedProductionException;
-import pfe.terrain.gen.exception.InvalidContractException;
-import pfe.terrain.gen.exception.MissingRequiredException;
-import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.exception.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,7 +111,7 @@ public class ServiceController {
         throw new NoSuchCompoException();
     }
 
-    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException {
+    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException, MultipleEnderException {
         List<Contract> contracts = new ArrayList<>();
 
         for(Algorithm algorithm : composition.getAlgorithms()){

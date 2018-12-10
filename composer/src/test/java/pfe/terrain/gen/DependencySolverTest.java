@@ -9,6 +9,7 @@ import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.constraints.ContractOrder.ContractOrder;
 import pfe.terrain.gen.exception.DuplicatedProductionException;
 import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.MultipleEnderException;
 import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.util.ArrayList;
@@ -246,7 +247,74 @@ public class DependencySolverTest {
         assertEquals(B,contracts.get(1));
         assertEquals(D,contracts.get(2));
         assertEquals(C,contracts.get(3));
+    }
 
+    @Test(expected = UnsolvableException.class)
+    public void forceEnderExceptionTest() throws Exception{
+        Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
+                Arrays.asList(DependencySolver.allKey));
+        Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract C = new TestContract("C", Arrays.asList(),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract D = new TestContract("D", Arrays.asList(),
+                Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                new ArrayList<>());
+
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+
+        List<Contract> contracts = dependencySolver.orderContracts();
+    }
+
+    @Test (expected = MultipleEnderException.class)
+    public void multipleEnderTest() throws Exception{
+        Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
+                Arrays.asList(DependencySolver.allKey));
+        Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract C = new TestContract("C", Arrays.asList(),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract D = new TestContract("D", Arrays.asList(),
+                Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract end = new TestContract("end", new ArrayList<>(),
+                Arrays.asList(DependencySolver.allKey));
+
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                new ArrayList<>());
+
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end),Arrays.asList(A,B,C,D,end),EP);
+
+        List<Contract> contracts = dependencySolver.orderContracts();
+
+        System.out.println(contracts);
+    }
+
+    @Test
+    public void endTest() throws Exception{
+        Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
+                Arrays.asList());
+        Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract C = new TestContract("C", Arrays.asList(),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract D = new TestContract("D", Arrays.asList(),
+                Arrays.asList(new Key<>("EDGE", Void.class)),
+                Arrays.asList(new Key<>("POINTS", Void.class)));
+        Contract end = new TestContract("end", new ArrayList<>(),
+                Arrays.asList(DependencySolver.allKey));
+
+        Contract EP = new TestContract("EP", new ArrayList<>(),
+                new ArrayList<>());
+
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end),Arrays.asList(A,B,C,D,end),EP);
+
+        List<Contract> contracts = dependencySolver.orderContracts();
+
+        assertEquals(contracts.get(contracts.size()-1),end);
 
     }
 

@@ -11,10 +11,7 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.algo.reflection.ContractReflection;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.exception.DuplicatedProductionException;
-import pfe.terrain.gen.exception.InvalidContractException;
-import pfe.terrain.gen.exception.MissingRequiredException;
-import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.exception.*;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
@@ -34,7 +31,7 @@ public class ServiceController {
     private List<AdditionalConstraint> constraints;
 
     public ServiceController() throws InvalidContractException, UnsolvableException,
-            MissingRequiredException, DuplicatedProductionException {
+            MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
 
