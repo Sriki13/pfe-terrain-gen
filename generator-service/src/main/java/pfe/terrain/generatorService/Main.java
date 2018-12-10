@@ -36,13 +36,25 @@ public class Main {
             }
         });
 
+        get("/executionChart", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+
+            response.type("application/octet-stream");
+            try {
+                return controller.getExecutionChart();
+            } catch (Exception e) {
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
         get("/execute/diff", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
 
             response.type("application/json");
             try {
                 return controller.execute(true);
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -56,7 +68,7 @@ public class Main {
             response.type("application/json");
             try {
                 return controller.getGraph();
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -71,7 +83,7 @@ public class Main {
 
             try {
                 return parser.parseMap(controller.setContext(request.body()));
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -87,7 +99,7 @@ public class Main {
 
             try {
                 return parser.parseKeys(controller.getParameters());
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -101,7 +113,7 @@ public class Main {
             response.type("application/json");
             try {
                 return parser.parseAlgo(controller.getAlgoList());
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }

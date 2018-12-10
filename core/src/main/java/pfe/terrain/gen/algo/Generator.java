@@ -12,4 +12,6 @@ public interface Generator {
     void setParams(Context map);
 
     List<Contract> getContracts();
+
+    byte[] getExecutionChart();
 }

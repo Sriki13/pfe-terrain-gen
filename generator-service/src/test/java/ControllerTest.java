@@ -67,6 +67,11 @@ public class ControllerTest {
         public List<Contract> getContracts() {
             return Collections.singletonList(new TestContract());
         }
+
+        @Override
+        public byte[] getExecutionChart() {
+            return new byte[0];
+        }
     }
 
     @Before

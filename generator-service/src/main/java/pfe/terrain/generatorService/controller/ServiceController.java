@@ -24,7 +24,6 @@ import java.util.Map;
 
 public class ServiceController {
 
-
     private Generator generator;
     private Context recessive;
     private Context dominant;
@@ -135,5 +134,9 @@ public class ServiceController {
         }
 
         return consts;
+    }
+
+    public byte[] getExecutionChart() {
+        return generator.getExecutionChart();
     }
 }
