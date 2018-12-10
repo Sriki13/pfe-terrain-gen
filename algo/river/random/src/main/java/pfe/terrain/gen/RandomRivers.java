@@ -13,8 +13,8 @@ import static pfe.terrain.gen.RiverGenerator.*;
 
 public class RandomRivers extends Contract {
 
-    public static final Param<Integer> NB_RIVERS_PARAM = new Param<>("nbRivers", Integer.class,
-            1, 100, "Number of rivers in the island.", 10, "Amount of rivers");
+    public static final Param<Integer> NB_RIVERS_PARAM = Param.generatePositiveIntegerParam("nbRivers",
+            100, "Number of rivers in the island.", 10, "Amount of rivers");
 
     @Override
     public Set<Param> getRequestedParameters() {

@@ -35,9 +35,11 @@ public class DiffSolver {
                     if (contracts.indexOf(contract) < min) {
                         min = contracts.indexOf(contract);
                     }
-                    modifiedKeys.addAll(contract.getContract().getModified());
                 }
             }
+        }
+        for (int i = min; i < contracts.size(); i++) {
+            modifiedKeys.addAll(contracts.get(i).getContract().getModified());
         }
         for (Key key : modifiedKeys) {
             for (int i = 0; i < contracts.size(); i++) {
