@@ -25,9 +25,9 @@ public class NoiseWall extends Contract {
             Noise.RIDGED.getNoiseName(), "Noise type for cave shape");
 
     static final Param<Double> MULTIPLE_CAVES_TENDENCY = Param.generateDefaultDoubleParam("multipleCaveTendency",
-            "Tendency of multiple caves to spawn, (0 = not a lot, 1.0 = max)", 0.3, "Number of caves");
+            "Tendency of multiple caves to spawn, (0 = not a lot, 1.0 = max)", 0.5, "Number of caves");
     static final Param<Double> CAVE_ROUGHNESS = Param.generateDefaultDoubleParam("caveRoughness",
-            "Makes the borders of the walls appear more smooth (0.0) or rough (1.0)", 0.3, "cave walls roughness");
+            "Makes the borders of the walls appear more smooth (0.0) or rough (1.0)", 0.5, "cave walls roughness");
 
     @Override
     public Set<Param> getRequestedParameters() {
