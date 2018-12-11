@@ -26,6 +26,7 @@ public class MapGenerator implements Generator {
     private List<Contract> contracts;
     private TerrainMap terrainMap;
     private Context context;
+    private Context lastExecContext;
 
     private boolean hasRunOnce = false;
     private Map<String, Long> mapMillis;
@@ -42,12 +43,14 @@ public class MapGenerator implements Generator {
         mapMillis = new HashMap<>();
         hasRunOnce = true;
         long start = System.nanoTime();
+        solveDiff();
         StringBuilder sb = initLogs();
         RuntimeException rte = executeContracts(sb);
         finishLogs(rte, sb, start);
         if (rte != null) {
             throw rte;
         }
+        this.lastExecContext = context;
     }
 
     @Override
@@ -58,6 +61,15 @@ public class MapGenerator implements Generator {
             }
         }
         throw new NoSuchKeyException(keyId);
+    }
+
+    public void solveDiff() {
+        if (this.lastExecContext != null) {
+            DiffSolver solver = new DiffSolver(this.lastExecContext, context);
+            this.contracts = solver.getContractsToExecute(this.original);
+            MapReverser reverser = new MapReverser(this.terrainMap, this.contracts);
+            reverser.reverseContracts();
+        }
     }
 
     private StringBuilder initLogs() {
@@ -124,7 +136,6 @@ public class MapGenerator implements Generator {
             chart.getStyler().setAnnotationDistance(1.7);
             chart.getStyler().setPlotContentSize(.5);
             chart.getStyler().setDrawAllAnnotations(true);
-            chart.addSeries("Export", mapMillis.get("JSONExport"));
             for (int i = contracts.size() - 1; i >= 0; i--) {
                 chart.addSeries(contracts.get(i).getName(), mapMillis.get(contracts.get(i).getName()));
             }
@@ -148,14 +159,6 @@ public class MapGenerator implements Generator {
 
     @Override
     public void setParams(Context map) {
-        if (!hasRunOnce) {
-            this.context = map;
-            return;
-        }
-        DiffSolver solver = new DiffSolver(this.context, map);
-        this.contracts = solver.getContractsToExecute(this.original);
-        MapReverser reverser = new MapReverser(this.terrainMap, this.contracts);
-        reverser.reverseContracts();
         this.context = map;
     }
 

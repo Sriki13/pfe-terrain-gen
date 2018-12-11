@@ -24,18 +24,44 @@ public class Main {
 
         port(8080);
 
-        get("/execute/:export", (request, response) -> {
+        get("/execute", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-
             response.type("application/json");
             try {
                 controller.execute();
+                return "";
+            } catch (Exception e) {
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        get("/execute/:export", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.type("application/json");
+            try {
+                controller.execute();
+                String property = request.params("export");
+                if (property == null) {
+                    return "";
+                }
                 return controller.getProperty(request.params("export"));
             } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
+
+        get("/property/:export", ((request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.type("application/json");
+            try {
+                return controller.getProperty(request.params("export"));
+            } catch (Exception e) {
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        }));
 
         get("/executionChart", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
