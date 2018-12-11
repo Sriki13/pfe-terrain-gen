@@ -1,7 +1,6 @@
 package pfe.terrain.generatorService.controller;
 
 import pfe.terrain.gen.DependencySolver;
-import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.MapGenerator;
 import pfe.terrain.gen.algo.Generator;
 import pfe.terrain.gen.algo.constraints.Contract;
@@ -42,7 +41,7 @@ public class ServiceController {
         ParamParser initializer = new ParamParser();
         this.dominant = initializer.getContext(contracts);
 
-        DependencySolver solver = new DependencySolver(contracts, contracts, new FinalContract());
+        DependencySolver solver = new DependencySolver(contracts);
         this.constraints = initializer.getConstraints(contracts);
 
         this.generator = new MapGenerator(solver.orderContracts(this.listToArray(this.constraints)));

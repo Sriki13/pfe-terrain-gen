@@ -20,14 +20,11 @@ public class DependencySolver {
 
     private ContractStore toUse;
     private ContractStore available;
-    private Contract finalMap;
 
     public static final Key<Void> ALL_KEY = new Key<>("All", Void.class);
 
-    public DependencySolver(List<Contract> available, List<Contract> priority, Contract finalMap) {
-        this.available = new ContractStore(available);
+    public DependencySolver(List<Contract> priority) {
         this.toUse = new ContractStore(priority);
-        this.finalMap = finalMap;
     }
 
     /**
@@ -39,20 +36,13 @@ public class DependencySolver {
     public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws
             UnsolvableException, MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
 
-        Set<Key> elementsToAdd = finalMap.getContract().getRequired();
-        // remove all the created element to the required to get the missing required element
-        elementsToAdd.removeAll(toUse.getAllCreated());
+        Set<Key> required = this.toUse.getAllRequired();
+        Set<Key> created = this.toUse.getAllCreated();
 
-        for(Key resource : elementsToAdd){
-            toUse.add(available.getContractCreating(resource));
-        }
+        required.removeAll(created);
 
-        elementsToAdd = toUse.getAllRequired();
-        // same process as before to be sure all need are satisfied for each algorithm
-        elementsToAdd.removeAll(toUse.getAllCreated());
-
-        for(Key resource : elementsToAdd){
-            toUse.add(available.getContractCreating(resource));
+        if(!required.isEmpty()){
+            throw new MissingRequiredException(required);
         }
 
         checkDuplicate(toUse.getContracts());

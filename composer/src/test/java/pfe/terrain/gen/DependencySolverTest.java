@@ -33,7 +33,7 @@ public class DependencySolverTest {
                 Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
         Contract EP = new TestContract("C", new ArrayList<>(),
                 Collections.singletonList(new Key<>("EDGES", Void.class)));
-        dependencySolver = new DependencySolver(Arrays.asList(A, B), new ArrayList<>(), EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A, B));
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(2, got.size());
         assertEquals(A, got.get(0));
@@ -52,7 +52,7 @@ public class DependencySolverTest {
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
-        dependencySolver = new DependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A, B, C));
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
         assertEquals(A, got.get(0));
@@ -80,7 +80,7 @@ public class DependencySolverTest {
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
-        dependencySolver = new DependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A, B, C));
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
         assertEquals(A, got.get(0));
@@ -94,7 +94,7 @@ public class DependencySolverTest {
     public void missingResource() throws Exception{
         Contract A = new TestContract("A",new ArrayList<>(),Arrays.asList(new Key<>("EDGES",Void.class)));
 
-        new DependencySolver(Arrays.asList(A),Arrays.asList(A),new FinalContract()).orderContracts();
+        new DependencySolver(Arrays.asList(A)).orderContracts();
     }
 
     @Test(expected = DuplicatedProductionException.class)
@@ -114,7 +114,7 @@ public class DependencySolverTest {
                 Arrays.asList(new Key<>("FACES",FaceSet.class)),
                 Arrays.asList(new Key<>("EDGES", EdgeSet.class))));
 
-        DependencySolver solver = new DependencySolver(contracts,contracts,new FinalContract());
+        DependencySolver solver = new DependencySolver(contracts);
 
         List<Contract> orders = solver.orderContracts();
     }
@@ -126,8 +126,7 @@ public class DependencySolverTest {
         contracts.add(new TestContract("1",Arrays.asList(new Key<>("EDGES", EdgeSet.class)),Arrays.asList(new Key<>("VERTICES",CoordSet.class))));
         contracts.add(new TestContract("2",Arrays.asList(new Key<>("VERTICES",CoordSet.class)),Arrays.asList(new Key<>("EDGES",EdgeSet.class))));
 
-        new DependencySolver(contracts,contracts,
-                new TestContract("3",new ArrayList<>(),Arrays.asList(new Key<>("EDGES",EdgeSet.class)))).
+        new DependencySolver(contracts).
                 orderContracts();
 
     }
@@ -142,7 +141,7 @@ public class DependencySolverTest {
                 new ArrayList<>());
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
-        dependencySolver = new DependencySolver(Arrays.asList(A, B, C), new ArrayList<>(), EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A, B, C));
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
         assertEquals(A, got.get(0));
@@ -162,11 +161,10 @@ public class DependencySolverTest {
                 new ArrayList<>());
         Contract D = new TestModifyContract("D", Collections.singletonList(new Key<>("EDGES", Void.class)),
                 Collections.singletonList(new Key<>("POINTS", CoordSet.class)));
-        Contract E = new TestModifyContract("A", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
+        Contract E = new TestModifyContract("E", Collections.singletonList(new Key<>("POINTS", CoordSet.class)),
                 new ArrayList<>());
-        Contract EP = new TestContract("EP", new ArrayList<>(),
-                Arrays.asList(new Key<>("EDGES", Void.class), new Key<>("FACES", Void.class)));
-        dependencySolver = new DependencySolver(Arrays.asList(D, E, A, B, C), Arrays.asList(A, B), EP);
+
+        dependencySolver = new DependencySolver(Arrays.asList( A, B, C));
         List<Contract> got = dependencySolver.orderContracts();
         assertEquals(3, got.size());
         assertEquals(A, got.get(0));
@@ -190,7 +188,7 @@ public class DependencySolverTest {
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D));
 
         List<Contract> contracts = dependencySolver.orderContracts(new ContractOrder(B,C),
                 new ContractOrder("C","D",Arrays.asList(A,B,C,D)));
@@ -216,7 +214,7 @@ public class DependencySolverTest {
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D));
 
         List<Contract> contracts = dependencySolver.orderContracts(new ContractOrder(B,C),
                 new ContractOrder(C,D),
@@ -238,7 +236,7 @@ public class DependencySolverTest {
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D));
 
         List<Contract> contracts = dependencySolver.orderContracts();
 
@@ -264,7 +262,7 @@ public class DependencySolverTest {
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D),Arrays.asList(A,B,C,D),EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D));
 
         List<Contract> contracts = dependencySolver.orderContracts();
     }
@@ -286,7 +284,7 @@ public class DependencySolverTest {
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end),Arrays.asList(A,B,C,D,end),EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end));
 
         List<Contract> contracts = dependencySolver.orderContracts();
 
@@ -310,7 +308,7 @@ public class DependencySolverTest {
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end),Arrays.asList(A,B,C,D,end),EP);
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end));
 
         List<Contract> contracts = dependencySolver.orderContracts();
 

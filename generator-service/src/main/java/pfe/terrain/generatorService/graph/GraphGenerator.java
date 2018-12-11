@@ -8,7 +8,6 @@ import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
-import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.key.Key;
 
@@ -70,9 +69,6 @@ public class GraphGenerator {
     }
 
     private void addAndLinkContract(Contract contract) {
-        if (contract.getName().equals(FinalContract.FINAL_CONTRACT_NAME)) {
-            return;
-        }
         MutableNode contractNode = mutNode(contract.getName())
                 .add(Color.RED).add(Shape.ELLIPSE);
         graph.add(contractNode);
