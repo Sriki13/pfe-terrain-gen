@@ -48,6 +48,13 @@ public class ServiceController {
         this.generator.setParams(this.dominant.merge(this.recessive));
     }
 
+    public ServiceController(Generator generator) throws UnsolvableException,
+            MissingRequiredException, DuplicatedProductionException, MultipleEnderException{
+        this();
+        this.generator = generator;
+        this.generator.setParams(this.dominant.merge(this.recessive));
+    }
+
     public void execute() {
         this.generator.generate();
     }
