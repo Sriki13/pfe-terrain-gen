@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static pfe.terrain.gen.algo.constraints.Contract.FACES;
 
-public class NoiseWaterGenerationTest {
+public class NoiseWallGeneration {
 
     private TerrainMap map;
     private FaceSet faces;
@@ -48,6 +48,9 @@ public class NoiseWaterGenerationTest {
         map.putProperty(new Key<>("SIZE", Integer.class), mapSize);
         map.putProperty(new Key<>("SEED", Integer.class), new Random().nextInt());
         Context context = new Context();
+        context.putParam(NoiseWall.MULTIPLE_CAVES_TENDENCY,1.0);
+        context.putParam(NoiseWall.CAVE_ROUGHNESS,1.0);
+        context.putParam(NoiseWall.NOISE_PARAM,"ridged");
         wallGen.execute(map, context);
     }
 
