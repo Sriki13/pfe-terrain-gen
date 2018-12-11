@@ -1,17 +1,17 @@
 package pfe.terrain.factory.controller;
 
+import pfe.terrain.factory.compatibility.CompatibilityChecker;
 import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.exception.CannotReachRepoException;
+import pfe.terrain.factory.exception.CompatibilityException;
 import pfe.terrain.factory.exception.CompositionAlreadyExistException;
 import pfe.terrain.factory.exception.NoSuchCompoException;
-import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
-import pfe.terrain.factory.pom.Dependency;
 import pfe.terrain.factory.storage.AlgoStorage;
+import pfe.terrain.factory.storage.CompatibilityStorage;
 import pfe.terrain.factory.storage.CompoStorage;
 import pfe.terrain.gen.DependencySolver;
-import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.NotExecutableContract;
@@ -30,8 +30,10 @@ public class ServiceController {
 
     private AlgoStorage algoStorage;
     private CompoStorage compoStorage;
+    private CompatibilityStorage compatStorage;
 
     public ServiceController() {
+        this.compatStorage = new CompatibilityStorage();
         algoStorage = new AlgoStorage();
         this.compoStorage = new CompoStorage();
         try {
@@ -44,6 +46,7 @@ public class ServiceController {
     public ServiceController(AlgoStorage algoStorage){
         this.algoStorage = algoStorage;
         this.compoStorage = new CompoStorage();
+        this.compatStorage = new CompatibilityStorage();
 
     }
 
@@ -111,15 +114,16 @@ public class ServiceController {
         throw new NoSuchCompoException();
     }
 
-    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException, MultipleEnderException {
+    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException, MultipleEnderException, CompatibilityException {
         List<Contract> contracts = new ArrayList<>();
 
         for(Algorithm algorithm : composition.getAlgorithms()){
             contracts.add(algorithm.getContract());
         }
 
-        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final","final contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
+        new CompatibilityChecker(composition.getAlgorithms()).check();
 
+        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final","final contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
         solver.orderContracts(composition.getConstraintsArray());
 
         return true;

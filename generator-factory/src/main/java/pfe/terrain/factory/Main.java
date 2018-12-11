@@ -28,17 +28,6 @@ public class Main {
             }
         });
 
-        post("/generator", (request,response) -> {
-            response.type("application/xml");
-
-            try{
-                return controller.getGenerator(parser.listFromJson(request.body())).toString();
-            } catch (Exception e){
-                response.status(500);
-                return parser.exceptionToJson(e);
-            }
-        });
-
         get("/compositions", (request,response) -> {
             response.type("application/json");
 
@@ -101,6 +90,8 @@ public class Main {
                 return parser.exceptionToJson(e);
             }
         });
+
+
 
 
     }
