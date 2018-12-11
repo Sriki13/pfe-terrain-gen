@@ -27,8 +27,6 @@ public class CaveWallGeneratorTest {
 
     private Face emptyFace;
     private Face fullFace;
-    private Face almostFullFace;
-    private Face almostEmptyFace;
 
     private int seedCount = 0;
 
@@ -43,10 +41,8 @@ public class CaveWallGeneratorTest {
         terrainMap = new TerrainMap();
         emptyFace = generateFace(5, 0, false, false);
         fullFace = generateFace(0, 5, true, true);
-        almostEmptyFace = generateFace(10, 1, false, false);
-        almostFullFace = generateFace(1, 10, true, false);
         FaceSet allFaces = new FaceSet(new HashSet<>(Arrays.asList(
-                emptyFace, fullFace, almostEmptyFace, almostFullFace
+                emptyFace, fullFace
         )));
         terrainMap.putProperty(FACES, allFaces);
     }
@@ -78,9 +74,7 @@ public class CaveWallGeneratorTest {
         context.putParam(FLOOR_HEIGHT_PARAM, -1);
         generator.execute(terrainMap, context);
         assertFaceHeight(emptyFace, -1);
-        assertFaceHeight(almostEmptyFace, -1);
         assertFaceHeight(fullFace, 13);
-        assertFaceHeight(almostFullFace, 13);
     }
 
     @Test(expected = InvalidAlgorithmParameters.class)

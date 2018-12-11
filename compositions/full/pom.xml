@@ -188,7 +188,12 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.cave.walls</artifactId>
+            <artifactId>algo.cave.height.walls</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.cave.height.noisefloor</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
