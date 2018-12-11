@@ -3,7 +3,7 @@ package pfe.terrain.gen.algo.name.markov;
 import org.junit.Assert;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -32,7 +32,7 @@ public class NameGenTest {
     public void cityNameTest(){
         Namer namer = new Namer();
 
-        IslandMap map = new IslandMap();
+        TerrainMap map = new TerrainMap();
 
         FaceSet set = new FaceSet();
 

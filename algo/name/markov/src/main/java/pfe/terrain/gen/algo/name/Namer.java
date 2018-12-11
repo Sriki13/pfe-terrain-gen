@@ -1,20 +1,23 @@
 package pfe.terrain.gen.algo.name;
 
+
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.OptionalKey;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
-import pfe.terrain.gen.algo.island.IslandMap;
+import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
 import pfe.terrain.gen.algo.name.markov.MarkovNameGenerator;
+import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.MarkerType;
 import pfe.terrain.gen.algo.types.StringType;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,14 +47,18 @@ public class Namer extends Contract {
     }
 
     @Override
-    public void execute(IslandMap map, Context context) {
-        FaceSet faces = map.getFaces();
+    public String getDescription() {
+        return "add name to the cities";
+    }
+
+    @Override
+    public void execute(TerrainMap map, Context context) {
+        FaceSet faces = map.getProperty(FACES);
 
         for(Face face : faces){
             if(face.hasProperty(CITY_KEY)){
                 face.putProperty(CITY_NAME,new StringType(this.nameGenerator.getName()));
             }
         }
-
     }
 }
