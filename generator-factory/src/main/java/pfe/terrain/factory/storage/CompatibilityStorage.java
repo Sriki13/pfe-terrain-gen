@@ -5,6 +5,7 @@ import pfe.terrain.factory.compatibility.SimpleCompatibility;
 import pfe.terrain.factory.entities.Algorithm;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CompatibilityStorage {
@@ -35,6 +36,14 @@ public class CompatibilityStorage {
         compatibilities.get(b).put(a, simpleCompatibility);
 
         return this.getCompatibility(a,b);
+    }
+
+    public void putCompatibility(List<Algorithm> algorithms, Compatibility compatibility){
+        for(Algorithm a : algorithms){
+            for (Algorithm b : algorithms){
+                this.putCompatibility(a,b,compatibility);
+            }
+        }
     }
 
     public void clear(){

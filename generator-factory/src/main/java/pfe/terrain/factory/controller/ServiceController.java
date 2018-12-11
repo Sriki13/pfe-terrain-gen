@@ -1,6 +1,8 @@
 package pfe.terrain.factory.controller;
 
+import pfe.terrain.factory.compatibility.Compatibility;
 import pfe.terrain.factory.compatibility.CompatibilityChecker;
+import pfe.terrain.factory.compatibility.SimpleCompatibility;
 import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.CompatibilityException;
@@ -20,6 +22,7 @@ import pfe.terrain.gen.exception.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -91,8 +94,15 @@ public class ServiceController {
         Composition composition = getCompoByName(name);
 
         this.compoStorage.removeComposition(composition);
+    }
 
+    public Compatibility addCompatibility(List<String> names, int compatNumber) throws Exception{
+        List<Algorithm> algos = algoStorage.algosFromStrings(names);
+        Compatibility compatibility = SimpleCompatibility.compatibilityFromId(compatNumber);
 
+        this.compatStorage.putCompatibility(algos,compatibility);
+
+        return compatibility;
     }
 
     private BasePom pomFromAlgo(List<Algorithm> algorithms){

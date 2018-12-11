@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.entities.Composition;
+import pfe.terrain.factory.exception.ParsingException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,5 +65,24 @@ public class JsonParser {
         map.put("status", "OK");
 
         return new Gson().toJson(map);
+    }
+
+    public AlgoCompatibilityChange getAlgoCompatibility(String json) throws ParsingException {
+        try{
+            Gson gson = new Gson();
+            JsonObject obj = gson.toJsonTree(gson.fromJson(json,Map.class),Map.class).getAsJsonObject();
+            JsonArray jsonNames = obj.getAsJsonArray("AlgoNames");
+
+            List<String> names = new ArrayList<>();
+
+            for(JsonElement name : jsonNames){
+                names.add(name.getAsString());
+            }
+
+            return new AlgoCompatibilityChange(names,obj.get("compatibility").getAsInt());
+
+        }catch (Exception e){
+            throw new ParsingException();
+        }
     }
 }

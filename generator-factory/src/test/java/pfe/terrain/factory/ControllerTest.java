@@ -230,4 +230,18 @@ public class ControllerTest {
         compatibilityStorage.putCompatibility(algos.get(0),algos.get(1), SimpleCompatibility.COMPATIBLE_BEWARE);
         Composition compo = this.controller.addComposition("test",Arrays.asList("test","all"),"{}");
     }
+
+    @Test
+    public void addingCompatibililtyTest() throws Exception{
+        AlgoStorage storage = new Lister();
+
+        this.controller.addCompatibility(Arrays.asList("all","test","salut"),SimpleCompatibility.COMPATIBLE_BEWARE.getId());
+        Algorithm all = storage.algosFromStrings(Arrays.asList("all")).get(0);
+        Algorithm test = storage.algosFromStrings(Arrays.asList("test")).get(0);
+        Algorithm salut = storage.algosFromStrings(Arrays.asList("salut")).get(0);
+
+        assertEquals(this.compatibilityStorage.getCompatibility(all,test),SimpleCompatibility.COMPATIBLE_BEWARE);
+        assertEquals(this.compatibilityStorage.getCompatibility(all,salut),SimpleCompatibility.COMPATIBLE_BEWARE);
+        assertEquals(this.compatibilityStorage.getCompatibility(test,salut),SimpleCompatibility.COMPATIBLE_BEWARE);
+    }
 }

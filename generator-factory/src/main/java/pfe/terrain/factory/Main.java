@@ -91,6 +91,18 @@ public class Main {
             }
         });
 
+        post("/compatibility", (request,response) -> {
+            response.type("application/json");
+
+            try{
+
+                return parser.okAnswer();
+            }catch (Exception e){
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
 
 
 
