@@ -28,7 +28,7 @@ public class SmallCaveSuppression extends Contract {
             new SerializableKey<>(VERTICES_PREFIX + "IS_WALL", "isWall", BooleanType.class);
 
     static final Param<Double> SUPPRESSION_PERCENTAGE = Param.generateDefaultDoubleParam("smallCaveSuppressionPercentage",
-            "How many of the small caves to delete, a very small portion (0.0) or all except one (1.0)", 0.5, "Small caves suppression percentage");
+            "How many of the small caves to delete, a very small portion (0.0) or all except one (1.0)", 0.7, "Small caves suppression percentage");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -84,13 +84,12 @@ public class SmallCaveSuppression extends Contract {
         }
 
         for (Face face : map.getProperty(FACES)) {
-            for (Coord c : face.getBorderVertices()) {
-                if (!c.getProperty(VERTEX_WALL_KEY).value) {
-                    break;
-                }
+            boolean anyEmpty = face.getBorderVertices().stream()
+                    .anyMatch(c -> !c.getProperty(VERTEX_WALL_KEY).value);
+            if (!anyEmpty) {
+                face.getCenter().putProperty(FACE_WALL_KEY, new BooleanType(true));
+                face.putProperty(FACE_WALL_KEY, new BooleanType(true));
             }
-            face.putProperty(FACE_WALL_KEY, new BooleanType(true));
-            face.getCenter().putProperty(FACE_WALL_KEY, new BooleanType(true));
         }
     }
 }
