@@ -42,6 +42,12 @@ public class Face extends Mappable {
         return result;
     }
 
+    public Set<Coord> getAllVertices() {
+        Set<Coord> vertices = getBorderVertices();
+        vertices.add(center);
+        return vertices;
+    }
+
     public Set<Face> getNeighbors() {
         return neighbors;
     }

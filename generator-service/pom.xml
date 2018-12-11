@@ -55,7 +55,7 @@
                         <id>mapGen</id>
                         <configuration>
                             <executable>java</executable>
-                            <mainClass>pfe.terrain.generatorService.GenMap</mainClass>
+                            <mainClass>pfe.terrain.generatorService.GenJsonMap</mainClass>
                         </configuration>
                     </execution>
                 </executions>

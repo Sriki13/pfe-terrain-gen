@@ -55,7 +55,7 @@ public class BridgesBuilder extends Contract {
 
     @Override
     public String getDescription() {
-        return "Creates road between cities based on a fast steiner graph with added edges, Complexity : O(I*V²) optimized";
+        return "Creates roads between cities based on a fast steiner graph with added edges, Complexity : O(I*V²) optimized";
     }
 
     @SuppressWarnings("Duplicates")

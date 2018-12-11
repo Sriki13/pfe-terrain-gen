@@ -252,7 +252,7 @@ public class DependencySolverTest {
     @Test(expected = UnsolvableException.class)
     public void forceEnderExceptionTest() throws Exception{
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
-                Arrays.asList(DependencySolver.allKey));
+                Arrays.asList(DependencySolver.ALL_KEY));
         Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
                 Arrays.asList(new Key<>("POINTS", Void.class)));
         Contract C = new TestContract("C", Arrays.asList(),
@@ -272,7 +272,7 @@ public class DependencySolverTest {
     @Test (expected = MultipleEnderException.class)
     public void multipleEnderTest() throws Exception{
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
-                Arrays.asList(DependencySolver.allKey));
+                Arrays.asList(DependencySolver.ALL_KEY));
         Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
                 Arrays.asList(new Key<>("POINTS", Void.class)));
         Contract C = new TestContract("C", Arrays.asList(),
@@ -281,7 +281,7 @@ public class DependencySolverTest {
                 Arrays.asList(new Key<>("EDGE", Void.class)),
                 Arrays.asList(new Key<>("POINTS", Void.class)));
         Contract end = new TestContract("end", new ArrayList<>(),
-                Arrays.asList(DependencySolver.allKey));
+                Arrays.asList(DependencySolver.ALL_KEY));
 
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
@@ -305,7 +305,7 @@ public class DependencySolverTest {
                 Arrays.asList(new Key<>("EDGE", Void.class)),
                 Arrays.asList(new Key<>("POINTS", Void.class)));
         Contract end = new TestContract("end", new ArrayList<>(),
-                Arrays.asList(DependencySolver.allKey));
+                Arrays.asList(DependencySolver.ALL_KEY));
 
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());

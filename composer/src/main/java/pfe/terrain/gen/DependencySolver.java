@@ -9,7 +9,10 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.constraints.ContractOrder.EndingContract;
-import pfe.terrain.gen.exception.*;
+import pfe.terrain.gen.exception.DuplicatedProductionException;
+import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.MultipleEnderException;
+import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.util.*;
 
@@ -19,14 +22,11 @@ public class DependencySolver {
     private ContractStore available;
     private Contract finalMap;
 
-    public static final Key<Void> allKey = new Key<>("All",Void.class);
+    public static final Key<Void> ALL_KEY = new Key<>("All", Void.class);
 
-    private List<Contract> ordered;
-
-    public DependencySolver(List<Contract> available, List<Contract> priority, Contract finalMap) throws InvalidContractException {
+    public DependencySolver(List<Contract> available, List<Contract> priority, Contract finalMap) {
         this.available = new ContractStore(available);
         this.toUse = new ContractStore(priority);
-        this.ordered = new ArrayList<>();
         this.finalMap = finalMap;
     }
 
@@ -36,7 +36,8 @@ public class DependencySolver {
      * @throws UnsolvableException thrown if the problem is not solvable by the system
      * @throws MissingRequiredException thrown if required element cannot be found
      */
-    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws UnsolvableException,MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
+    public List<Contract> orderContracts(AdditionalConstraint... dependencies) throws
+            UnsolvableException, MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
 
         Set<Key> elementsToAdd = finalMap.getContract().getRequired();
         // remove all the created element to the required to get the missing required element

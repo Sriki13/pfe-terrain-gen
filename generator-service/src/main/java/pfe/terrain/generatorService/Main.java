@@ -26,23 +26,50 @@ public class Main {
 
         get("/execute", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-
             response.type("application/json");
             try {
-                return controller.execute(false);
+                controller.execute();
+                return "";
             } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
         });
 
-        get("/execute/diff", (request, response) -> {
+        get("/execute/:export", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-
             response.type("application/json");
             try {
-                return controller.execute(true);
-            } catch (Exception e){
+                controller.execute();
+                String property = request.params("export");
+                if (property == null) {
+                    return "";
+                }
+                return controller.getProperty(request.params("export"));
+            } catch (Exception e) {
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+        get("/property/:export", ((request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.type("application/json");
+            try {
+                return controller.getProperty(request.params("export"));
+            } catch (Exception e) {
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        }));
+
+        get("/executionChart", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+
+            response.type("application/octet-stream");
+            try {
+                return controller.getExecutionChart();
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -56,7 +83,7 @@ public class Main {
             response.type("application/json");
             try {
                 return controller.getGraph();
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -71,7 +98,7 @@ public class Main {
 
             try {
                 return parser.parseMap(controller.setContext(request.body()));
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -87,7 +114,7 @@ public class Main {
 
             try {
                 return parser.parseKeys(controller.getParameters());
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -101,7 +128,7 @@ public class Main {
             response.type("application/json");
             try {
                 return parser.parseAlgo(controller.getAlgoList());
-            } catch (Exception e){
+            } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
             }

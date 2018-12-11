@@ -11,11 +11,14 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.parsing.ContextParser;
 import pfe.terrain.gen.algo.reflection.ContractReflection;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
-import pfe.terrain.gen.exception.*;
+import pfe.terrain.gen.exception.DuplicatedProductionException;
+import pfe.terrain.gen.exception.MissingRequiredException;
+import pfe.terrain.gen.exception.MultipleEnderException;
+import pfe.terrain.gen.exception.UnsolvableException;
+import pfe.terrain.gen.parser.ParamParser;
 import pfe.terrain.generatorService.graph.GraphGenerator;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
-import pfe.terrain.gen.parser.ParamParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,13 +27,12 @@ import java.util.Map;
 
 public class ServiceController {
 
-
     private Generator generator;
     private Context recessive;
     private Context dominant;
     private List<AdditionalConstraint> constraints;
 
-    public ServiceController() throws InvalidContractException, UnsolvableException,
+    public ServiceController() throws UnsolvableException,
             MissingRequiredException, DuplicatedProductionException, MultipleEnderException {
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
@@ -47,13 +49,12 @@ public class ServiceController {
         this.generator.setParams(this.dominant.merge(this.recessive));
     }
 
-
-    public ServiceController(Generator generator) {
-        this.generator = generator;
+    public void execute() {
+        this.generator.generate();
     }
 
-    public String execute(boolean diffOnly) {
-        return this.generator.generate(diffOnly);
+    public Object getProperty(String keyId) {
+        return this.generator.getProperty(keyId);
     }
 
     public Map<String, Object> setContext(String contextString) {
@@ -135,5 +136,9 @@ public class ServiceController {
         }
 
         return consts;
+    }
+
+    public byte[] getExecutionChart() {
+        return generator.getExecutionChart();
     }
 }
