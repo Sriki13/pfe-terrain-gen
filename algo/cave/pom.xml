@@ -18,6 +18,8 @@
     <modules>
         <module>noiseshape</module>
         <module>smallcavesuppr</module>
+        <module>cavelinker</module>
+        <module>graphcavelib</module>
         <module>height</module>
     </modules>
 

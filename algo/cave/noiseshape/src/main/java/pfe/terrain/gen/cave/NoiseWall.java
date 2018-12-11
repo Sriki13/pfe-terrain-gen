@@ -22,7 +22,7 @@ public class NoiseWall extends Contract {
     static final Param<String> NOISE_PARAM = new Param<>("noiseType", String.class,
             Arrays.toString(Noise.values()),
             "Choose the noise algorithm to use",
-            Noise.PERLIN.getNoiseName(), "Noise type for cave shape");
+            Noise.RIDGED.getNoiseName(), "Noise type for cave shape");
 
     static final Param<Double> MULTIPLE_CAVES_TENDENCY = Param.generateDefaultDoubleParam("multipleCaveTendency",
             "Tendency of multiple caves to spawn, (0 = not a lot, 1.0 = max)", 0.3, "Number of caves");
@@ -78,7 +78,7 @@ public class NoiseWall extends Contract {
                 ((RidgedMulti) noise).setFrequency(1.3 + multipleCaveTendency*1.2);
                 ((RidgedMulti) noise).setLacunarity(0.8 + caveRoughness*1.3);
                 ((RidgedMulti) noise).setOctaveCount(7 + (int) caveRoughness * 2);
-                borderSmoothing = 1.0;
+                borderSmoothing = 0.8;
                 break;
         }
         for (Face face : map.getProperty(FACES)) {
@@ -105,7 +105,7 @@ public class NoiseWall extends Contract {
     private boolean isWall(Module perlin, double x, double y, double borderSmoothing) {
         double c = (perlin.getValue(x, y, 0));
         double maxi = Math.max(Math.abs(x), Math.abs(y));
-        double smoothing = borderSmoothing * Math.max(Math.abs(x), Math.abs(y));
+        double smoothing = borderSmoothing * maxi;
         if (maxi > 0.8) {
             smoothing += (maxi - 0.8) * 12;
         }

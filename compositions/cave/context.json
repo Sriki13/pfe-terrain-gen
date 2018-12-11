@@ -6,6 +6,11 @@
     {
       "name": "order",
       "before": "SmallCaveSuppression",
+      "after": "CaveLinker"
+    },
+    {
+      "name": "order",
+      "before": "CaveLinker",
       "after": "CaveWallGenerator"
     }
   ]
