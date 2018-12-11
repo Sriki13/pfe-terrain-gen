@@ -42,7 +42,8 @@ public class NoiseWall extends Contract {
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asKeySet(FACES, SEED, FACE_WALL_KEY), asKeySet());
+        return new Constraints(asKeySet(FACES, SEED),
+                asKeySet(FACE_WALL_KEY, VERTEX_WALL_KEY));
     }
 
     @Override
