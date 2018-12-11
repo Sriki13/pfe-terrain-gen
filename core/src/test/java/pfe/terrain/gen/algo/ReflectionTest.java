@@ -1,3 +1,5 @@
+package pfe.terrain.gen.algo;
+
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.reflection.ContractReflection;
