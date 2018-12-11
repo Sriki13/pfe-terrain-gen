@@ -5,6 +5,7 @@ import org.junit.Test;
 import pfe.terrain.factory.compatibility.Compatibility;
 import pfe.terrain.factory.compatibility.SimpleCompatibility;
 import pfe.terrain.factory.entities.Algorithm;
+import pfe.terrain.factory.exception.NoSuchCompatibility;
 import pfe.terrain.factory.storage.CompatibilityStorage;
 
 import static org.junit.Assert.assertEquals;
@@ -50,12 +51,16 @@ public class AlgorithmSimpleCompatibilityStorageTest {
     }
 
     @Test
-    public void getCompatTest(){
-        assertNull(SimpleCompatibility.compatibilityFromId(100));
+    public void getCompatTest() throws Exception{
 
         assertEquals(COMPATIBLE_BEWARE,SimpleCompatibility.compatibilityFromId(COMPATIBLE_BEWARE.getId()));
         assertEquals(UNKNOWN,SimpleCompatibility.compatibilityFromId(UNKNOWN.getId()));
         assertEquals(UNCOMPATIBLE,SimpleCompatibility.compatibilityFromId(UNCOMPATIBLE.getId()));
+    }
+
+    @Test (expected = NoSuchCompatibility.class)
+    public void noSuchCompatTest() throws Exception{
+        assertNull(SimpleCompatibility.compatibilityFromId(100));
     }
 
 
