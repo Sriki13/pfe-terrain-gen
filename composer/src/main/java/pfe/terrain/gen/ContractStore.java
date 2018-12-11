@@ -31,7 +31,7 @@ public class ContractStore {
             required.addAll(dependency.getContract().getModified());
         }
 
-        required.remove(DependencySolver.allKey);
+        required.remove(DependencySolver.ALL_KEY);
 
         return required;
     }

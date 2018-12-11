@@ -6,7 +6,6 @@ import pfe.terrain.gen.DependencySolver;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.constraints.AdditionalConstraint;
 import pfe.terrain.gen.exception.MultipleEnderException;
-import pfe.terrain.gen.exception.UnsolvableException;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class EndingContract implements AdditionalConstraint {
 
     public EndingContract(List<Contract> contracts) throws MultipleEnderException{
         for(Contract contract : contracts){
-            if(contract.getContract().getRequired().contains(DependencySolver.allKey)){
+            if (contract.getContract().getRequired().contains(DependencySolver.ALL_KEY)) {
                 if(ending != null){
                     throw new MultipleEnderException(contract,this.ending);
                 } else {

@@ -11,7 +11,6 @@ import pfe.terrain.factory.pom.Dependency;
 import pfe.terrain.factory.storage.AlgoStorage;
 import pfe.terrain.factory.storage.CompoStorage;
 import pfe.terrain.gen.DependencySolver;
-import pfe.terrain.gen.FinalContract;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.NotExecutableContract;
@@ -118,7 +117,7 @@ public class ServiceController {
             contracts.add(algorithm.getContract());
         }
 
-        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final","final contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
+        DependencySolver solver = new DependencySolver(contracts);
 
         solver.orderContracts(composition.getConstraintsArray());
 

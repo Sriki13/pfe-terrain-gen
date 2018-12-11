@@ -34,6 +34,9 @@ public class MapReverser {
     }
 
     private void removeKey(Key key) {
+        if (key.isPermanent()) {
+            return;
+        }
         Key<?> location = null;
         for (Prefix prefix : Prefix.values()) {
             if (key.getId().startsWith(prefix.getPrefix())) {

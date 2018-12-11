@@ -1,0 +1,12 @@
+{
+  "context": {
+    "size": 400
+  },
+  "constraint": [
+    {
+      "name": "order",
+      "before": "SmallCaveSuppression",
+      "after": "CaveWallGenerator"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import pfe.terrain.gen.algo.island.TerrainMap;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TestContract extends Contract {
 
@@ -27,6 +28,21 @@ public class TestContract extends Contract {
                 new HashSet<>(required), new HashSet<>(created), new HashSet<>(modified)
         );
     }
+
+    public TestContract(String name, Set<Key> created, Set<Key> required) {
+        this.name = name;
+        this.constraints = new Constraints(
+                new HashSet<>(required), new HashSet<>(created)
+        );
+    }
+
+    public TestContract(String name, Set<Key> created, Set<Key> required, Set<Key> modified) {
+        this.name = name;
+        this.constraints = new Constraints(
+                new HashSet<>(required), new HashSet<>(created), new HashSet<>(modified)
+        );
+    }
+
 
     @Override
     public Constraints getContract() {

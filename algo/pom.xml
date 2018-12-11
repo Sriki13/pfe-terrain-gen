@@ -24,6 +24,7 @@
 
     <modules>
         <module>mesh</module>
+        <module>cave</module>
         <module>points</module>
         <module>borders</module>
         <module>biome</module>
@@ -38,7 +39,7 @@
         <module>city</module>
         <module>name</module>
         <module>road</module>
-
+        <module>export</module>
     </modules>
 
 </project>

@@ -20,62 +20,61 @@ public class ParamParser {
     private String contextKey = "context";
     private String constraintKey = "constraint";
 
-    public ParamParser(String path){
+    public ParamParser(String path) {
         this.contextPath = path;
     }
 
-    public ParamParser(){
+    public ParamParser() {
         this.contextPath = this.getClass().getClassLoader().getResource("context.json").getFile();
     }
 
-    public String getContextString(){
+    public String getContextString() {
         try {
             FileReader reader = new FileReader(this.contextPath);
 
             Scanner scanner = new Scanner(reader);
             StringBuilder builder = new StringBuilder();
 
-            while(scanner.hasNextLine()){
+            while (scanner.hasNextLine()) {
                 builder.append(scanner.nextLine());
             }
 
             return builder.toString();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("could not load context file, loading empty context");
             return "{}";
         }
     }
 
-    public Context getContext(List<Contract> contracts){
+    public Context getContext(List<Contract> contracts) {
         this.readContext();
 
-        Map<String,Object> init = new Gson().fromJson(this.contextString, Map.class);
-        if(init.containsKey(this.contextKey)) {
-            Context context = new MapContext((Map)init.get(this.contextKey), contracts);
+        Map<String, Object> init = new Gson().fromJson(this.contextString, Map.class);
+        if (init.containsKey(this.contextKey)) {
 
-            return context;
+            return new MapContext((Map) init.get(this.contextKey), contracts);
         }
 
         return new MapContext();
     }
 
-    public List<AdditionalConstraint> getConstraints(List<Contract> contracts){
+    public List<AdditionalConstraint> getConstraints(List<Contract> contracts) {
         this.readContext();
 
         String stringContext = this.getContextString();
-        Map<String,Object> init = new Gson().fromJson(stringContext, Map.class);
-        if(init.containsKey(this.constraintKey)) {
-            List<Map> constraints = (List<Map>)init.get(this.constraintKey);
+        Map<String, Object> init = new Gson().fromJson(stringContext, Map.class);
+        if (init.containsKey(this.constraintKey)) {
+            List<Map> constraints = (List<Map>) init.get(this.constraintKey);
 
             ConstraintParser parser = new ConstraintParser();
-            return parser.listToConstraints(constraints,contracts);
+            return parser.listToConstraints(constraints, contracts);
         }
         return new ArrayList<>();
     }
 
-    private void readContext(){
-        if(this.contextString == null){
+    private void readContext() {
+        if (this.contextString == null) {
             this.contextString = this.getContextString();
         }
     }

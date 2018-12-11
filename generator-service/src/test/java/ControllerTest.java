@@ -1,61 +1,82 @@
-import org.junit.Assert;
+import graph.TestContract;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import pfe.terrain.gen.DependencySolver;
 import pfe.terrain.gen.algo.Generator;
-import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
-import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.island.TerrainMap;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
+import pfe.terrain.gen.algo.island.geometry.CoordSet;
+import pfe.terrain.gen.algo.types.BooleanType;
+import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static pfe.terrain.gen.algo.constraints.Contract.*;
 
-@Ignore
-public class ControllerTest {
+public class ControllerTest{
     private ServiceController controller;
+    private Generator generator;
 
-    private static final Param<Integer> salut = new Param<>("salut", Integer.class, "", "", 1, "");
+    static final Key<BooleanType> FACE_WALL_KEY =
+            new SerializableKey<>(FACES_PREFIX + "IS_WALL", "isWall", BooleanType.class);
 
-    private class TestContract extends Contract {
+    static final Key<BooleanType> VERTEX_WALL_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "IS_WALL", "isWall", BooleanType.class);
 
-        @Override
-        public Set<Param> getRequestedParameters() {
-            return asParamSet(salut);
-        }
+    static final Key<DoubleType> HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
-        @Override
-        public Constraints getContract() {
-            return new Constraints(new HashSet<>(), new HashSet<>());
-        }
+    Contract relaxed  = new TestContract("relaxed",
+            asKeySet(new Key<>("POINTS", CoordSet.class)),
+            asKeySet(SIZE, SEED));
 
-        @Override
-        public String getDescription() {
-            return null;
-        }
+    Contract mesh = new TestContract("mesh",
+            asKeySet(VERTICES, EDGES, FACES),
+            asKeySet(new Key<>("POINTS", CoordSet.class), SIZE)
+    );
 
-        @Override
-        public void execute(TerrainMap map, Context context) {
-        }
+    Contract init = new TestContract("init",
+            asKeySet(SEED, SIZE),
+            Collections.emptySet());
 
-        @Override
-        public String getName() {
-            return "Test";
-        }
+    Contract noiseshape = new TestContract("noise",
+            asKeySet(FACE_WALL_KEY, VERTEX_WALL_KEY),
+            asKeySet(FACES, SEED));
 
-    }
+    Contract caveWall = new TestContract("wall",
+            asKeySet(HEIGHT_KEY),
+            asKeySet(FACES, FACE_WALL_KEY, VERTEX_WALL_KEY));
+
+    Contract smallCaveSuppr = new TestContract("suppr",
+            asKeySet(),
+            asKeySet(FACES, SEED, EDGES, VERTICES),
+            asKeySet(FACE_WALL_KEY, VERTEX_WALL_KEY));
+
 
     private class TestGenerator implements Generator{
+        private List<Contract> contracts;
+
+        public TestGenerator() throws Exception{
+            DependencySolver solver = new DependencySolver(Arrays.asList(relaxed,mesh,init,noiseshape,caveWall,smallCaveSuppr));
+            this.contracts = solver.orderContracts();
+        }
+
         @Override
-        public String generate(boolean diffOnly) {
-            return "salut";
+        public void generate() {
+
+        }
+
+        @Override
+        public Object getProperty(String keyId) {
+            return null;
         }
 
         @Override
@@ -65,63 +86,28 @@ public class ControllerTest {
 
         @Override
         public List<Contract> getContracts() {
-            return Collections.singletonList(new TestContract());
+            return this.contracts;
+        }
+
+        @Override
+        public byte[] getExecutionChart() {
+            return new byte[0];
         }
     }
 
     @Before
-    public void init() {
-        controller = new ServiceController(new TestGenerator());
+    public void init() throws Exception{
+        this.generator = new TestGenerator();
+        this.controller = new ServiceController(this.generator);
     }
 
     @Test
-    public void setContextTest() {
-        controller.setContext("{\"salut\" : 12}");
-
-        Context context = controller.getContext();
-
-        assertEquals(new Integer(12), context.getParamOrDefault(salut));
-    }
-
-    @Test
-    public void setContextWithUnknownKeyTest() {
-        controller.setContext("{\"eeeee\" : 12}");
-
-        Context context = controller.getContext();
-
-        int val = context.getParamOrDefault(new Param<>("eeeee", Integer.class, "", "", 1, ""));
-
-        assertEquals(1,val);
-
-    }
-
-    @Test
-    public void runWithContext() {
-
-        controller.setContext("{\"salut\" : 12}");
-
-        Context context = controller.getContext();
-
-        assertEquals(new Integer(12), context.getParamOrDefault(salut));
-
-        String map = controller.execute(false);
-
-        Assert.assertNotEquals("", map);
-    }
-
-    @Test
-    public void execTest() {
-        assertEquals("salut", controller.execute(false));
-    }
-
-    @Test
-    public void listAlgoTest() {
+    public void getAlgoListTest(){
         List<Algorithm> algorithms = this.controller.getAlgoList();
-
-        assertEquals(1, algorithms.size());
-
-        assertEquals("Test", algorithms.get(0).getName());
+        for(Algorithm algo : algorithms){
+            assertEquals(algo.getName(),this.generator.getContracts().get(algo.getPos()).getName());
+        }
     }
-
+    
 
 }
