@@ -29,6 +29,11 @@
       "name": "order",
       "before": "StalagmitePlacer",
       "after": "CaveFlooding"
+    },
+    {
+      "name": "order",
+      "before": "ConcaveFloor",
+      "after": "CaveFlooding"
     }
   ]
 }
