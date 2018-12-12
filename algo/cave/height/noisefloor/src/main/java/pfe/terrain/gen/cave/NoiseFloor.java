@@ -11,6 +11,7 @@ import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,22 +31,24 @@ public class NoiseFloor extends Contract {
         return asParamSet(FLOOR_ROUGHNESS_PARAM, FLOOD_PARAM);
     }
 
-    static final Key<BooleanType> FACE_WALL_KEY =
+    private static final Key<BooleanType> FACE_WALL_KEY =
             new Key<>(FACES_PREFIX + "IS_WALL", BooleanType.class);
 
-    static final Key<BooleanType> VERTEX_WALL_KEY =
+    private static final Key<BooleanType> VERTEX_WALL_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "IS_WALL", "isWall", BooleanType.class);
 
-    static final Key<DoubleType> HEIGHT_KEY =
+    private static final Key<DoubleType> HEIGHT_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "CAVE_HEIGHT", "height", DoubleType.class);
 
-    static final Key<Double> WALL_HEIGHT_KEY = new Key<>("WALL_HEIGHT", Double.class);
+    private static final Key<Double> WALL_HEIGHT_KEY = new Key<>("WALL_HEIGHT", Double.class);
+
+    private static final Key<MarkerType> FLOOR_KEY = new Key<>("FLOOR_CAVE", MarkerType.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(FACES, VERTICES, VERTEX_WALL_KEY, SIZE, WALL_HEIGHT_KEY, FACE_WALL_KEY),
-                asKeySet(),
+                asKeySet(FLOOR_KEY),
                 asKeySet(HEIGHT_KEY)
         );
     }
@@ -99,6 +102,8 @@ public class NoiseFloor extends Contract {
         for (Coord vertex : emptyVertices) {
             vertex.putProperty(HEIGHT_KEY, new DoubleType(generatedValues.get(vertex)));
         }
+
+        map.putProperty(FLOOR_KEY, new MarkerType());
     }
 
     private double findMinHeight(TerrainMap map) {

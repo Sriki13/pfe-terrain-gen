@@ -1,6 +1,7 @@
 package pfe.terrain.gen.algo.name.markov;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.island.TerrainMap;
@@ -18,6 +19,7 @@ import static pfe.terrain.gen.algo.constraints.Contract.FACES;
 public class NameGenTest {
 
     @Test
+    @Ignore
     public void nameTest() throws Exception{
 
         MarkovNameGenerator gen = new MarkovNameGenerator(4,8);
@@ -28,6 +30,7 @@ public class NameGenTest {
         assertTrue(name.length() < 8);
     }
 
+    @Ignore
     @Test
     public void cityNameTest(){
         Namer namer = new Namer();
