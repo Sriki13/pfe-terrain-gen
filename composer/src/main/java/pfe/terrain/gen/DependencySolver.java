@@ -81,20 +81,25 @@ public class DependencySolver {
         Contract[] orderedContracts = new Contract[contracts.size()];
 
         Model model = new Model("constraints");
+        Model modelWithModifConstratins = new Model("modifConstraints");
 
         IntVar[] vars = new IntVar[contracts.size()];
+        IntVar[] varsModif = new IntVar[contracts.size()];
         for (int i = 0; i < vars.length; i++) {
             vars[i] = model.intVar("contracts" + i, 0, vars.length - 1);
+            varsModif[i] = modelWithModifConstratins.intVar("contracts" + i, 0, vars.length - 1);
         }
 
         Set<IntVar> toMinimize = new HashSet<>();
 
         for(AdditionalConstraint order : dependencies){
             order.apply(model,contracts,vars);
+            order.apply(modelWithModifConstratins,contracts,varsModif);
         }
 
         AdditionalConstraint ender = new EndingContract(contracts);
         ender.apply(model,contracts,vars);
+        ender.apply(modelWithModifConstratins,contracts,varsModif);
 
         for (int i = 0; i < vars.length; i++) {
             Constraints a = contracts.get(i).getContract();
@@ -103,6 +108,7 @@ public class DependencySolver {
 
                 Constraints b = contracts.get(j).getContract();
                 model.arithm(vars[i], "!=", vars[j]).post(); // must be different
+                modelWithModifConstratins.arithm(varsModif[i], "!=", varsModif[j]).post();
 
                 if (a.getModified().size() > 0) {
                     toMinimize.add(vars[i]);
@@ -116,20 +122,38 @@ public class DependencySolver {
                 for (Key required : requireAndModified) {
                     if (b.getCreated().contains(required)) {
                         model.arithm(vars[i], ">", vars[j]).post();
+                        modelWithModifConstratins.arithm(varsModif[i], ">", varsModif[j]).post();
                     }
                 }
 
                 for (Key create : a.getCreated()) {
                     if (b.getRequired().contains(create)) {
                         model.arithm(vars[j], ">", vars[i]).post();
+                        modelWithModifConstratins.arithm(varsModif[j], ">", varsModif[i]).post();
+                    }
+                }
+
+                for (Key modif : a.getModified()) {
+                    if (b.getRequired().contains(modif)) {
+                        modelWithModifConstratins.arithm(varsModif[j], ">", varsModif[i]).post();
                     }
                 }
 
             }
         }
 
+        Solution solution = modelWithModifConstratins.getSolver().findSolution();
 
-        Solution solution = resolveWithMinimisation(model,toMinimize);
+        if(solution != null){
+            for(int i = 0;i<vars.length;i++){
+                int position = solution.getIntVal(varsModif[i]);
+                orderedContracts[position] =contracts.get(i);
+            }
+
+            return new ArrayList<>(Arrays.asList(orderedContracts));
+        }
+
+        solution = resolveWithMinimisation(model,toMinimize);
 
         //ordering the contracts
         for(int i = 0;i<vars.length;i++){
