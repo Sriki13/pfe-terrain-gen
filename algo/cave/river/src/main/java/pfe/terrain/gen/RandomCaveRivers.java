@@ -8,11 +8,14 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.IntegerType;
 import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static pfe.terrain.gen.RiverGenerator.*;
 
@@ -69,8 +72,16 @@ public class RandomCaveRivers extends Contract {
         for (int i = 0; i < nbRivers; i++) {
             Coord start = empty.get(random.nextInt(empty.size()));
             empty.remove(start);
-            generator.generateRiverFrom(start, new HashSet<>(),
-                    coord -> coord.getProperty(HEIGHT_KEY).value <= 0);
+            Function<Coord, Boolean> endCondition = coord -> coord.getProperty(HEIGHT_KEY).value <= 0;
+            Coord end = generator.generateRiverFrom(start, new HashSet<>(), endCondition);
+            int jokers = 0;
+            while (!endCondition.apply(end) && jokers < 30) {
+                jokers++;
+                Coord otherRiverStart = generator.getLowestNeighbour(end, new HashSet<>(), false);
+                Edge river = generator.findEdge(otherRiverStart, end);
+                end = generator.generateRiverFrom(otherRiverStart, new HashSet<>(Collections.singleton(end)), endCondition);
+                river.putProperty(RIVER_FLOW_KEY, new IntegerType(1));
+            }
             if (empty.isEmpty()) {
                 break;
             }

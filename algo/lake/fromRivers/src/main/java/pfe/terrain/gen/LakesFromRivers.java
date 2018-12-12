@@ -31,6 +31,9 @@ public class LakesFromRivers extends Contract {
         return asParamSet(LAKE_SIZE_PARAM);
     }
 
+    private static final Key<DoubleType> HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
+
     // Produced
 
     public static final Key<MarkerType> HAS_LAKES_KEY = new Key<>("LAKES", MarkerType.class);
@@ -72,7 +75,7 @@ public class LakesFromRivers extends Contract {
     public void execute(TerrainMap map, Context context) {
         this.terrainMap = map;
         this.random = new Random(map.getProperty(SEED));
-        this.riverGenerator = new RiverGenerator(terrainMap);
+        this.riverGenerator = new RiverGenerator(terrainMap, HEIGHT_KEY);
         this.maxLakeSize = context.getParamOrDefault(LAKE_SIZE_PARAM);
         this.newRiverStarts = new HashSet<>();
         this.newLakeStarts = new HashSet<>();

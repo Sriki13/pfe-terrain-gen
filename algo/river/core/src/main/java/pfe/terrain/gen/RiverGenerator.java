@@ -45,8 +45,8 @@ public class RiverGenerator {
         generateRiverFrom(start, seen, (coord -> !coord.getProperty(VERTEX_WATER_KEY).value));
     }
 
-    public void generateRiverFrom(Coord start, Set<Coord> seen,
-                                  Function<Coord, Boolean> endCondition) {
+    public Coord generateRiverFrom(Coord start, Set<Coord> seen,
+                                   Function<Coord, Boolean> endCondition) {
         start.putProperty(IS_SOURCE_KEY, new MarkerType());
         while (!endCondition.apply(start)) {
             Coord flowTowards = getLowestNeighbour(start, seen, true);
@@ -59,6 +59,7 @@ public class RiverGenerator {
             start = flowTowards;
         }
         start.putProperty(IS_RIVER_END_KEY, new MarkerType());
+        return start;
     }
 
     public Coord getLowestNeighbour(Coord coord, Set<Coord> seen, boolean includeStart) {
@@ -74,7 +75,7 @@ public class RiverGenerator {
         return min;
     }
 
-    private Edge findEdge(Coord a, Coord b) {
+    public Edge findEdge(Coord a, Coord b) {
         Edge searched = new Edge(a, b);
         for (Edge edge : terrainMap.getProperty(EDGES)) {
             if (edge.equals(searched)) {
