@@ -22,13 +22,9 @@ public class NoiseFloor extends Contract {
             "floorRoughness", "The roughness of the cave floor", 0.5, "Cave floor roughness"
     );
 
-    static final Param<Double> FLOOD_PARAM = Param.generateDefaultDoubleParam(
-            "floorFloodLevel", "How much water should be in the cave", 0.07, "Cave flood level"
-    );
-
     @Override
     public Set<Param> getRequestedParameters() {
-        return asParamSet(FLOOR_ROUGHNESS_PARAM, FLOOD_PARAM);
+        return asParamSet(FLOOR_ROUGHNESS_PARAM);
     }
 
     private static final Key<BooleanType> FACE_WALL_KEY =
@@ -93,11 +89,6 @@ public class NoiseFloor extends Contract {
         generatedValues.forEach((key, value) ->
                 generatedValues.put(key, (maxHeight - minHeight) * (value - minGenerated) / (maxGenerated - minGenerated) + minHeight)
         );
-        List<Map.Entry<Coord, Double>> sortedEntries = new ArrayList<>(generatedValues.entrySet());
-        sortedEntries.sort((a, b) -> (int) (1000 * (a.getValue() - b.getValue())));
-        double floodParam = context.getParamOrDefault(FLOOD_PARAM);
-        double floodLevel = sortedEntries.get((int) (floodParam * (sortedEntries.size() - 1))).getValue();
-        generatedValues.forEach((key, value) -> generatedValues.put(key, value - floodLevel));
 
         for (Coord vertex : emptyVertices) {
             vertex.putProperty(HEIGHT_KEY, new DoubleType(generatedValues.get(vertex)));

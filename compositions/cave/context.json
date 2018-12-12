@@ -1,6 +1,7 @@
 {
   "context": {
-    "size": 400
+    "size": 400,
+    "nbPoints": 5000
   },
   "constraint": [
     {
@@ -17,6 +18,11 @@
       "name": "order",
       "before": "CaveLinker",
       "after": "CaveWallGenerator"
+    },
+    {
+      "name": "order",
+      "before": "StalagmitePlacer",
+      "after": "CaveFlooding"
     }
   ]
 }
