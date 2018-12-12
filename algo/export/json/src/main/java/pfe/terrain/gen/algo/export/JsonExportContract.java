@@ -14,9 +14,9 @@ import java.util.Set;
 
 public class JsonExportContract extends Contract {
 
-    public static final Param<Boolean> DIFF_PARAM = new Param<>("jsonDiff", Boolean.class, "true / false",
-            "Whether the produced json should only be the diff with the earlier excution or not",
-            false, "Enable diff Json");
+    public static final Param<String> DIFF_PARAM = new Param<>("jsonDiff", String.class, "true / false",
+            "Whether the produced json should only be the diff with the earlier execution or not",
+            "false", "Enable diff Json");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -40,7 +40,7 @@ public class JsonExportContract extends Contract {
 
     @Override
     public void execute(TerrainMap map, Context context) {
-        if (!map.hasProperty(EXPORT_JSON_KEY) || !context.getParamOrDefault(DIFF_PARAM)) {
+        if (!map.hasProperty(EXPORT_JSON_KEY) || !Boolean.valueOf(context.getParamOrDefault(DIFF_PARAM))) {
             JsonExporter exporter = new JsonExporter();
             map.putProperty(EXPORT_JSON_KEY, exporter.export(map));
             map.putProperty(EXPORT_MESH_KEY, exporter.getMeshExporter());

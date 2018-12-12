@@ -1,7 +1,8 @@
 {
   "context": {
     "size": 400,
-    "nbPoints": 5000
+    "caveWallHeight": 70,
+    "caveFloorHeight": 10
   },
   "constraint": [
     {
@@ -18,6 +19,11 @@
       "name": "order",
       "before": "CaveLinker",
       "after": "CaveWallGenerator"
+    },
+    {
+      "name": "order",
+      "before": "NoiseFloor",
+      "after": "StalagmitePlacer"
     },
     {
       "name": "order",

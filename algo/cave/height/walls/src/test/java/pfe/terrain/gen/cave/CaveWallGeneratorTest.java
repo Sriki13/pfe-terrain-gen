@@ -70,18 +70,18 @@ public class CaveWallGeneratorTest {
     @Test
     public void elevateWallsTest() {
         Context context = new Context();
-        context.putParam(WALL_HEIGHT_PARAM, 13);
-        context.putParam(FLOOR_HEIGHT_PARAM, -1);
+        context.putParam(WALL_HEIGHT_PARAM, WALL_HEIGHT_PARAM.getDefaultValue());
+        context.putParam(FLOOR_HEIGHT_PARAM, FLOOR_HEIGHT_PARAM.getDefaultValue());
         generator.execute(terrainMap, context);
-        assertFaceHeight(emptyFace, -1);
-        assertFaceHeight(fullFace, 13);
+        assertFaceHeight(emptyFace, FLOOR_HEIGHT_PARAM.getDefaultValue());
+        assertFaceHeight(fullFace, WALL_HEIGHT_PARAM.getDefaultValue());
     }
 
     @Test(expected = InvalidAlgorithmParameters.class)
     public void invalidParamsTest() {
         Context context = new Context();
         context.putParam(WALL_HEIGHT_PARAM, 13);
-        context.putParam(FLOOR_HEIGHT_PARAM, 100);
+        context.putParam(FLOOR_HEIGHT_PARAM, 14);
         generator.execute(terrainMap, context);
     }
 

@@ -116,9 +116,10 @@ public class ServiceController {
 
         for (Param key : context.getProperties().keySet()) {
             try {
+                //noinspection unchecked
                 map.put(key.getId(), context.getParamOrDefault(key));
             } catch (Exception e) {
-                System.err.println("can't put key " + key.getId() + "into map");
+                System.err.println("can't put key " + key.getId() + " into map");
             }
         }
 
