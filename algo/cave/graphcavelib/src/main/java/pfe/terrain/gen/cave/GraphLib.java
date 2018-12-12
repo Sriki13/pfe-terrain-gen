@@ -45,7 +45,6 @@ public class GraphLib {
         return graph;
     }
 
-
     public static DefaultUndirectedWeightedGraph<Coord, Edge> buildFullGraphRandomWeight(TerrainMap map, Random random) {
         DefaultUndirectedWeightedGraph<Coord, Edge> graph = new DefaultUndirectedWeightedGraph<>(Edge.class);
         Set<Coord> edgeCoords = new HashSet<>(map.getProperty(VERTICES));
@@ -64,4 +63,33 @@ public class GraphLib {
         }
         return graph;
     }
+
+//    public static DefaultUndirectedWeightedGraph<Coord, Edge> buildSmallEmergedCaveGraph(TerrainMap map) {
+//        DefaultUndirectedWeightedGraph<Coord, Edge> graph = new DefaultUndirectedWeightedGraph<Coord, Edge>(Edge.class);
+//        Set<Coord> edgeCoords = new HashSet<>(map.getProperty(VERTICES));
+//
+//        for (Face face : map.getProperty(FACES)) {
+//            edgeCoords.remove(face.getCenter());
+//            if (face.getProperty(FACE_WALL_KEY).value) {
+//                edgeCoords.removeAll(face.getBorderVertices());
+//                //face.getNeighbors().forEach(neigh -> edgeCoords.removeAll(neigh.getAllVertices()));
+//            }
+//        }
+//
+//        for (Coord coord : edgeCoords) {
+//            if (!coord.getProperty(VERTEX_WALL_KEY).value && coord.getProperty(HEIGHT_KEY).value > 0) {
+//                graph.addVertex(coord);
+//            }
+//        }
+//
+//        for (Edge edge : map.getProperty(EDGES)) {
+//            if (graph.containsVertex(edge.getStart()) && graph.containsVertex(edge.getEnd())) {
+//                graph.addEdge(edge.getStart(), edge.getEnd(), edge);
+//                graph.setEdgeWeight(edge, edge.getStart().distance(edge.getEnd()));
+//            }
+//        }
+//
+//        return graph;
+//    }
+
 }
