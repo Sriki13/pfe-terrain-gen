@@ -22,7 +22,7 @@
     },
     {
       "name": "order",
-      "before": "NoiseFloor",
+      "before": "ConcaveFloor",
       "after": "StalagmitePlacer"
     },
     {

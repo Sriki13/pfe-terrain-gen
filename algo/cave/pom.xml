@@ -25,6 +25,7 @@
         <module>stalagmite</module>
         <module>ore</module>
         <module>loot</module>
+        <module>river</module>
     </modules>
 
 </project>

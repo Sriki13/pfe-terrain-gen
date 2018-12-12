@@ -10,6 +10,7 @@ import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,6 +26,8 @@ public class CaveFlooding extends Contract {
     private static final Key<BooleanType> VERTEX_WALL_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "IS_WALL", "isWall", BooleanType.class);
 
+    private static final Key<MarkerType> FLOOD_KEY = new Key<>("hasFlood", MarkerType.class);
+
     @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(FLOOD_PARAM);
@@ -37,7 +40,7 @@ public class CaveFlooding extends Contract {
     public Constraints getContract() {
         return new Constraints(
                 asKeySet(VERTICES, VERTEX_WALL_KEY),
-                asKeySet(),
+                asKeySet(FLOOD_KEY),
                 asKeySet(HEIGHT_KEY)
         );
     }
@@ -52,6 +55,7 @@ public class CaveFlooding extends Contract {
 
     @Override
     public void execute(TerrainMap map, Context context) {
+        map.putProperty(FLOOD_KEY, new MarkerType());
         List<Coord> allCoords = map.getProperty(VERTICES).stream()
                 .filter(v -> !v.getProperty(VERTEX_WALL_KEY).value)
                 .sorted(HEIGHT_COMPARATOR)

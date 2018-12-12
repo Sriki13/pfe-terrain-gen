@@ -3,9 +3,12 @@ package pfe.terrain.gen;
 import pfe.terrain.gen.algo.constraints.Constraints;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.types.DoubleType;
 
 import java.util.*;
 
@@ -21,6 +24,8 @@ public class RandomRivers extends Contract {
         return asParamSet(NB_RIVERS_PARAM);
     }
 
+    public static final Key<DoubleType> HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
     @Override
     public Constraints getContract() {
@@ -37,7 +42,7 @@ public class RandomRivers extends Contract {
 
     @Override
     public void execute(TerrainMap map, Context context) {
-        RiverGenerator generator = new RiverGenerator(map);
+        RiverGenerator generator = new RiverGenerator(map, HEIGHT_KEY);
         Random random = new Random(map.getProperty(SEED));
         List<Coord> land = new ArrayList<>();
         Set<Coord> edgeVertices = new HashSet<>(map.getProperty(VERTICES));
