@@ -2,6 +2,7 @@ package pfe.terrain.factory;
 
 import com.google.gson.Gson;
 import pfe.terrain.factory.controller.ServiceController;
+import pfe.terrain.factory.parser.AlgoCompatibilityChange;
 import pfe.terrain.factory.parser.JsonCompoParser;
 import pfe.terrain.factory.parser.JsonParser;
 
@@ -95,7 +96,8 @@ public class Main {
             response.type("application/json");
 
             try{
-
+                AlgoCompatibilityChange change = parser.getAlgoCompatibility(request.body());
+                controller.addCompatibility(change.getAlgoNames(),change.getCompateNumber());
                 return parser.okAnswer();
             }catch (Exception e){
                 response.status(500);

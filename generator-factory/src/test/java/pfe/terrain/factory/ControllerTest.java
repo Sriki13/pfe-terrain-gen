@@ -244,4 +244,9 @@ public class ControllerTest {
         assertEquals(this.compatibilityStorage.getCompatibility(all,salut),SimpleCompatibility.COMPATIBLE_BEWARE);
         assertEquals(this.compatibilityStorage.getCompatibility(test,salut),SimpleCompatibility.COMPATIBLE_BEWARE);
     }
+
+    @Test (expected = NoSuchAlgorithmException.class)
+    public void noSuchAlgoCompatibility() throws Exception{
+        this.controller.addCompatibility(Arrays.asList("azeaze","azeazrr"),SimpleCompatibility.COMPATIBLE_BEWARE.getId());
+    }
 }
