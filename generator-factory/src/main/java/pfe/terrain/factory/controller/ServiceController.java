@@ -1,14 +1,17 @@
 package pfe.terrain.factory.controller;
 
+import pfe.terrain.factory.compatibility.Compatibility;
+import pfe.terrain.factory.compatibility.CompatibilityChecker;
+import pfe.terrain.factory.compatibility.SimpleCompatibility;
 import pfe.terrain.factory.entities.Composition;
 import pfe.terrain.factory.exception.CannotReachRepoException;
+import pfe.terrain.factory.exception.CompatibilityException;
 import pfe.terrain.factory.exception.CompositionAlreadyExistException;
 import pfe.terrain.factory.exception.NoSuchCompoException;
-import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.pom.BasePom;
-import pfe.terrain.factory.pom.Dependency;
 import pfe.terrain.factory.storage.AlgoStorage;
+import pfe.terrain.factory.storage.CompatibilityStorage;
 import pfe.terrain.factory.storage.CompoStorage;
 import pfe.terrain.gen.DependencySolver;
 import pfe.terrain.gen.algo.constraints.Constraints;
@@ -19,6 +22,7 @@ import pfe.terrain.gen.exception.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,8 +33,10 @@ public class ServiceController {
 
     private AlgoStorage algoStorage;
     private CompoStorage compoStorage;
+    private CompatibilityStorage compatStorage;
 
     public ServiceController() {
+        this.compatStorage = new CompatibilityStorage();
         algoStorage = new AlgoStorage();
         this.compoStorage = new CompoStorage();
         try {
@@ -43,6 +49,7 @@ public class ServiceController {
     public ServiceController(AlgoStorage algoStorage){
         this.algoStorage = algoStorage;
         this.compoStorage = new CompoStorage();
+        this.compatStorage = new CompatibilityStorage();
 
     }
 
@@ -87,8 +94,15 @@ public class ServiceController {
         Composition composition = getCompoByName(name);
 
         this.compoStorage.removeComposition(composition);
+    }
 
+    public Compatibility addCompatibility(List<String> names, int compatNumber) throws Exception{
+        List<Algorithm> algos = algoStorage.algosFromStrings(names);
+        Compatibility compatibility = SimpleCompatibility.compatibilityFromId(compatNumber);
 
+        this.compatStorage.putCompatibility(algos,compatibility);
+
+        return compatibility;
     }
 
     private BasePom pomFromAlgo(List<Algorithm> algorithms){
@@ -110,15 +124,15 @@ public class ServiceController {
         throw new NoSuchCompoException();
     }
 
-    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException, MultipleEnderException {
+    private boolean check(Composition composition) throws InvalidContractException,UnsolvableException,MissingRequiredException,DuplicatedProductionException, MultipleEnderException, CompatibilityException {
         List<Contract> contracts = new ArrayList<>();
 
         for(Algorithm algorithm : composition.getAlgorithms()){
             contracts.add(algorithm.getContract());
         }
 
+        new CompatibilityChecker(composition.getAlgorithms()).check();
         DependencySolver solver = new DependencySolver(contracts);
-
         solver.orderContracts(composition.getConstraintsArray());
 
         return true;

@@ -2,6 +2,7 @@ package pfe.terrain.factory;
 
 import com.google.gson.Gson;
 import pfe.terrain.factory.controller.ServiceController;
+import pfe.terrain.factory.parser.AlgoCompatibilityChange;
 import pfe.terrain.factory.parser.JsonCompoParser;
 import pfe.terrain.factory.parser.JsonParser;
 
@@ -23,17 +24,6 @@ public class Main {
             try{
                 return parser.algoListToJson(controller.getAlgoList());
             }catch (Exception e){
-                response.status(500);
-                return parser.exceptionToJson(e);
-            }
-        });
-
-        post("/generator", (request,response) -> {
-            response.type("application/xml");
-
-            try{
-                return controller.getGenerator(parser.listFromJson(request.body())).toString();
-            } catch (Exception e){
                 response.status(500);
                 return parser.exceptionToJson(e);
             }
@@ -101,6 +91,21 @@ public class Main {
                 return parser.exceptionToJson(e);
             }
         });
+
+        post("/compatibility", (request,response) -> {
+            response.type("application/json");
+
+            try{
+                AlgoCompatibilityChange change = parser.getAlgoCompatibility(request.body());
+                controller.addCompatibility(change.getAlgoNames(),change.getCompateNumber());
+                return parser.okAnswer();
+            }catch (Exception e){
+                response.status(500);
+                return parser.exceptionToJson(e);
+            }
+        });
+
+
 
 
     }
