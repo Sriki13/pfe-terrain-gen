@@ -31,7 +31,7 @@ public class LakesFromRivers extends Contract {
         return asParamSet(LAKE_SIZE_PARAM);
     }
 
-    private static final Key<DoubleType> HEIGHT_KEY =
+    public static final Key<DoubleType> HEIGHT_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
     // Produced

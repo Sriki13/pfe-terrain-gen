@@ -20,6 +20,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
+import static pfe.terrain.gen.LakesFromRivers.HEIGHT_KEY;
 import static pfe.terrain.gen.RiverGenerator.*;
 
 public class LakesFromRiversTest {
