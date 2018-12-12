@@ -6,6 +6,7 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
+import pfe.terrain.gen.algo.island.Biome;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.WaterKind;
 import pfe.terrain.gen.algo.island.geometry.Coord;
@@ -34,6 +35,10 @@ public class LakesFromRivers extends Contract {
     public static final Key<DoubleType> HEIGHT_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
+    public static final Key<Biome> FACE_BIOME_KEY =
+            new SerializableKey<>(FACES_PREFIX + "BIOME", "biome", Biome.class);
+
+
     // Produced
 
     public static final Key<MarkerType> HAS_LAKES_KEY = new Key<>("LAKES", MarkerType.class);
@@ -53,7 +58,7 @@ public class LakesFromRivers extends Contract {
                 asKeySet(VERTICES, SEED, EDGES, FACES),
                 asKeySet(HAS_LAKES_KEY),
                 asKeySet(VERTEX_WATER_KEY, HEIGHT_KEY, FACE_WATER_KEY, WATER_KIND_KEY,
-                        RIVER_FLOW_KEY, IS_SOURCE_KEY, IS_RIVER_END_KEY)
+                        RIVER_FLOW_KEY, IS_SOURCE_KEY, IS_RIVER_END_KEY, FACE_BIOME_KEY)
         );
     }
 
@@ -160,6 +165,7 @@ public class LakesFromRivers extends Contract {
         turnIntoWaterPoint(face.getCenter(), lakeHeight);
         face.putProperty(FACE_WATER_KEY, new BooleanType(true));
         face.putProperty(WATER_KIND_KEY, kind);
+        face.putProperty(FACE_BIOME_KEY, Biome.LAKE);
         recalculateCenterHeight(face.getNeighbors());
         return kind == WaterKind.LAKE;
     }
@@ -171,6 +177,7 @@ public class LakesFromRivers extends Contract {
             }
             turnIntoWaterPoint(face.getCenter(), 0);
             face.putProperty(WATER_KIND_KEY, WaterKind.OCEAN);
+            face.putProperty(FACE_BIOME_KEY, Biome.OCEAN);
             recalculateCenterHeight(face.getNeighbors());
         }
     }

@@ -42,11 +42,10 @@ public class RiverGenerator {
     private TerrainMap terrainMap;
 
     public void generateRiverFrom(Coord start, Set<Coord> seen) {
-        generateRiverFrom(start, seen, (coord -> !coord.getProperty(VERTEX_WATER_KEY).value));
+        generateRiverFrom(start, seen, (coord -> coord.getProperty(VERTEX_WATER_KEY).value));
     }
 
-    public Coord generateRiverFrom(Coord start, Set<Coord> seen,
-                                   Function<Coord, Boolean> endCondition) {
+    public Coord generateRiverFrom(Coord start, Set<Coord> seen, Function<Coord, Boolean> endCondition) {
         start.putProperty(IS_SOURCE_KEY, new MarkerType());
         while (!endCondition.apply(start)) {
             Coord flowTowards = getLowestNeighbour(start, seen, true);
