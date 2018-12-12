@@ -33,7 +33,6 @@ public class ConcaveFloor extends Contract {
     static final Key<BooleanType> FACE_WALL_KEY =
             new Key<>(FACES_PREFIX + "IS_WALL", BooleanType.class);
 
-
     static final Key<BooleanType> VERTEX_WALL_KEY =
             new Key<>(VERTICES_PREFIX + "IS_WALL", BooleanType.class);
 

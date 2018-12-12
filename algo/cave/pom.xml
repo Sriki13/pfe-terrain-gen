@@ -24,6 +24,7 @@
         <module>colorgradient</module>
         <module>stalagmite</module>
         <module>ore</module>
+        <module>river</module>
     </modules>
 
 </project>

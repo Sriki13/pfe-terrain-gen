@@ -9,10 +9,9 @@ import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.types.*;
 
 import java.util.Set;
+import java.util.function.Function;
 
-import static pfe.terrain.gen.algo.constraints.Contract.EDGES;
-import static pfe.terrain.gen.algo.constraints.Contract.EDGES_PREFIX;
-import static pfe.terrain.gen.algo.constraints.Contract.VERTICES_PREFIX;
+import static pfe.terrain.gen.algo.constraints.Contract.*;
 
 public class RiverGenerator {
 
@@ -20,9 +19,6 @@ public class RiverGenerator {
 
     public static final Key<BooleanType> VERTEX_WATER_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
-
-    public static final Key<DoubleType> HEIGHT_KEY =
-            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
     // Produced
 
@@ -36,15 +32,23 @@ public class RiverGenerator {
             new OptionalKey<>(VERTICES_PREFIX + "RIVER_END", MarkerType.class);
 
 
-    public RiverGenerator(TerrainMap terrainMap) {
+    private Key<DoubleType> heightKey;
+
+    public RiverGenerator(TerrainMap terrainMap, Key<DoubleType> heightKey) {
         this.terrainMap = terrainMap;
+        this.heightKey = heightKey;
     }
 
     private TerrainMap terrainMap;
 
     public void generateRiverFrom(Coord start, Set<Coord> seen) {
+        generateRiverFrom(start, seen, (coord -> !coord.getProperty(VERTEX_WATER_KEY).value));
+    }
+
+    public void generateRiverFrom(Coord start, Set<Coord> seen,
+                                  Function<Coord, Boolean> endCondition) {
         start.putProperty(IS_SOURCE_KEY, new MarkerType());
-        while (!start.getProperty(VERTEX_WATER_KEY).value) {
+        while (!endCondition.apply(start)) {
             Coord flowTowards = getLowestNeighbour(start, seen, true);
             if (flowTowards == start) {
                 break;
@@ -63,7 +67,7 @@ public class RiverGenerator {
         for (Coord current : neighbours) {
             if (min == null ||
                     (!seen.contains(current) &&
-                            current.getProperty(HEIGHT_KEY).value <= min.getProperty(HEIGHT_KEY).value)) {
+                            current.getProperty(heightKey).value <= min.getProperty(heightKey).value)) {
                 min = current;
             }
         }

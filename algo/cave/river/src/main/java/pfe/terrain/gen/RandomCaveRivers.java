@@ -8,61 +8,72 @@ import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
+import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.*;
 
 import static pfe.terrain.gen.RiverGenerator.*;
 
-public class RandomRivers extends Contract {
+public class RandomCaveRivers extends Contract {
 
-    public static final Param<Integer> NB_RIVERS_PARAM = Param.generatePositiveIntegerParam("nbRivers",
-            100, "Number of rivers in the island.", 10, "Amount of rivers");
+    public static final Param<Integer> NB_RIVERS_PARAM = new Param<>("nbCaveRivers", Integer.class, 1,
+            50, "Number of rivers in the cave.", 10, "Amount of rivers");
 
     @Override
     public Set<Param> getRequestedParameters() {
         return asParamSet(NB_RIVERS_PARAM);
     }
 
-    public static final Key<DoubleType> HEIGHT_KEY =
-            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
+    static final Key<BooleanType> VERTEX_WALL_KEY =
+            new Key<>(VERTICES_PREFIX + "IS_WALL", BooleanType.class);
+
+    static final Key<DoubleType> HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "CAVE_HEIGHT", "height", DoubleType.class);
+
+    static final Key<MarkerType> FLOOD_KEY = new Key<>("hasFlood", MarkerType.class);
 
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(VERTICES, SEED, EDGES, FACES, VERTEX_WATER_KEY, HEIGHT_KEY),
+                asKeySet(VERTICES, SEED, EDGES, FACES, HEIGHT_KEY, VERTEX_WALL_KEY, FLOOD_KEY),
                 asKeySet(RIVER_FLOW_KEY, IS_SOURCE_KEY, IS_RIVER_END_KEY)
         );
     }
 
     @Override
     public String getDescription() {
-        return "Adds a number of sources randomly on emerged land, river will flow down from the sources";
+        return "Adds a number of sources randomly in the caves, river will flow down from the sources";
     }
 
     @Override
     public void execute(TerrainMap map, Context context) {
         RiverGenerator generator = new RiverGenerator(map, HEIGHT_KEY);
         Random random = new Random(map.getProperty(SEED));
-        List<Coord> land = new ArrayList<>();
+        List<Coord> empty = new ArrayList<>();
+
         Set<Coord> edgeVertices = new HashSet<>(map.getProperty(VERTICES));
         map.getProperty(FACES).forEach(face -> edgeVertices.remove(face.getCenter()));
         for (Coord vertex : edgeVertices) {
-            if (!vertex.getProperty(VERTEX_WATER_KEY).value) {
-                land.add(vertex);
+            if (!vertex.getProperty(VERTEX_WALL_KEY).value
+                    && vertex.getProperty(HEIGHT_KEY).value > 0) {
+                empty.add(vertex);
             }
         }
 
         // necessary for deterministic purposes
-        land.sort((o1, o2) -> (int) (o1.x + o1.y - o2.x - o2.y));
+        empty.sort((o1, o2) -> (int) (1000 * (o1.x + o1.y - o2.x - o2.y)));
 
         int nbRivers = context.getParamOrDefault(NB_RIVERS_PARAM);
         for (int i = 0; i < nbRivers; i++) {
-            Coord start = land.get(random.nextInt(land.size()));
-            while (start.getProperty(IS_SOURCE_KEY) != null) {
-                start = land.get(random.nextInt(land.size()));
+            Coord start = empty.get(random.nextInt(empty.size()));
+            empty.remove(start);
+            generator.generateRiverFrom(start, new HashSet<>(),
+                    coord -> coord.getProperty(HEIGHT_KEY).value <= 0);
+            if (empty.isEmpty()) {
+                break;
             }
-            generator.generateRiverFrom(start, new HashSet<>());
         }
     }
 
