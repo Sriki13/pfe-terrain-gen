@@ -23,6 +23,7 @@
         <module>height</module>
         <module>colorgradient</module>
         <module>stalagmite</module>
+        <module>ore</module>
     </modules>
 
 </project>
