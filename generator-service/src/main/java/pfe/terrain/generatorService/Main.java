@@ -78,7 +78,7 @@ public class Main {
         get("/graph", ((request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
 
-            logger.log(Level.INFO, "Serving graph");
+            logger.log(Level.INFO, "Serving pfe.terrain.generatorService.graph");
 
             response.type("application/json");
             try {

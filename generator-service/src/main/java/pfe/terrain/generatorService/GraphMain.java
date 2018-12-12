@@ -9,13 +9,13 @@ import java.util.List;
 public class GraphMain {
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Generating graph...");
+        System.out.println("Generating pfe.terrain.generatorService.graph...");
         ContractReflection reflection = new ContractReflection();
         List<Contract> contracts = reflection.getContracts();
         GraphGenerator graphGenerator = new GraphGenerator(contracts);
         graphGenerator.generateGraph();
-        graphGenerator.exportAsSVG("graph.svg");
-        System.out.println("Graph generated as graph.svg");
+        graphGenerator.exportAsSVG("pfe.terrain.generatorService.graph.svg");
+        System.out.println("Graph generated as pfe.terrain.generatorService.graph.svg");
     }
 
 }

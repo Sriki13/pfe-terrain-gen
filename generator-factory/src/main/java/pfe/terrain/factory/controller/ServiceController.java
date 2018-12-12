@@ -132,8 +132,7 @@ public class ServiceController {
         }
 
         new CompatibilityChecker(composition.getAlgorithms()).check();
-
-        DependencySolver solver = new DependencySolver(contracts,contracts,new NotExecutableContract("final","final contract",new HashSet<>(),new Constraints(new HashSet<>(),new HashSet<>())));
+        DependencySolver solver = new DependencySolver(contracts);
         solver.orderContracts(composition.getConstraintsArray());
 
         return true;

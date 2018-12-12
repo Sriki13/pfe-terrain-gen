@@ -1,5 +1,17 @@
 {
   "context": {
     "size": 400
-  }
+  },
+  "constraint": [
+    {
+      "name": "order",
+      "before": "SmallCaveSuppression",
+      "after": "CaveLinker"
+    },
+    {
+      "name": "order",
+      "before": "CaveLinker",
+      "after": "CaveWallGenerator"
+    }
+  ]
 }
