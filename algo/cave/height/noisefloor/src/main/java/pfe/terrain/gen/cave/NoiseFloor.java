@@ -23,7 +23,7 @@ public class NoiseFloor extends Contract {
     );
 
     static final Param<Double> FLOOD_PARAM = Param.generateDefaultDoubleParam(
-            "floorFloodLevel", "How much water should be in the cave", 0.2, "Cave flood level"
+            "floorFloodLevel", "How much water should be in the cave", 0.07, "Cave flood level"
     );
 
     @Override

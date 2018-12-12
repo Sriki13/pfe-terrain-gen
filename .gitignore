@@ -33,6 +33,7 @@ param.json
 island.json
 map.json
 order.json
+heightmap.png
 graph.png
 graph.svg
 noise.png
