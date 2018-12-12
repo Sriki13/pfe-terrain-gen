@@ -22,8 +22,13 @@
     },
     {
       "name": "order",
-      "before": "NoiseFloor",
+      "before": "ConcaveFloor",
       "after": "StalagmitePlacer"
+    },
+    {
+      "name": "order",
+      "before": "NoiseFloor",
+      "after": "ConcaveFloor"
     },
     {
       "name": "order",
