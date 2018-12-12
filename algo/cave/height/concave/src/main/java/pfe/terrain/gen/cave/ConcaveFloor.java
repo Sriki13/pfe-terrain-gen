@@ -11,6 +11,7 @@ import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
 import pfe.terrain.gen.algo.types.BooleanType;
 import pfe.terrain.gen.algo.types.DoubleType;
+import pfe.terrain.gen.algo.types.MarkerType;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -39,10 +40,12 @@ public class ConcaveFloor extends Contract {
     static final Key<DoubleType> HEIGHT_KEY =
             new SerializableKey<>(VERTICES_PREFIX + "CAVE_HEIGHT", "height", DoubleType.class);
 
+    private static final Key<MarkerType> FLOOR_KEY = new Key<>("FLOOR_CAVE", MarkerType.class);
+
     @Override
     public Constraints getContract() {
         return new Constraints(
-                asKeySet(FACES, VERTICES, VERTEX_WALL_KEY, SIZE, FACE_WALL_KEY),
+                asKeySet(FACES, VERTICES, VERTEX_WALL_KEY, SIZE, FACE_WALL_KEY, FLOOR_KEY),
                 asKeySet(),
                 asKeySet(HEIGHT_KEY)
         );

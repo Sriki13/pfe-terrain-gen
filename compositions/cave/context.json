@@ -27,11 +27,6 @@
     },
     {
       "name": "order",
-      "before": "NoiseFloor",
-      "after": "ConcaveFloor"
-    },
-    {
-      "name": "order",
       "before": "StalagmitePlacer",
       "after": "CaveFlooding"
     }
