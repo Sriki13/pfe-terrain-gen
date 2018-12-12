@@ -11,13 +11,16 @@ import java.util.Map;
 
 public class JsonDiffExporter {
 
-    private JsonExporter latestExporter = new JsonExporter();
+    private MeshExporter oldMesh;
 
     public JsonObject processDiff(JsonObject oldMap, MeshExporter oldMesh, TerrainMap terrainMap) {
+        JsonExporter latestExporter = new JsonExporter();
         JsonObject latestMap = latestExporter.export(terrainMap);
         if (!latestExporter.getMeshExporter().sameMesh(oldMesh)) {
+            this.oldMesh = latestExporter.getMeshExporter();
             return latestMap;
         }
+        this.oldMesh = oldMesh;
         JsonObject result = new JsonObject();
         processIslandDiff(result, oldMap, latestMap);
         processPropertyDiff(result, oldMap, latestMap, "face");
@@ -27,7 +30,7 @@ public class JsonDiffExporter {
     }
 
     public MeshExporter getLatestMesh() {
-        return latestExporter.getMeshExporter();
+        return oldMesh;
     }
 
     public void processIslandDiff(JsonObject result, JsonObject original, JsonObject latest) {
