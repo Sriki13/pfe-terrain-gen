@@ -26,11 +26,10 @@ public class JsonExportContract extends Contract {
     public static final Key<Void> ALL_KEY = new Key<>("All", Void.class);
 
     public static final Key<JsonObject> EXPORT_JSON_KEY = new PermanentKey<>("json", JsonObject.class);
-    public static final Key<MeshExporter> EXPORT_MESH_KEY = new PermanentKey<>("MESH_EXPORTER", MeshExporter.class);
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asKeySet(ALL_KEY), asKeySet(EXPORT_JSON_KEY, EXPORT_MESH_KEY));
+        return new Constraints(asKeySet(ALL_KEY), asKeySet(EXPORT_JSON_KEY));
     }
 
     @Override
@@ -38,18 +37,21 @@ public class JsonExportContract extends Contract {
         return "A Json exporter for island maps.";
     }
 
+    private JsonObject lastMap;
+    private MeshExporter lastExporter;
+
     @Override
     public void execute(TerrainMap map, Context context) {
         if (!map.hasProperty(EXPORT_JSON_KEY) || !Boolean.valueOf(context.getParamOrDefault(DIFF_PARAM))) {
             JsonExporter exporter = new JsonExporter();
-            map.putProperty(EXPORT_JSON_KEY, exporter.export(map));
-            map.putProperty(EXPORT_MESH_KEY, exporter.getMeshExporter());
+            lastMap = exporter.export(map);
+            lastExporter = exporter.getMeshExporter();
+            map.putProperty(EXPORT_JSON_KEY, lastMap);
         } else {
             JsonDiffExporter diff = new JsonDiffExporter();
-            map.putProperty(EXPORT_JSON_KEY, diff.processDiff(
-                    map.getProperty(EXPORT_JSON_KEY), map.getProperty(EXPORT_MESH_KEY), map
-            ));
-            map.putProperty(EXPORT_MESH_KEY, diff.getLatestMesh());
+            map.putProperty(EXPORT_JSON_KEY, diff.processDiff(lastMap, lastExporter, map));
+            lastMap = diff.getLastMap();
+            lastExporter = diff.getLastMesh();
         }
     }
 
