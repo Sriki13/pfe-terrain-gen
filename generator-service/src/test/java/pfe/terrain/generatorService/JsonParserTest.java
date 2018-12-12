@@ -1,3 +1,5 @@
+package pfe.terrain.generatorService;
+
 import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;

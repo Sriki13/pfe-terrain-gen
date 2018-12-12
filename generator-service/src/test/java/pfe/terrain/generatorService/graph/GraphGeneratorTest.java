@@ -1,4 +1,4 @@
-package graph;
+package pfe.terrain.generatorService.graph;
 
 import guru.nidi.graphviz.model.Link;
 import guru.nidi.graphviz.model.MutableGraph;
@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.types.IntegerType;
-import pfe.terrain.generatorService.graph.GraphGenerator;
+import pfe.terrain.generatorService.TestContract;
 
 import java.util.ArrayList;
 import java.util.Arrays;

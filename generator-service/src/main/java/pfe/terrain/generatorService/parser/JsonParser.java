@@ -1,6 +1,8 @@
 package pfe.terrain.generatorService.parser;
 
 import com.google.gson.Gson;
+import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
 
@@ -33,6 +35,10 @@ public class JsonParser {
         return new Gson().toJson(map);
     }
 
+    public String parseContext(Context context){
+        return parseMap(contextToMap(context));
+    }
+
     public String parseAlgo(List<Algorithm> algorithms) {
         return new Gson().toJson(algorithms);
     }
@@ -44,4 +50,19 @@ public class JsonParser {
 
         return new Gson().toJson(map);
     }
+
+    private Map<String, Object> contextToMap(Context context) {
+        Map<String, Object> map = new HashMap<>();
+
+        for (Param key : context.getProperties().keySet()) {
+            try {
+                map.put(key.getId(), context.getParamOrDefault(key));
+            } catch (Exception e) {
+                System.err.println("can't put key " + key.getId() + "into map");
+            }
+        }
+
+        return map;
+    }
+
 }
