@@ -13,12 +13,4 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <dependencies>
-        <dependency>
-            <groupId>pfe.terrain.gen</groupId>
-            <artifactId>algo.cave.graphcavelib</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
 </project>

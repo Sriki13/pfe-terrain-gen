@@ -6,7 +6,6 @@ import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.Param;
-import pfe.terrain.gen.algo.constraints.key.PermanentKey;
 import pfe.terrain.gen.algo.export.diff.JsonDiffExporter;
 import pfe.terrain.gen.algo.island.TerrainMap;
 
@@ -25,7 +24,7 @@ public class JsonExportContract extends Contract {
 
     public static final Key<Void> ALL_KEY = new Key<>("All", Void.class);
 
-    public static final Key<JsonObject> EXPORT_JSON_KEY = new PermanentKey<>("json", JsonObject.class);
+    public static final Key<JsonObject> EXPORT_JSON_KEY = new Key<>("json", JsonObject.class);
 
     @Override
     public Constraints getContract() {
