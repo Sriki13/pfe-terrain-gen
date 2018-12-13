@@ -50,7 +50,7 @@ public class SmallCaveSuppression extends Contract {
     @Override
     public void execute(TerrainMap map, Context context) {
         double supprPercentage = context.getParamOrDefault(SUPPRESSION_PERCENTAGE);
-        DefaultUndirectedGraph<Coord, Edge> graph = new GraphLib().buildCaveGraph(map);
+        DefaultUndirectedGraph<Coord, Edge> graph = GraphLib.buildCaveGraph(map);
         ConnectivityInspector<Coord, Edge> connectivityInspector = new ConnectivityInspector<>(graph);
 
         List<Set<Coord>> caves = connectivityInspector.connectedSets();
