@@ -88,8 +88,7 @@ public class CaveLinker extends Contract {
 
     private void setFaceEmpty(Face face, BooleanType value) {
         face.putProperty(FACE_WALL_KEY, value);
-        face.getBorderVertices().forEach(c -> c.putProperty(VERTEX_WALL_KEY, value));
-        face.getCenter().putProperty(VERTEX_WALL_KEY, value);
+        face.getAllVertices().forEach(c -> c.putProperty(VERTEX_WALL_KEY, value));
     }
 
     private List<Edge> findPath(Coord source, Coord target, DefaultUndirectedGraph<Coord, Edge> allNodeGraph) {

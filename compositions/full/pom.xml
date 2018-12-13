@@ -138,6 +138,11 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.lake.biome</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
             <artifactId>algo.river.ridge</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -208,6 +213,11 @@
         </dependency>
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.cave.stalagmite</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
             <artifactId>algo.cave.cavelinker</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -219,6 +229,26 @@
         <dependency>
             <groupId>pfe.terrain.gen</groupId>
             <artifactId>algo.cave.height.flood</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.cave.ore</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.cave.loot</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.cave.river</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pfe.terrain.gen</groupId>
+            <artifactId>algo.water.smallislandsuppr</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

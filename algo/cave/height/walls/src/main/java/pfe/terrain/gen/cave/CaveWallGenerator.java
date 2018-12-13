@@ -19,11 +19,11 @@ import java.util.Set;
 public class CaveWallGenerator extends Contract {
 
     static final Param<Integer> WALL_HEIGHT_PARAM = new Param<>(
-            "caveWallHeight", Integer.class, -100, 200, "The height of the cave walls", 100, "Cave wall height"
+            "caveWallHeight", Integer.class, 60, 200, "The height of the cave walls", 70, "Cave wall height"
     );
 
     static final Param<Integer> FLOOR_HEIGHT_PARAM = new Param<>(
-            "caveFloorHeight", Integer.class, -100, 200, "The height of the cave floor", 10, "Cave floor height"
+            "caveFloorHeight", Integer.class, 0, 150, "The height of the cave floor", 10, "Cave floor height"
     );
 
     @Override
@@ -63,6 +63,9 @@ public class CaveWallGenerator extends Contract {
         if (floorHeight >= wallHeight) {
             throw new InvalidAlgorithmParameters("Cave floor height (" + floorHeight + " ) " +
                     "cannot be above cave wall height (" + wallHeight + ")");
+        } else if (wallHeight - floorHeight < 10) {
+            throw new InvalidAlgorithmParameters("Cave floor height (" + floorHeight + " ) " +
+                    "is too close to cave wall height (" + wallHeight + "): minimum difference is 10");
         }
         Set<Face> emptyFaces = new HashSet<>();
         Set<Face> fullFaces = new HashSet<>();

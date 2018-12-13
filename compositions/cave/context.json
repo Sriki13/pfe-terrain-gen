@@ -1,7 +1,8 @@
 {
   "context": {
     "size": 400,
-    "nbPoints": 5000
+    "caveWallHeight": 70,
+    "caveFloorHeight": 10
   },
   "constraint": [
     {
@@ -21,7 +22,17 @@
     },
     {
       "name": "order",
+      "before": "ConcaveFloor",
+      "after": "StalagmitePlacer"
+    },
+    {
+      "name": "order",
       "before": "StalagmitePlacer",
+      "after": "CaveFlooding"
+    },
+    {
+      "name": "order",
+      "before": "ConcaveFloor",
       "after": "CaveFlooding"
     }
   ]

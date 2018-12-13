@@ -45,7 +45,6 @@ public class GraphLib {
         return graph;
     }
 
-
     public static DefaultUndirectedWeightedGraph<Coord, Edge> buildFullGraphRandomWeight(TerrainMap map, Random random) {
         DefaultUndirectedWeightedGraph<Coord, Edge> graph = new DefaultUndirectedWeightedGraph<>(Edge.class);
         Set<Coord> edgeCoords = new HashSet<>(map.getProperty(VERTICES));
@@ -64,4 +63,5 @@ public class GraphLib {
         }
         return graph;
     }
+
 }

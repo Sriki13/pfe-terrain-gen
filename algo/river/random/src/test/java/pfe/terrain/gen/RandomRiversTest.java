@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.Contract;
 import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.constraints.key.Key;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.*;
 import pfe.terrain.gen.algo.types.BooleanType;
@@ -16,13 +18,15 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 import static pfe.terrain.gen.RiverGenerator.*;
-import static pfe.terrain.gen.algo.constraints.Contract.EDGES;
-import static pfe.terrain.gen.algo.constraints.Contract.VERTICES;
+import static pfe.terrain.gen.algo.constraints.Contract.*;
 
 public class RandomRiversTest {
 
     private RandomRivers riverGenerator;
     private TerrainMap terrainMap;
+
+    public static final Key<DoubleType> HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
 
     @Before
     public void setUp() {

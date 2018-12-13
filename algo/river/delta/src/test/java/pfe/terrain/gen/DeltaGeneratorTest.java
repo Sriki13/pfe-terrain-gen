@@ -18,7 +18,9 @@ import java.util.HashSet;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static pfe.terrain.gen.DeltaGenerator.DELTA_SOURCE_KEY;
-import static pfe.terrain.gen.RiverGenerator.*;
+import static pfe.terrain.gen.DeltaGenerator.HEIGHT_KEY;
+import static pfe.terrain.gen.RiverGenerator.RIVER_FLOW_KEY;
+import static pfe.terrain.gen.RiverGenerator.VERTEX_WATER_KEY;
 import static pfe.terrain.gen.algo.constraints.Contract.*;
 
 public class DeltaGeneratorTest {

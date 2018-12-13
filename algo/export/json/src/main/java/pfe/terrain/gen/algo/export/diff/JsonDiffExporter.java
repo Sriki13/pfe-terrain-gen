@@ -11,23 +11,30 @@ import java.util.Map;
 
 public class JsonDiffExporter {
 
-    private JsonExporter latestExporter = new JsonExporter();
+    private MeshExporter lastMesh;
+    private JsonObject lastMap;
 
     public JsonObject processDiff(JsonObject oldMap, MeshExporter oldMesh, TerrainMap terrainMap) {
-        JsonObject latestMap = latestExporter.export(terrainMap);
+        JsonExporter latestExporter = new JsonExporter();
+        this.lastMap = latestExporter.export(terrainMap);
+        this.lastMesh = latestExporter.getMeshExporter();
         if (!latestExporter.getMeshExporter().sameMesh(oldMesh)) {
-            return latestMap;
+            return lastMap;
         }
         JsonObject result = new JsonObject();
-        processIslandDiff(result, oldMap, latestMap);
-        processPropertyDiff(result, oldMap, latestMap, "face");
-        processPropertyDiff(result, oldMap, latestMap, "vertex");
-        processPropertyDiff(result, oldMap, latestMap, "edge");
+        processIslandDiff(result, oldMap, lastMap);
+        processPropertyDiff(result, oldMap, lastMap, "face");
+        processPropertyDiff(result, oldMap, lastMap, "vertex");
+        processPropertyDiff(result, oldMap, lastMap, "edge");
         return result;
     }
 
-    public MeshExporter getLatestMesh() {
-        return latestExporter.getMeshExporter();
+    public MeshExporter getLastMesh() {
+        return lastMesh;
+    }
+
+    public JsonObject getLastMap() {
+        return lastMap;
     }
 
     public void processIslandDiff(JsonObject result, JsonObject original, JsonObject latest) {
@@ -47,8 +54,7 @@ public class JsonDiffExporter {
         }
     }
 
-    private void processPropertyDiff(JsonObject result, JsonObject original, JsonObject latest,
-                                     String propName) {
+    private void processPropertyDiff(JsonObject result, JsonObject original, JsonObject latest, String propName) {
         PropertyDiffExporter exporter = new PropertyDiffExporter(original.getAsJsonArray(propName + "_props"),
                 latest.getAsJsonArray(propName + "_props"));
         JsonArray propDiff = exporter.getDiffArray();

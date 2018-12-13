@@ -6,9 +6,11 @@ import pfe.terrain.gen.algo.constraints.context.Context;
 import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.OptionalKey;
 import pfe.terrain.gen.algo.constraints.key.Param;
+import pfe.terrain.gen.algo.constraints.key.SerializableKey;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Edge;
+import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.gen.algo.types.IntegerType;
 import pfe.terrain.gen.algo.types.MarkerType;
 
@@ -34,6 +36,9 @@ public class DeltaGenerator extends Contract {
             VERTICES_PREFIX + "IS_DELTA_SOURCE", MarkerType.class
     );
 
+    public static final Key<DoubleType> HEIGHT_KEY =
+            new SerializableKey<>(VERTICES_PREFIX + "HEIGHT", "height", DoubleType.class);
+
     @Override
     public Constraints getContract() {
         return new Constraints(
@@ -53,7 +58,7 @@ public class DeltaGenerator extends Contract {
 
     @Override
     public void execute(TerrainMap map, Context context) {
-        riverGenerator = new RiverGenerator(map);
+        riverGenerator = new RiverGenerator(map, HEIGHT_KEY);
         Map<Coord, Double> normalized = normalizeHeights(map);
         Map<Coord, Set<Coord>> candidates = findDeltaCandidates(map, normalized, context.getParamOrDefault(DELTA_HEIGHT));
         Random random = new Random(map.getProperty(SEED));

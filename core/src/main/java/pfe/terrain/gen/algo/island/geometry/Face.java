@@ -48,6 +48,10 @@ public class Face extends Mappable {
         return vertices;
     }
 
+    public double centerDist(int halfSize) {
+        return Math.abs(center.x - halfSize) + Math.abs(center.y - halfSize);
+    }
+
     public Set<Face> getNeighbors() {
         return neighbors;
     }

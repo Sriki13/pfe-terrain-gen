@@ -1,7 +1,7 @@
 {
   "context": {
     "size": 400,
-    "nbRidged": 1.0,
+    "nbRidges": 1.0,
     "hardness": 0.5,
     "biomeQuantity": 0.5,
     "biomeStyle": "classic"
@@ -36,6 +36,11 @@
       "name": "order",
       "before": "BridgedBuilder",
       "after": "RoadsToCitiesSteiner"
+    },
+    {
+      "name": "order",
+      "before": "SmallIslandSuppression",
+      "after": "HeightFromWater"
     }
   ]
 }
