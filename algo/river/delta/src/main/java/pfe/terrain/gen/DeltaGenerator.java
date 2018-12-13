@@ -22,7 +22,7 @@ import static pfe.terrain.gen.RiverGenerator.*;
 public class DeltaGenerator extends Contract {
 
     public static final Param<Integer> NB_DELTAS_PARAM = Param.generatePositiveIntegerParam("nbDeltas",
-            50, "Number of deltas in the island.", 10, "Amount of deltas");
+            50, "Number of deltas in the island.", 5, "Amount of deltas");
 
     public static final Param<Double> DELTA_HEIGHT = Param.generateDefaultDoubleParam("deltaHeight",
             "The maximum height the deltas can spawn", 0.4, "Delta maximum height");
