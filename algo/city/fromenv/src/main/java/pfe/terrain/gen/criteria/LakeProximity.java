@@ -10,7 +10,7 @@ import java.util.Set;
 public class LakeProximity implements Criterion {
 
     public static final Param<Double> CITY_LAKE_WEIGHT = Param.generateDefaultDoubleParam(
-            "cityLakeHeight", "The multiplier for the bonus a location gets from being near a lake", 0.1, "Lake proximity bonus"
+            "cityLakeWeight", "The multiplier for the bonus a location gets from being near a lake", 0.1, "Lake proximity bonus"
     );
 
     private Set<Face> lakes;

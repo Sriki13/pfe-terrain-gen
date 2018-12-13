@@ -96,6 +96,7 @@ public class DeltaGenerator extends Contract {
 
     private Map<Coord, Set<Coord>> findDeltaCandidates(TerrainMap map, Map<Coord, Double> normalized, double max) {
         lowEdges = map.getProperty(EDGES).stream()
+                .filter(e -> !e.getStart().getProperty(VERTEX_WATER_KEY).value && !e.getEnd().getProperty(VERTEX_WATER_KEY).value)
                 .filter(e -> normalized.get(e.getStart()) < max && normalized.get(e.getEnd()) < max)
                 .collect(Collectors.toSet());
         Set<Edge> rivers = lowEdges.stream()
