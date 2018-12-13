@@ -22,10 +22,10 @@ import static pfe.terrain.gen.RiverGenerator.*;
 public class DeltaGenerator extends Contract {
 
     public static final Param<Integer> NB_DELTAS_PARAM = Param.generatePositiveIntegerParam("nbDeltas",
-            50, "Number of deltas in the island.", 5, "Amount of deltas");
+            50, "Number of deltas in the island.", 10, "Amount of deltas");
 
     public static final Param<Double> DELTA_HEIGHT = Param.generateDefaultDoubleParam("deltaHeight",
-            "The maximum height the deltas can spawn", 0.2, "Delta maximum height");
+            "The maximum height the deltas can spawn", 0.4, "Delta maximum height");
 
     @Override
     public Set<Param> getRequestedParameters() {
@@ -74,13 +74,19 @@ public class DeltaGenerator extends Contract {
         }
     }
 
+    private static final Comparator<Coord> HEIGHT_COMPARATOR =
+            (a, b) -> (int) (1000 * (a.getProperty(HEIGHT_KEY).value - b.getProperty(HEIGHT_KEY).value));
+
     private Map<Coord, Double> normalizeHeights(TerrainMap map) {
-        double minHeight = Collections.min(map.getProperty(VERTICES),
-                (a, b) -> (int) (1000 * (a.getProperty(HEIGHT_KEY).value - b.getProperty(HEIGHT_KEY).value)))
+        Set<Coord> land = map.getProperty(VERTICES).stream()
+                .filter(c -> !c.getProperty(VERTEX_WATER_KEY).value)
+                .collect(Collectors.toSet());
+
+        double minHeight = Collections.min(land, HEIGHT_COMPARATOR)
                 .getProperty(HEIGHT_KEY).value;
-        double maxHeight = Collections.max(map.getProperty(VERTICES),
-                (a, b) -> (int) (1000 * (a.getProperty(HEIGHT_KEY).value - b.getProperty(HEIGHT_KEY).value)))
+        double maxHeight = Collections.max(land, HEIGHT_COMPARATOR)
                 .getProperty(HEIGHT_KEY).value;
+
         Map<Coord, Double> normalized = new HashMap<>();
         for (Coord coord : map.getProperty(VERTICES)) {
             normalized.put(coord, ((coord.getProperty(HEIGHT_KEY).value - minHeight) / maxHeight - minHeight));
