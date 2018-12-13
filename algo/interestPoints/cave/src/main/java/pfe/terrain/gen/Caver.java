@@ -8,6 +8,7 @@ import pfe.terrain.gen.algo.constraints.key.Key;
 import pfe.terrain.gen.algo.constraints.key.OptionalKey;
 import pfe.terrain.gen.algo.constraints.key.Param;
 import pfe.terrain.gen.algo.constraints.key.SerializableKey;
+import pfe.terrain.gen.algo.island.Biome;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Face;
 import pfe.terrain.gen.algo.island.geometry.FaceSet;
@@ -23,6 +24,10 @@ import java.util.*;
 public class Caver extends Contract {
 
     private Context context;
+    private Map<Biome,List<ContextModifier>> biomeModification;
+
+    public static final Key<Biome> FACE_BIOME_KEY =
+            new SerializableKey<>(FACES_PREFIX + "BIOME", "biome", Biome.class);
 
     public static final Key<BooleanType> FACE_WATER_KEY =
             new SerializableKey<>(FACES_PREFIX + "IS_WATER", "isWater", BooleanType.class);
@@ -64,12 +69,20 @@ public class Caver extends Contract {
         for(Param param : params){
             this.context.putParam(param,param.getDefaultValue());
         }
+
+        this.biomeModification = new HashMap<>();
+        this.biomeModification.put(Biome.MANGROVE,Arrays.asList(new ContextModifierDouble(FLOOR_ROUGHNESS_PARAM,0.2),
+                new ContextModifierInteger(FLOOR_HEIGHT_PARAM,50)));
+        this.biomeModification.put(Biome.SNOW,Arrays.asList(new ContextModifierDouble(FLOOD_PARAM,0.4)));
+        this.biomeModification.put(Biome.TROPICAL_RAIN_FOREST,Arrays.asList(new ContextModifierDouble(FLOOD_PARAM,0.3),
+                new ContextModifierDouble(SUPPRESSION_PERCENTAGE,0.3)));
+        this.biomeModification.put(Biome.TUNDRA,Arrays.asList(new ContextModifierInteger(FLOOR_HEIGHT_PARAM,50)));
     }
 
 
     @Override
     public Constraints getContract() {
-        return new Constraints(asKeySet(FACES,FACE_WATER_KEY),
+        return new Constraints(asKeySet(FACES,FACE_WATER_KEY,SEED,FACE_BIOME_KEY),
                 asKeySet(FACE_CAVE_KEY));
     }
 
@@ -81,9 +94,10 @@ public class Caver extends Contract {
     @Override
     public void execute(TerrainMap map, Context context) {
         int nbCave = context.getParamOrDefault(NB_CAVE);
+        int seed = map.getProperty(SEED);
 
-        for(Face face : getFaces(nbCave,map.getProperty(FACES))){
-            face.putProperty(FACE_CAVE_KEY,new StringType(contextToJson()));
+        for(Face face : getFaces(nbCave,map.getProperty(FACES),seed)){
+            face.putProperty(FACE_CAVE_KEY,new StringType(contextToJson(getContext(face,3))));
         }
 
     }
@@ -93,13 +107,14 @@ public class Caver extends Contract {
         return asParamSet(NB_CAVE);
     }
 
-    private Set<Face> getFaces(int nb, FaceSet set){
+    private Set<Face> getFaces(int nb, FaceSet set, int seed){
         Set<Face> faces = new HashSet<>();
 
         List<Face> faceList = new ArrayList<>(set);
+        Random rand = new Random(seed);
 
         while(faces.size() < nb){
-            Random rand = new Random();
+
             Face face = faceList.get(rand.nextInt(set.size()));
             if(!face.getProperty(FACE_WATER_KEY).value) {
                 faces.add(face);
@@ -109,13 +124,42 @@ public class Caver extends Contract {
         return faces;
     }
 
-    private String contextToJson(){
+    private String contextToJson(Context context){
         Map<String,Object> map = new HashMap<>();
 
-        for(Param param : this.context.getProperties().keySet()){
+        for(Param param : context.getProperties().keySet()){
             map.put(param.getId(),this.context.getParamOrDefault(param));
         }
 
         return new Gson().toJson(map);
+    }
+
+    private Context getContext(Face face, int deepness){
+        Context context = this.context.merge(new Context());
+        Map<Face,Integer> deepnessMap = new HashMap<>();
+
+        buildDeepness(face,deepnessMap,1,deepness);
+
+        for(Face neighboor : deepnessMap.keySet()) {
+            Biome biome = neighboor.getProperty(FACE_BIOME_KEY);
+            if (this.biomeModification.containsKey(biome)) {
+                for(ContextModifier modificator : this.biomeModification.get(biome)) {
+                    modificator.modify(context,1/deepnessMap.get(neighboor));
+                }
+            }
+        }
+
+        return context;
+    }
+
+    private void buildDeepness(Face face, Map<Face,Integer> deepnessMap, int currentDeepness, int deepnessToGo){
+        if(deepnessMap.containsKey(face) || deepnessToGo ==0) return;
+
+        if(face.hasProperty(FACE_BIOME_KEY)) {
+            deepnessMap.put(face, currentDeepness);
+        }
+        for(Face neighboor : face.getNeighbors()){
+            buildDeepness(neighboor,deepnessMap,currentDeepness+1,deepnessToGo-1);
+        }
     }
 }

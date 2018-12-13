@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static pfe.terrain.gen.Caver.NB_CAVE;
 import static pfe.terrain.gen.algo.constraints.Contract.FACES;
+import static pfe.terrain.gen.algo.constraints.Contract.SEED;
 
 import org.junit.Before;
 import org.junit.Test;
 import pfe.terrain.gen.algo.constraints.context.Context;
+import pfe.terrain.gen.algo.island.Biome;
 import pfe.terrain.gen.algo.island.TerrainMap;
 import pfe.terrain.gen.algo.island.geometry.Coord;
 import pfe.terrain.gen.algo.island.geometry.Face;
@@ -26,6 +28,7 @@ public class CaverTest {
     public void init(){
         this.context = new Context();
         this.map = new TerrainMap();
+        this.map.putProperty(SEED,10);
 
         FaceSet set = new FaceSet();
 
@@ -33,6 +36,7 @@ public class CaverTest {
             for (int j = 0; j < 10; j++){
                 Face face = new Face(new Coord(i,j),new HashSet<>());
                 face.putProperty(Caver.FACE_WATER_KEY,new BooleanType(false));
+                face.putProperty(Caver.FACE_BIOME_KEY, Biome.ALPINE);
 
                 set.add(face);
             }
