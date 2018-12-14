@@ -17,7 +17,6 @@ import pfe.terrain.gen.algo.types.DoubleType;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.holder.Algorithm;
 import pfe.terrain.generatorService.holder.Parameter;
-import pfe.terrain.generatorService.parser.JsonParser;
 
 import java.util.*;
 
@@ -111,6 +110,11 @@ public class ControllerTest{
         @Override
         public byte[] getExecutionChart() {
             return new byte[0];
+        }
+
+        @Override
+        public String getResponseType(String keyId) {
+            return null;
         }
     }
 
