@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EndingContractTest {
 
-    @Test(expected = MultipleEnderException.class)
+    @Test
     public void multipleEnderTest() throws Exception{
         List<Key> required = new ArrayList<>();
 

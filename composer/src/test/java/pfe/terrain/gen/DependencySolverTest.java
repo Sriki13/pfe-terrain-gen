@@ -267,10 +267,10 @@ public class DependencySolverTest {
         List<Contract> contracts = dependencySolver.orderContracts();
     }
 
-    @Test (expected = MultipleEnderException.class)
+    @Test
     public void multipleEnderTest() throws Exception{
         Contract A = new TestContract("A", Collections.singletonList(new Key<>("POINTS", Void.class)),
-                Arrays.asList(DependencySolver.ALL_KEY));
+                Arrays.asList());
         Contract B = new TestContract("B", Arrays.asList(new Key<>("EDGE", Void.class)),
                 Arrays.asList(new Key<>("POINTS", Void.class)));
         Contract C = new TestContract("C", Arrays.asList(),
@@ -280,15 +280,16 @@ public class DependencySolverTest {
                 Arrays.asList(new Key<>("POINTS", Void.class)));
         Contract end = new TestContract("end", new ArrayList<>(),
                 Arrays.asList(DependencySolver.ALL_KEY));
+        Contract end2 = new TestContract("end2", new ArrayList<>(),
+                Arrays.asList(DependencySolver.ALL_KEY));
 
         Contract EP = new TestContract("EP", new ArrayList<>(),
                 new ArrayList<>());
 
-        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end));
+        dependencySolver = new DependencySolver(Arrays.asList(A,B,C,D,end,end2));
 
         List<Contract> contracts = dependencySolver.orderContracts();
 
-        System.out.println(contracts);
     }
 
     @Test
