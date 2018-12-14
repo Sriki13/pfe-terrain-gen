@@ -62,7 +62,7 @@ public class HeightMoistureBiome extends Contract {
         String styleName = context.getParamOrDefault(BIOME_STYLE_PARAM);
         BiomeStyle style;
         style = BiomeStyle.valueOf(styleName.toUpperCase());
-        WhittakerDiagram diagram = new WhittakerDiagram(style.getWhit(), 0.9);
+        WhittakerDiagram diagram = new WhittakerDiagram(style.getWhit());
         // Normalizing emerged faces between 0 and 1
         for (Face face : map.getProperty(FACES)) {
             if (!face.getProperty(FACE_WATER_KEY).value) {

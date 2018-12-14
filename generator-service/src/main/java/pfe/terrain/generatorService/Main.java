@@ -28,13 +28,12 @@ public class Main {
         ServiceController controller = new ServiceController();
         JsonParser parser = new JsonParser();
 
-
         Map<String, Object> baseContext = controller.getContextMap();
 
         logger.log(Level.INFO, "Base Context : " + parser.parseMap(baseContext));
         logger.log(Level.INFO, "Constraints: " + controller.getConstraintList());
 
-        port(8080);
+        port(port);
 
         get("/execute", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
@@ -50,13 +49,13 @@ public class Main {
 
         get("/execute/:export", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-            response.type("application/json");
             try {
                 controller.execute();
                 String property = request.params("export");
                 if (property == null) {
-                    return "";
+                    return "No property specified";
                 }
+                response.type(controller.getResponseType(property));
                 logger.info("\n" + MapGenerator.SEPARATOR + controller.getProperty(property).toString().length() / 1000 + " KB\n" + MapGenerator.SEPARATOR);
                 return controller.getProperty(property);
             } catch (Exception e) {
@@ -67,9 +66,14 @@ public class Main {
 
         get("/property/:export", ((request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-            response.type("application/json");
             try {
-                return controller.getProperty(request.params("export"));
+                String property = request.params("export");
+                if (property == null) {
+                    response.status(400);
+                    return "No property specified";
+                }
+                response.type(controller.getResponseType(property));
+                return controller.getProperty(property);
             } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);

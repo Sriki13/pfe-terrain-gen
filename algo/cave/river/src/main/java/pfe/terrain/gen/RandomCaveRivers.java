@@ -68,6 +68,9 @@ public class RandomCaveRivers extends Contract {
 
         Function<Coord, Boolean> endCondition = coord -> coord.getProperty(HEIGHT_KEY).value <= 0;
         int nbRivers = context.getParamOrDefault(NB_RIVERS_PARAM);
+        if (empty.isEmpty()) {
+            return;
+        }
         for (int i = 0; i < nbRivers; i++) {
             Coord start = empty.get(random.nextInt(empty.size()));
             empty.remove(start);

@@ -17,5 +17,6 @@ public interface Generator {
 
     byte[] getExecutionChart();
 
+    String getResponseType(String keyId);
 
 }

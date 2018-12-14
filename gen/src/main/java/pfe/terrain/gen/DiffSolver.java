@@ -9,6 +9,8 @@ import java.util.*;
 
 public class DiffSolver {
 
+    private static final Key<Void> ALL_KEY = new Key<>("All", Void.class);
+
     private List<Param<?>> modifiedParams;
 
     public DiffSolver(Context original, Context latest) {
@@ -50,7 +52,13 @@ public class DiffSolver {
                 min = newMin;
             }
         }
-
+        if (min == contracts.size()) {
+            for (int i = min - 1; i > 0; i--) {
+                if (contracts.get(i).getContract().getRequired().contains(ALL_KEY)) {
+                    min = i;
+                }
+            }
+        }
         return contracts.subList(min, contracts.size());
     }
 

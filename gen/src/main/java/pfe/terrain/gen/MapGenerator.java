@@ -159,6 +159,16 @@ public class MapGenerator implements Generator {
     }
 
     @Override
+    public String getResponseType(String keyId) {
+        Key<String> responseTypeKey = new Key<>(keyId + "_response_type", String.class);
+        if (terrainMap.hasProperty(responseTypeKey)) {
+            return terrainMap.getProperty(responseTypeKey);
+        } else {
+            return "application/json";
+        }
+    }
+
+    @Override
     public void setParams(Context map) {
         this.context = map;
     }

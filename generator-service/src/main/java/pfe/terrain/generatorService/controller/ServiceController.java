@@ -63,6 +63,10 @@ public class ServiceController {
         return this.generator.getProperty(keyId);
     }
 
+    public String getResponseType(String keyId) {
+        return this.generator.getResponseType(keyId);
+    }
+
     public Map<String, Object> setContext(String contextString) {
 
         ContextParser parser = new ContextParser(contextString);

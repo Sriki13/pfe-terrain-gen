@@ -9,19 +9,9 @@ import java.util.TreeMap;
 public class WhittakerDiagram {
 
     private TreeMap<Double, TreeMap<Double, Biome>> whittaker;
-    private double ice;
 
-    public WhittakerDiagram(String whittakerMatrix, double ice) {
+    public WhittakerDiagram(String whittakerMatrix) {
         this.whittaker = parseWhittakerMatrix(whittakerMatrix);
-        this.ice = ice;
-    }
-
-    public double getIce() {
-        return ice;
-    }
-
-    public TreeMap<Double, TreeMap<Double, Biome>> getWhittaker() {
-        return whittaker;
     }
 
     public Biome getBiome(double moisture, double height) {

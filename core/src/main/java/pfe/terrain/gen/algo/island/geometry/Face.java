@@ -94,26 +94,21 @@ public class Face extends Mappable {
     }
 
     // Stolen from java.awt.Polygon
-    private boolean containsPoint(double x, double y) {
+    public boolean containsPoint(double x, double y) {
         int hits = 0;
-
         Set<Coord> borders = getBorderVertices();
         int npoints = borders.size();
         double[] xpoints = borders.stream().mapToDouble(c -> c.x).toArray();
         double[] ypoints = borders.stream().mapToDouble(c -> c.y).toArray();
-
         double lastx = xpoints[npoints - 1];
         double lasty = ypoints[npoints - 1];
         double curx, cury;
-
         for (int i = 0; i < npoints; lastx = curx, lasty = cury, i++) {
             curx = xpoints[i];
             cury = ypoints[i];
-
             if (cury == lasty) {
                 continue;
             }
-
             double leftx;
             if (curx < lastx) {
                 if (x >= lastx) {
@@ -126,7 +121,6 @@ public class Face extends Mappable {
                 }
                 leftx = lastx;
             }
-
             double test1, test2;
             if (cury < lasty) {
                 if (y < cury || y >= lasty) {
@@ -154,7 +148,6 @@ public class Face extends Mappable {
                 hits++;
             }
         }
-
         return ((hits & 1) != 0);
     }
 

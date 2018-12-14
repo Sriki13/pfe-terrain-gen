@@ -15,7 +15,6 @@ import java.awt.*;
 
 public class ColorGradientGenerator extends Contract {
 
-
     private static final Key<BooleanType> FACE_WALL_KEY =
             new SerializableKey<>(FACES_PREFIX + "IS_WALL", "isWall", BooleanType.class);
 

@@ -12,7 +12,7 @@ public class WhittakerDiagramTest {
 
     @Test
     public void verifyOkDiagram() {
-        whittakerDiagram = new WhittakerDiagram(BiomeStyle.CLASSIC.getWhit(), 0.9);
+        whittakerDiagram = new WhittakerDiagram(BiomeStyle.CLASSIC.getWhit());
         Biome shouldBeTed = whittakerDiagram.getBiome(0.25, 0.7);
         assertThat(shouldBeTed, equalTo(Biome.TEMPERATE_DESERT));
         Biome shouldBeSnow = whittakerDiagram.getBiome(1.0, 1.0);
@@ -28,7 +28,7 @@ public class WhittakerDiagramTest {
                         "0.66 SHR SHR trS trS\n" +
                         "0.33 SHR SHR SHR trS\n" +
                         "0    SHR SHR BEA BEA";
-        whittakerDiagram = new WhittakerDiagram(diag, 0.9);
+        whittakerDiagram = new WhittakerDiagram(diag);
         Biome shouldBetrS = whittakerDiagram.getBiome(0.8, 0.45);
         assertThat(shouldBetrS, equalTo(Biome.TROPICAL_SEASONAL_FOREST));
     }
