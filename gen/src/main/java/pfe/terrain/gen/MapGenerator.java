@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 public class MapGenerator implements Generator {
 
-    private static final String SEPARATOR = "---------------------------------------------------------------------\n";
+    public static final String SEPARATOR = "---------------------------------------------------------------------\n";
 
     private List<Contract> original;
     private List<Contract> contracts;
@@ -118,6 +118,7 @@ public class MapGenerator implements Generator {
             sb.append(SEPARATOR);
         } else {
             sb.append(formatExecution("MapGeneration", "SUCCESS", totalTime));
+            sb.append(SEPARATOR);
         }
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, sb.toString());
     }

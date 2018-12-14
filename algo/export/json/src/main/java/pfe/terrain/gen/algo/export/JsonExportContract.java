@@ -41,7 +41,7 @@ public class JsonExportContract extends Contract {
 
     @Override
     public void execute(TerrainMap map, Context context) {
-        if (!map.hasProperty(EXPORT_JSON_KEY) || !Boolean.valueOf(context.getParamOrDefault(DIFF_PARAM))) {
+        if (lastMap == null || !Boolean.valueOf(context.getParamOrDefault(DIFF_PARAM))) {
             JsonExporter exporter = new JsonExporter();
             lastMap = exporter.export(map);
             lastExporter = exporter.getMeshExporter();
