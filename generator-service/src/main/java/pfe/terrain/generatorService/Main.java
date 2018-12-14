@@ -1,5 +1,6 @@
 package pfe.terrain.generatorService;
 
+import pfe.terrain.gen.MapGenerator;
 import pfe.terrain.generatorService.controller.ServiceController;
 import pfe.terrain.generatorService.parser.JsonParser;
 
@@ -15,12 +16,12 @@ public class Main {
         Logger logger = Logger.getLogger("WebService");
 
         int port = 8080;
-        if(args.length == 1){
-            try{
+        if (args.length == 1) {
+            try {
                 port = Integer.parseInt(args[0]);
-                logger.log(Level.INFO,"using port : " + port);
-            } catch (Exception e){
-                logger.log(Level.INFO,"cannot read port, falling back to default : " + port);
+                logger.log(Level.INFO, "using port : " + port);
+            } catch (Exception e) {
+                logger.log(Level.INFO, "cannot read port, falling back to default : " + port);
             }
         }
 
@@ -56,7 +57,8 @@ public class Main {
                 if (property == null) {
                     return "";
                 }
-                return controller.getProperty(request.params("export"));
+                logger.info("\n" + MapGenerator.SEPARATOR + controller.getProperty(property).toString().length() / 1000 + " KB\n" + MapGenerator.SEPARATOR);
+                return controller.getProperty(property);
             } catch (Exception e) {
                 response.status(500);
                 return parser.exceptionToJson(e);
@@ -76,7 +78,6 @@ public class Main {
 
         get("/executionChart", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-
             response.type("application/octet-stream");
             try {
                 return controller.getExecutionChart();
