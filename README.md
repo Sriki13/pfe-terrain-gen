@@ -62,5 +62,6 @@ The generator you ran is available at
  
  **Core:**
  - **POST localhost:8080/context** :  Post a JSON context (optional parameter values to use for the next executions)
- - **GET localhost:8080/execute** : Generate a map with the generator and the provided context and get the JSON representation
- - **GET localhost:8080/execute/diff** : Generate a map, but only send what has changed from the last map generation. See [the diff specification](DiffSpec.md) for details about the format.
+ - **GET localhost:8080/execute/json** : Generate a map with the generator and the provided context and get the JSON representation
+ - **GET localhost:8080/property/X** : Get the property X contained in the map
+ 
