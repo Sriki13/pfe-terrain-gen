@@ -24,7 +24,7 @@ public class DiffSolver {
 
     public List<Contract> getContractsToExecute(List<Contract> contracts) {
         int min = contracts.size();
-        Set<Key> modifiedKeys = new HashSet<>();
+
         for (Contract contract : contracts) {
             Set<Param> requested = contract.getRequestedParameters();
             if (requested == null) {
@@ -38,20 +38,35 @@ public class DiffSolver {
                 }
             }
         }
-        for (int i = min; i < contracts.size(); i++) {
-            modifiedKeys.addAll(contracts.get(i).getContract().getModified());
+        while (true) {
+            Set<Key> modifiedKeys = new HashSet<>();
+            for (int i = min; i < contracts.size(); i++) {
+                modifiedKeys.addAll(contracts.get(i).getContract().getModified());
+            }
+            int newMin = findMinContract(modifiedKeys, contracts, min);
+            if (min == newMin) {
+                break;
+            } else {
+                min = newMin;
+            }
         }
+
+        return contracts.subList(min, contracts.size());
+    }
+
+    private int findMinContract(Set<Key> modifiedKeys, List<Contract> contracts, int min) {
         for (Key key : modifiedKeys) {
             for (int i = 0; i < contracts.size(); i++) {
                 Contract current = contracts.get(i);
                 if (current.getContract().getCreated().contains(key)) {
                     if (contracts.indexOf(current) < min) {
-                        min = contracts.indexOf(current);
+                        return contracts.indexOf(current);
                     }
+                    break;
                 }
             }
         }
-        return contracts.subList(min, contracts.size());
+        return min;
     }
 
 

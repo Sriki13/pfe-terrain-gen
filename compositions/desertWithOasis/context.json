@@ -9,7 +9,6 @@
     "biomeStyle": "classic",
     "coastRoughness":0.9,
     "archipelagoTendency":0.2,
-    "NoiseType": "ridged",
     "treeDensity": 0.3,
     "maxMoisture": 0.3,
     "minMoisture": 0,
@@ -17,7 +16,16 @@
     "pitchImportance": 0.3,
     "nbCities": 3,
     "heightFactor": 0.9,
-    "SmoothingLevel": 0.9
+    "smoothingLevel": 0.9,
+    "deltaHeight": 0.6,
+    "cityPitchWeight": 0.2,
+    "cityHeightWeight": 0.15,
+    "cityMaxHeight": 0.7,
+    "cityProximityWeight": 1.0,
+    "cityRiverWeight": 0.1,
+    "cityMinHeight": 0.1,
+    "cityLakeWeight": 0.1,
+    "cityMoistureWeight": 0.1
   },
   "constraint": [
     {
@@ -27,8 +35,8 @@
     },
     {
       "name": "order",
-      "before": "RiverRidge",
-      "after": "HeightRedistribution"
+      "before": "HeightRedistribution",
+      "after": "RiverRidge"
     },
     {
       "name": "order",
@@ -49,6 +57,11 @@
       "name": "order",
       "before": "HeightSmoothing",
       "after": "BasicPitch"
+    },
+    {
+      "name": "order",
+      "before": "DeltaGenerator",
+      "after": "RiverRidge"
     }
   ]
 }

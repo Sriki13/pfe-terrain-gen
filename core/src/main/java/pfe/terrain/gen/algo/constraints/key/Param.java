@@ -31,7 +31,7 @@ public class Param<T> extends Key<T> {
         return new Param<>(id, Double.class, 0.0, 1.0, description, defaultValue, label);
     }
 
-    public static Param<Integer> generatePositiveIntegerParam(String id, Comparable max, String description,
+    public static Param<Integer> generatePositiveIntegerParam(String id, int max, String description,
                                                               int defaultValue, String label) {
         return new Param<>(id, Integer.class, 0, max, description, defaultValue, label);
     }

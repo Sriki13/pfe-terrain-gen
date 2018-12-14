@@ -45,7 +45,7 @@ public class RiverGenerator {
         generateRiverFrom(start, seen, (coord -> coord.getProperty(VERTEX_WATER_KEY).value));
     }
 
-    public Coord generateRiverFrom(Coord start, Set<Coord> seen, Function<Coord, Boolean> endCondition) {
+    public void generateRiverFrom(Coord start, Set<Coord> seen, Function<Coord, Boolean> endCondition) {
         start.putProperty(IS_SOURCE_KEY, new MarkerType());
         while (!endCondition.apply(start)) {
             Coord flowTowards = getLowestNeighbour(start, seen, true);
@@ -58,7 +58,6 @@ public class RiverGenerator {
             start = flowTowards;
         }
         start.putProperty(IS_RIVER_END_KEY, new MarkerType());
-        return start;
     }
 
     public Coord getLowestNeighbour(Coord coord, Set<Coord> seen, boolean includeStart) {
