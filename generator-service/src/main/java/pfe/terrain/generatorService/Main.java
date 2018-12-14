@@ -12,10 +12,21 @@ import static spark.Spark.*;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        Logger logger = Logger.getLogger("WebService");
+
+        int port = 8080;
+        if(args.length == 1){
+            try{
+                port = Integer.parseInt(args[0]);
+                logger.log(Level.INFO,"using port : " + port);
+            } catch (Exception e){
+                logger.log(Level.INFO,"cannot read port, falling back to default : " + port);
+            }
+        }
+
         ServiceController controller = new ServiceController();
         JsonParser parser = new JsonParser();
 
-        Logger logger = Logger.getLogger("WebService");
 
         Map<String, Object> baseContext = controller.getContextMap();
 
