@@ -13,6 +13,7 @@ public class AlgoStorageTest {
 
 
     @Test
+    @Ignore
     public void getAlgoListTest() throws Exception{
         List<Algorithm> algorithms = storage.getAlgoList();
 
