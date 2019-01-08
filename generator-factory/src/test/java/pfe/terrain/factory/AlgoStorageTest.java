@@ -1,5 +1,6 @@
 package pfe.terrain.factory;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.factory.entities.Algorithm;
 import pfe.terrain.factory.storage.AlgoStorage;

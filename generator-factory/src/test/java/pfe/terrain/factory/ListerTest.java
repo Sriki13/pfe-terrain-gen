@@ -2,6 +2,7 @@ package pfe.terrain.factory;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import pfe.terrain.factory.exception.CannotReachRepoException;
 import pfe.terrain.factory.exception.NoArtifStringException;
@@ -9,6 +10,7 @@ import pfe.terrain.factory.extern.ArtifactoryAlgoLister;
 
 import static org.junit.Assert.assertNotNull;
 
+@Ignore
 public class ListerTest {
     private ArtifactoryAlgoLister lister;
 
