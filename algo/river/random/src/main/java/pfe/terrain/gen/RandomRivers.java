@@ -54,7 +54,7 @@ public class RandomRivers extends Contract {
         }
 
         // necessary for deterministic purposes
-        land.sort((o1, o2) -> (int) (o1.x + o1.y - o2.x - o2.y));
+        land.sort((o1, o2) -> (int) (1000 *(o1.x + o1.y - o2.x - o2.y)));
 
         int nbRivers = context.getParamOrDefault(NB_RIVERS_PARAM);
         for (int i = 0; i < nbRivers; i++) {
