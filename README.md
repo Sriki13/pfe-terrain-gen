@@ -51,6 +51,7 @@ The generator you ran is available at
 
     localhost:8080
 
+If artefactory is not available, a composition using algorithms installed locally can be run with `mvn -o exec:java`
 
 
 ### The following routes are available :
