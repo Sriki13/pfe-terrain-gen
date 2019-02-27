@@ -7,7 +7,7 @@ public class PomConstants {
     public static String dependency = "dependency";
     public static String dependencies = "dependencies";
 
-    private static String repoUrl = "http://35.189.252.97/artifactory/pfe";
+    private static String repoUrl = "http://34.76.98.30/artifactory/pfe";
 
     public static final String base = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "\n" +
